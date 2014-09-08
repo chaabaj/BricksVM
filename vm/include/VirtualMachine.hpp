@@ -19,20 +19,35 @@ namespace bricksvm
 
 		~VirtualMachine();
 
-		void readFile(std::string const &filename);
+		void addDevice(std::shared_ptr<event::EventThread> const &device);
+
+		void addProgram(std::shared_ptr<interpreter::Program> const &program);
+
+		void start();
 
 	private:
+
+		void executeInstruction(std::shared_ptr<interpreter::Instruction> &instruction);
+		
+		void onInstructionFinished(bricksvm::event::EventThread &thread, bricksvm::event::Message &msg);
+
+		void onCall(bricksvm::event::EventThread &thread, bricksvm::event::Message &msg);
 
 		template<typename ... Args>
 		void emit(std::string eventName, Args ... args)
 		{
-			for (std::shared_ptr<EventThread> &eventThread : _eventThreads)
+			if (this->hasEvent(name))
 			{
-				eventThread->emit(eventName, args...);
+				EventThread::emit(name, args...);
 			}
+			else
+			{
+				for (std::shared_ptr<EventThread> &eventThread : _eventThreads)
+				{
+					eventThread->emit(eventName, std::ref(*this), args...);
+				}
+			}		
 		}
-
-		void readStream(std::istream const &stream);
 
 	private:
 

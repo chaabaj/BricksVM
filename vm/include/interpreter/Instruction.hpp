@@ -2,7 +2,8 @@
 # define __BRICKSVM_INTERPRETER_INSTRUCTION_HPP__
 
 # include <vector>
-# include "interpreter/Parameter.hpp"
+# include <memory>
+# include "interpreter/AParameter.hpp"
 
 namespace bricksvm
 {
@@ -12,13 +13,13 @@ namespace bricksvm
 		{
 		public:
 
-			typedef std::vector<std::shared_ptr<IParameter> >	ParameterContainerType;
+			typedef std::vector<std::shared_ptr<AParameter> >	ParameterContainerType;
 
 			Instruction();
 			~Instruction();
 
 			void setName(std::string const &str);
-			void addParameter(IParameter *parameter);
+			void addParameter(std::shared_ptr<AParameter> const &parameter);
 
 			ParameterContainerType	&getParameters();
 			std::string const		&getName() const;

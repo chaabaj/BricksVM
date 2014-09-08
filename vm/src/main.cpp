@@ -1,36 +1,23 @@
 #include <iostream>
-#include "event/EventThread.hpp"
-
-static void sayHello(bricksvm::event::EventThread &thread, bricksvm::event::Message &msg)
-{
-	std::reference_wrapper<bricksvm::event::EventThread>	src = msg.getParameter<std::reference_wrapper<bricksvm::event::EventThread> >(0);
-
-	std::cout << "msg : " << msg.getParameter<int>(1) << std::endl;
-
-	src.get().emit("toto", thread, 10);
-}
-
-static void onFinished(bricksvm::event::EventThread &thread, bricksvm::event::Message &msg)
-{
-	std::cout << "finished with status" << msg.getParameter<int>(1) << std::endl;
-}
+#include "VirtualMachine.hpp"
+#include "interpreter/ValueParameter.hpp"
 
 int main()
 {
-	try
-	{
-		bricksvm::event::EventThread	device1("test");
-		bricksvm::event::EventThread	device2("blabla");
+	using namespace bricksvm;
 
-		device1.on("sayHello", &sayHello);
-		device2.on("toto", &onFinished);
-		std::cout << "device 1 : " << &device1 << std::endl;
-		device1.emit("sayHello", device2, 5);
-		_sleep(10000);
-	}
-	catch (std::runtime_error &err)
-	{
-		std::cout << err.what() << std::endl;
-	}
+	VirtualMachine								vm;
+	std::shared_ptr<interpreter::Program>		prg(new interpreter::Program);
+	std::shared_ptr<interpreter::Instruction>	instr(new interpreter::Instruction);
+	interpreter::Value							val(std::string("test"));
+	std::shared_ptr<interpreter::AParameter>	param(new interpreter::ValueParameter(val));
+	
+
+	instr->setName("call");
+	instr->addParameter(param);
+	prg->addInstruction(instr);
+	vm.addProgram(prg);
+	vm.start();
+	while (true);
 	return 0;
 }

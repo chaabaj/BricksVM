@@ -10,6 +10,13 @@ namespace bricksvm
 		class Value
 		{
 		public:
+			template<typename ScalarType>
+			Value(ScalarType const scalar)
+			{
+				_value = bricksvm::core::Any(scalar);
+			}
+
+			~Value() {}
 		public:
 			enum Type
 			{
@@ -19,6 +26,7 @@ namespace bricksvm
 				Int8,
 				Float,
 				Double,
+				String
 			};
 		private:
 			bricksvm::core::Any	_value;

@@ -15,12 +15,22 @@ namespace bricksvm
 
 	void VirtualMachine::onInstructionFinished(bricksvm::event::EventThread &thread, bricksvm::event::Message &msg)
 	{
-		// TODO
+		std::string										progId = msg.getParameter<std::string>(0);
+		VirtualMachine::ProgramContainerType::iterator	it;
+		
+		if ((it = _programs.find(progId)) != _programs.end())
+		{
+			this->nextInstruction(progId, it->second);
+		}
 	}
 
 	void VirtualMachine::onCall(bricksvm::event::EventThread &thread, bricksvm::event::Message &msg)
 	{
-		// TODO
+		std::string		progId = msg.getParameter<std::string>(1);
+		event::Message	response("finished", progId);
+
+		std::cout << "Call is executed in vm thread" << std::endl;
+		static_cast<VirtualMachine&>(thread).onInstructionFinished(thread, response);
 	}
 
 	void VirtualMachine::addDevice(std::shared_ptr<event::EventThread> const &device)
@@ -28,31 +38,33 @@ namespace bricksvm
 		_devices.push_back(device);
 	}
 
-	void VirtualMachine::addProgram(std::shared_ptr<interpreter::Program> const &program)
+	void VirtualMachine::addProgram(std::string const &name, std::shared_ptr<interpreter::Program> const &program)
 	{
-		_programs.push_back(program);
+		_programs[name] = program;
 	}
 
-	void VirtualMachine::executeInstruction(std::shared_ptr<interpreter::Instruction> &instruction)
+	void VirtualMachine::executeInstruction(std::string const &progName, interpreter::Instruction &instruction)
 	{
-		//TODO
+		this->emit(instruction.getName(), progName, instruction.getParameters());
+	}
+
+	void VirtualMachine::nextInstruction(std::string const &prgName, std::shared_ptr<interpreter::Program> &prg)
+	{
+		std::shared_ptr<interpreter::Instruction>	currentInstruction;
+
+		currentInstruction = prg->nextInstruction();
+		if (currentInstruction != nullptr)
+		{
+			this->executeInstruction(prgName, *currentInstruction);
+		}
+
 	}
 
 	void VirtualMachine::start()
 	{
-		std::shared_ptr<interpreter::Instruction>	currentInstruction;
-		bool										hasInstruction = true;
-
-
-		hasInstruction = false;
-		for (std::shared_ptr<interpreter::Program> &program : _programs)
+		for (auto &program : _programs)
 		{
-			currentInstruction = program->nextInstruction();
-			if (currentInstruction != nullptr)
-			{
-				hasInstruction = true;
-				this->executeInstruction(currentInstruction);
-			}
+			this->nextInstruction(program.first, program.second);
 		}
 	}
 }

@@ -47,16 +47,21 @@ namespace bricksvm
 				}
 				else
 				{
+					EventThread::MessageContainerType	msgs;
 					{
-						std::shared_ptr<Message>	msgPtr;
-						LockType					lock(_mutex);
+						std::shared_ptr<Message>			msgPtr;
+						LockType							lock(_mutex);
 
 						while (!_messages.empty())
 						{
 							msgPtr = _messages.front();
-							this->broadcastMsg(*msgPtr);
+							msgs.push_back(msgPtr);
 							_messages.pop_front();
 						}
+					}
+					for (std::shared_ptr<Message> &msg : msgs)
+					{
+						this->broadcastMsg(*msg);
 					}
 				}
 			}

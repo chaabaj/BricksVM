@@ -16,7 +16,8 @@ int main()
 	instr->setName("call");
 	instr->addParameter(param);
 	prg->addInstruction(instr);
-	vm.addProgram(prg);
+	prg->addInstruction(instr);
+	vm.addProgram("toto", prg);
 	vm.start();
 	while (true);
 	return 0;

@@ -4,68 +4,14 @@ namespace bricksvm
 {
 	namespace event
 	{
-		EventThread::EventThread(std::string const &name) : _name(name)
+		EventThread::EventThread(std::string const &name) : EventThread::ParentClass(), _name(name)
 		{
-			_started = false;
-			_thread = std::thread(std::bind(&EventThread::operator(), this));
-			{
-				LockType	lock(_mutex);
-
-				_condVar.wait(lock, [this]()
-				{
-					return _started;
-				});
-			}
 		}
 
 		EventThread::~EventThread()
 		{
-			_condVar.notify_one();
-			_started = false;
-			_thread.join();
 		}
 
-		void EventThread::stop()
-		{
-			_started = false;
-		}
-
-		void EventThread::operator()()
-		{
-			_started = true;
-			_condVar.notify_one();
-			while (_started)
-			{
-				if (_messages.size() == 0)
-				{
-					LockType lock(_mutex);
-
-					_condVar.wait(lock, [this]()
-					{
-						return _messages.size() > 0;
-					});
-				}
-				else
-				{
-					EventThread::MessageContainerType	msgs;
-					{
-						std::shared_ptr<Message>			msgPtr;
-						LockType							lock(_mutex);
-
-						while (!_messages.empty())
-						{
-							msgPtr = _messages.front();
-							msgs.push_back(msgPtr);
-							_messages.pop_front();
-						}
-					}
-					for (std::shared_ptr<Message> &msg : msgs)
-					{
-						this->broadcastMsg(*msg);
-					}
-				}
-			}
-		}
 
 		bool EventThread::hasEvent(std::string const &name) const
 		{
@@ -77,6 +23,14 @@ namespace bricksvm
 			return _name;
 		}
 
+		void EventThread::processItems(EventThread::ParentClass::ItemContainerType &items)
+		{
+			for (std::shared_ptr<Message> &msg : items)
+			{
+				this->broadcastMsg(*msg);
+			}
+		}
+
 		void EventThread::broadcastMsg(Message &msg)
 		{
 			ChannelContainerType::iterator	it;
@@ -84,7 +38,6 @@ namespace bricksvm
 
 			if ((it = _channels.find(name)) != _channels.end())
 			{
-				std::cout << "device 1(2) : " << this << std::endl;
 				it->second.emit(std::ref(*this), std::ref(msg));
 			}
 		}

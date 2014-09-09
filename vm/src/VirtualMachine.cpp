@@ -29,7 +29,7 @@ namespace bricksvm
 		std::string		progId = msg.getParameter<std::string>(1);
 		event::Message	response("finished", progId);
 
-		std::cout << "Call is executed in vm thread" << std::endl;
+		std::cout << "Finished" << std::endl;
 		static_cast<VirtualMachine&>(thread).onInstructionFinished(thread, response);
 	}
 

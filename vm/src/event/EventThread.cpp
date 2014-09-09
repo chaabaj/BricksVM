@@ -27,18 +27,18 @@ namespace bricksvm
 		{
 			for (std::shared_ptr<Message> &msg : items)
 			{
-				this->broadcastMsg(*msg);
+				this->broadcastMsg(msg);
 			}
 		}
 
-		void EventThread::broadcastMsg(Message &msg)
+		void EventThread::broadcastMsg(std::shared_ptr<Message> &msg)
 		{
 			ChannelContainerType::iterator	it;
-			std::string const				&name = msg.getName();
+			std::string const				&name = msg->getName();
 
 			if ((it = _channels.find(name)) != _channels.end())
 			{
-				it->second.emit(std::ref(*this), std::ref(msg));
+				it->second.emit(std::ref(*this), std::ref(*msg));
 			}
 		}
 

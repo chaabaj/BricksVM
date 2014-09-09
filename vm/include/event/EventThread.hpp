@@ -53,10 +53,10 @@ namespace bricksvm
 				}
 			}
 
-		private:
+		protected:
 			typedef std::list<std::shared_ptr<Message> >	MessageContainerType;
 
-			virtual void broadcastMsg(Message &msg);
+			virtual void broadcastMsg(std::shared_ptr<Message> &msg);
 			void processItems(ItemContainerType &items);
 
 		private:

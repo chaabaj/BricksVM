@@ -5,10 +5,11 @@
 # include <istream>
 # include "interpreter/Program.hpp"
 # include "event/EventThread.hpp"
+# include "event/ParallelEventThread.hpp"
 
 namespace bricksvm
 {
-	class VirtualMachine : public event::EventThread
+	class VirtualMachine : public event::ParallelEventThread
 	{
 	public:
 

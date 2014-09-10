@@ -7,6 +7,7 @@
 # include <map>
 # include <memory>
 # include "interpreter/Instruction.hpp"
+# include "interpreter/Value.hpp"
 
 namespace bricksvm
 {
@@ -28,7 +29,7 @@ namespace bricksvm
 
 			void addSubProgram(std::string const &progId, std::shared_ptr<Program> const &subProgram);
 
-			std::shared_ptr<Instruction>	nextInstruction();
+			std::shared_ptr<Instruction>	nextInstruction(Value const &retVal);
 
 			void call(std::string const &name);
 

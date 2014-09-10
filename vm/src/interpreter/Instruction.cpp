@@ -4,7 +4,7 @@ namespace bricksvm
 {
 	namespace interpreter
 	{
-		Instruction::Instruction()
+		Instruction::Instruction(unsigned const int lineNumber) : _lineNumber(lineNumber)
 		{
 
 		}

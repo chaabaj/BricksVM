@@ -1,6 +1,7 @@
 #ifndef __BRICKSVM_INTERPRETER_VALUE_HPP__
-# define __BRICKSVM_INTERPRETER_VALUE_HPP_
+# define __BRICKSVM_INTERPRETER_VALUE_HPP__
 
+# include <assert.h>
 # include "core/Any.hpp"
 
 namespace bricksvm
@@ -82,6 +83,17 @@ namespace bricksvm
 			{
 				_value = bricksvm::core::Any(scalar);
 				_type = static_cast<Type>(TypeTraits<ScalarType>::type);
+			}
+
+			Value(Value const &other);
+
+			Value &operator=(Value const &other);
+
+			template<typename T>
+			inline operator T&()
+			{
+				assert(_type == TypeTraits<ScalarType>::type);
+				return _value.getValue<T>();
 			}
 
 			~Value() {}

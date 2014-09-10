@@ -14,6 +14,11 @@ namespace bricksvm
 
 		}
 
+		ValueParameter::ValueParameter(Value const &&value) : AParameter(AParameter::ValueType), _value(value)
+		{
+
+		}
+
 		Value const &ValueParameter::getValue() const
 		{
 			return _value;

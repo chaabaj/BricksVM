@@ -1,4 +1,5 @@
 #include "VirtualMachine.hpp"
+#include "interpreter/Utils.hpp"
 
 namespace bricksvm
 {
@@ -15,19 +16,23 @@ namespace bricksvm
 
 	void VirtualMachine::onInstructionFinished(bricksvm::event::EventThread &thread, bricksvm::event::Message &msg)
 	{
-		std::string										progId = msg.getParameter<std::string>(0);
+		typedef interpreter::Instruction::ParameterContainerType	ParameterContainerType;
+
+		std::string										progId = msg.getParameter<std::string>(1);
+		ParameterContainerType							&params = msg.getParameter<ParameterContainerType>(2);
 		VirtualMachine::ProgramContainerType::iterator	it;
+		interpreter::Value const						&retVal = dynamic_cast<interpreter::ValueParameter&>(*params[0]).getValue();
 		
 		if ((it = _programs.find(progId)) != _programs.end())
 		{
-			this->nextInstruction(progId, it->second);
+			this->nextInstruction(progId, it->second, retVal);
 		}
 	}
 
 	void VirtualMachine::onCall(bricksvm::event::EventThread &thread, bricksvm::event::Message &msg)
 	{
 		std::string		progId = msg.getParameter<std::string>(1);
-		event::Message	response("finished", progId);
+		event::Message	response("instruction:finished", std::ref(*this), progId, interpreter::makeParameters(0));
 
 		static_cast<VirtualMachine&>(thread).onInstructionFinished(thread, response);
 	}
@@ -47,11 +52,13 @@ namespace bricksvm
 		this->emit(instruction.getName(), progName, instruction.getParameters());
 	}
 
-	void VirtualMachine::nextInstruction(std::string const &prgName, std::shared_ptr<interpreter::Program> &prg)
+	void VirtualMachine::nextInstruction(std::string const &prgName, 
+										 std::shared_ptr<interpreter::Program> &prg,
+										 interpreter::Value const &retVal)
 	{
 		std::shared_ptr<interpreter::Instruction>	currentInstruction;
 
-		currentInstruction = prg->nextInstruction();
+		currentInstruction = prg->nextInstruction(retVal);
 		if (currentInstruction != nullptr)
 		{
 			this->executeInstruction(prgName, *currentInstruction);
@@ -61,9 +68,11 @@ namespace bricksvm
 
 	void VirtualMachine::start()
 	{
+		interpreter::Value	retVal(0);
+
 		for (auto &program : _programs)
 		{
-			this->nextInstruction(program.first, program.second);
+			this->nextInstruction(program.first, program.second, retVal);
 		}
 	}
 }

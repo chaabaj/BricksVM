@@ -15,7 +15,7 @@ namespace bricksvm
 
 			typedef std::vector<std::shared_ptr<AParameter> >	ParameterContainerType;
 
-			Instruction();
+			Instruction(unsigned const int lineNumber);
 			~Instruction();
 
 			void setName(std::string const &str);
@@ -27,6 +27,7 @@ namespace bricksvm
 		private:
 			std::string				_name;
 			ParameterContainerType	_parameters;
+			unsigned const int		_lineNumber;
 		};
 	}
 }

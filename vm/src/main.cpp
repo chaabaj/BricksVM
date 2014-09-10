@@ -9,7 +9,7 @@ int main()
 	VirtualMachine								vm;
 	std::shared_ptr<interpreter::Program>		prg(new interpreter::Program);
 	std::shared_ptr<interpreter::Program>		prg2(new interpreter::Program);
-	std::shared_ptr<interpreter::Instruction>	instr(new interpreter::Instruction);
+	std::shared_ptr<interpreter::Instruction>	instr(new interpreter::Instruction(0));
 	interpreter::Value							val(std::string("test"));
 	std::shared_ptr<interpreter::AParameter>	param(new interpreter::ValueParameter(val));
 	

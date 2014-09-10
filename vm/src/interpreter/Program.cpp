@@ -40,8 +40,9 @@ namespace bricksvm
 			_currentIndex = 0;
 		}
 
-		std::shared_ptr<Instruction>	Program::nextInstruction()
+		std::shared_ptr<Instruction>	Program::nextInstruction(Value const &retVal)
 		{
+			//if a parameter need to be resolved use retval to resolve it
 			if (_calls.empty())
 			{
 				if (_currentIndex < _instructions.size())
@@ -55,12 +56,13 @@ namespace bricksvm
 				std::weak_ptr<Program>			subProgram = _calls.top();
 				std::shared_ptr<Instruction>	instruction;
 
-				instruction = subProgram.lock()->nextInstruction();
+				instruction = subProgram.lock()->nextInstruction(retVal);
 				if (instruction == nullptr)
 				{
 					subProgram.lock()->reset();
 					_calls.pop();
-					return this->nextInstruction();
+
+					return this->nextInstruction(retVal);
 				}
 				return instruction;
 			}

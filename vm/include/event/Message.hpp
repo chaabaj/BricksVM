@@ -15,7 +15,7 @@ namespace bricksvm
 		public:
 
 			template<typename ... Args>
-			Message(std::string const &name, Args ... args) : _name(name)
+			Message(std::string const &name, Args&& ... args) : _name(name)
 			{
 				this->pushParameter(args...);
 			}
@@ -44,7 +44,7 @@ namespace bricksvm
 		private:
 
 			template<typename ArgType, typename ... Args>
-			void pushParameter(ArgType arg, Args ... args)
+			void pushParameter(ArgType &&arg, Args&& ... args)
 			{
 				bricksvm::core::Any	value(arg);
 
@@ -53,7 +53,7 @@ namespace bricksvm
 			}
 
 			template<typename ArgType>
-			void pushParameter(ArgType arg)
+			void pushParameter(ArgType &&arg)
 			{
 				bricksvm::core::Any	value(arg);
 

@@ -40,32 +40,85 @@ namespace bricksvm
 			_currentIndex = 0;
 		}
 
-		std::shared_ptr<Instruction>	Program::nextInstruction(Value const &retVal)
+		std::shared_ptr<Instruction> Program::resolveInstruction(Value const &retVal)
 		{
-			//if a parameter need to be resolved use retval to resolve it
+			return _resolver->resolve();
+		}
+
+		
+		std::shared_ptr<Instruction> Program::getCurrentInstruction()
+		{
+			std::shared_ptr<Instruction>	instruction;
+
 			if (_calls.empty())
 			{
 				if (_currentIndex < _instructions.size())
 				{
-					return _instructions[_currentIndex++];
+					instruction = _instructions[_currentIndex];
 				}
-				return std::shared_ptr<Instruction>(nullptr);
+				else
+				{
+					std::cout << "Program finished" << std::endl;
+				}
 			}
 			else
 			{
 				std::weak_ptr<Program>			subProgram = _calls.top();
-				std::shared_ptr<Instruction>	instruction;
 
-				instruction = subProgram.lock()->nextInstruction(retVal);
+				instruction = subProgram.lock()->getCurrentInstruction();
 				if (instruction == nullptr)
 				{
 					subProgram.lock()->reset();
 					_calls.pop();
 
-					return this->nextInstruction(retVal);
+					return this->getCurrentInstruction();
 				}
-				return instruction;
 			}
+			return instruction;
+		}
+
+		void Program::nextInstruction()
+		{
+			if (_calls.empty())
+			{
+				++_currentIndex;
+			}
+			else
+			{
+				std::weak_ptr<Program>			subProgram = _calls.top();
+
+				subProgram.lock()->nextInstruction();
+			}
+		}
+
+		std::shared_ptr<Instruction> Program::execute(Value const &retVal)
+		{
+			std::shared_ptr<Instruction>	currentInstruction = this->getCurrentInstruction();
+
+			if (_state == Execution 
+				&& currentInstruction 
+				&& !currentInstruction->parametersIsResolved())
+			{
+				_resolver = std::shared_ptr<InstructionResolver>(new InstructionResolver(*currentInstruction));
+				_state = ResolveInstruction;
+				return _resolver->resolve();
+			}
+			else if (_state == ResolveInstruction)
+			{
+				if (_resolver->isResolved())
+				{
+					_state = Execution;
+					_resolver = nullptr;
+					return this->execute(retVal);
+				}
+				_resolver->setResolvedValue(retVal);
+				return _resolver->resolve();
+			}
+			else
+			{
+				this->nextInstruction();
+			}
+			return currentInstruction;
 		}
 	}
 }

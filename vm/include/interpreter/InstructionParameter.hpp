@@ -11,13 +11,15 @@ namespace bricksvm
 		class InstructionParameter : public AParameter
 		{
 		public:
-			InstructionParameter(Instruction const &instruction);
+			InstructionParameter(std::shared_ptr<Instruction> &instruction);
 			~InstructionParameter();
 
-			Instruction const &getInstruction() const;
+			std::shared_ptr<Instruction> getInstruction();
+
+			std::shared_ptr<const Instruction> getInstruction() const;
 
 		private:
-			Instruction const	&_instruction;
+			std::shared_ptr<Instruction> _instruction;
 		};
 	}
 }

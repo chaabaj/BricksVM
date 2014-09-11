@@ -8,6 +8,7 @@
 # include <memory>
 # include "interpreter/Instruction.hpp"
 # include "interpreter/Value.hpp"
+# include "interpreter/InstructionResolver.hpp"
 
 namespace bricksvm
 {
@@ -19,7 +20,8 @@ namespace bricksvm
 
 			enum State
 			{
-				
+				ResolveInstruction,
+				Execution
 			};
 
 			Program();
@@ -29,20 +31,31 @@ namespace bricksvm
 
 			void addSubProgram(std::string const &progId, std::shared_ptr<Program> const &subProgram);
 
-			std::shared_ptr<Instruction>	nextInstruction(Value const &retVal);
+			std::shared_ptr<Instruction> execute(Value const &retVal);
 
 			void call(std::string const &name);
 
 			void reset();
+
+		private:
+
+			std::shared_ptr<Instruction> resolveInstruction(Value const &retVal);
+
+			void nextInstruction();
+
+			std::shared_ptr<Instruction> getCurrentInstruction();
+
 		private:
 			typedef std::map<std::string, std::shared_ptr<Program> >	SubProgramContainerType;
 			typedef std::vector<std::shared_ptr<Instruction> >			InstructionContainerType;
 			typedef std::stack<std::weak_ptr<Program> >					StackCallContainerType;
 			
-			SubProgramContainerType		_subPrograms;
-			InstructionContainerType	_instructions;
-			StackCallContainerType		_calls;
-			unsigned int				_currentIndex;
+			SubProgramContainerType					_subPrograms;
+			InstructionContainerType				_instructions;
+			StackCallContainerType					_calls;
+			unsigned int							_currentIndex;
+			State									_state;
+			std::shared_ptr<InstructionResolver>	_resolver;
 			
 		};
 	}

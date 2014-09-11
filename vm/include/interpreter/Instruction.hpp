@@ -21,10 +21,19 @@ namespace bricksvm
 			void setName(std::string const &str);
 			void addParameter(std::shared_ptr<AParameter> const &parameter);
 
-			ParameterContainerType	&getParameters();
-			std::string const		&getName() const;
+			ParameterContainerType		&getParameters();
+			
+			bool						parametersIsResolved() const;
+
+			void						resolveParameter(std::shared_ptr<AParameter> const &paramToResolve,
+														 std::shared_ptr<AParameter> const &resolvedValue);
+		
+			std::shared_ptr<AParameter> getUnresolvedParameter();
+
+			std::string const			&getName() const;
 
 		private:
+			bool					_isResolved;
 			std::string				_name;
 			ParameterContainerType	_parameters;
 			unsigned const int		_lineNumber;

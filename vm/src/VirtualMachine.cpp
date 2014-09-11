@@ -34,6 +34,7 @@ namespace bricksvm
 		std::string		progId = msg.getParameter<std::string>(1);
 		event::Message	response("instruction:finished", std::ref(*this), progId, interpreter::makeParameters(0));
 
+		std::cout << "Call instruction : " << progId << std::endl;
 		static_cast<VirtualMachine&>(thread).onInstructionFinished(thread, response);
 	}
 
@@ -58,7 +59,7 @@ namespace bricksvm
 	{
 		std::shared_ptr<interpreter::Instruction>	currentInstruction;
 
-		currentInstruction = prg->nextInstruction(retVal);
+		currentInstruction = prg->execute(retVal);
 		if (currentInstruction != nullptr)
 		{
 			this->executeInstruction(prgName, *currentInstruction);

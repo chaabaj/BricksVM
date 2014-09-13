@@ -19,9 +19,8 @@ namespace bricksvm
 		typedef interpreter::Instruction::ParameterContainerType	ParameterContainerType;
 
 		std::string										progId = msg.getParameter<std::string>(1);
-		ParameterContainerType							&params = msg.getParameter<ParameterContainerType>(2);
 		VirtualMachine::ProgramContainerType::iterator	it;
-		interpreter::Value const						&retVal = dynamic_cast<interpreter::ValueParameter&>(*params[0]).getValue();
+		interpreter::Value								&retVal = msg.getParameter<interpreter::Value>(2);
 		
 		if ((it = _programs.find(progId)) != _programs.end())
 		{
@@ -32,16 +31,36 @@ namespace bricksvm
 	void VirtualMachine::onCall(bricksvm::event::EventThread &thread, bricksvm::event::Message &msg)
 	{
 		std::string		progId = msg.getParameter<std::string>(1);
-		event::Message	response("instruction:finished", std::ref(*this), progId, interpreter::makeParameters(0));
+		VirtualMachine	&vm = msg.getParameter<VirtualMachine>(0);
+		event::Message	response("instruction:finished", std::ref(*this), progId, interpreter::Value(0));
 
 		std::cout << "Call instruction : " << progId << std::endl;
 		static_cast<VirtualMachine&>(thread).onInstructionFinished(thread, response);
+	}
+
+	void VirtualMachine::emit(std::string const &eventName, std::shared_ptr<event::Message> &msg)
+	{
+		if (this->hasEvent(eventName))
+		{
+			EventThread::emit(eventName, msg);
+		}
+		else
+		{
+			for (std::shared_ptr<EventThread> &device : _devices)
+			{
+				if (device->hasEvent(eventName))
+				{
+					device->emit(eventName, msg);
+				}
+			}
+		}
 	}
 
 	void VirtualMachine::addDevice(std::shared_ptr<event::EventThread> const &device)
 	{
 		_devices.push_back(device);
 	}
+
 
 	void VirtualMachine::addProgram(std::string const &name, std::shared_ptr<interpreter::Program> const &program)
 	{
@@ -50,7 +69,17 @@ namespace bricksvm
 
 	void VirtualMachine::executeInstruction(std::string const &progName, interpreter::Instruction &instruction)
 	{
-		this->emit(instruction.getName(), progName, instruction.getParameters());
+		std::shared_ptr<event::Message>	msg = std::shared_ptr<event::Message>(new event::Message(instruction.getName()));
+		interpreter::ValueParameter		*param;
+
+		msg->pushParameter(std::ref(*this));
+		msg->pushParameter(progName);
+		for (auto &elem : instruction.getParameters())
+		{
+			param = static_cast<interpreter::ValueParameter*>(elem.get());
+			msg->pushParameter(param->getValue());
+		}
+		this->emit(instruction.getName(), msg);
 	}
 
 	void VirtualMachine::nextInstruction(std::string const &prgName, 

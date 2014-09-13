@@ -13,6 +13,26 @@ namespace bricksvm
 		{
 			static const int value = sizeof...(Args);
 		};
+
+		template<typename T>
+		class TypeTraits
+		{
+			template<typename T>
+			struct isRefWrapper
+			{
+				static const bool value = false;
+			};
+
+			template<typename T>
+			struct isRefWrapper < std::reference_wrapper<T> >
+			{
+				static const bool value = true;
+			};
+
+		public:
+			static const bool is_ref_wrapper = isRefWrapper<T>::value;
+		};
+		
 	}
 }
 

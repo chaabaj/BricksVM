@@ -14,12 +14,12 @@ namespace bricksvm
 
 		}
 
-		std::shared_ptr<bricksvm::event::EventThread> DeviceLoader::load(std::string const &name)
+		std::shared_ptr<bricksvm::event::EventThread> DeviceLoader::load(std::string const &name, gason::JsonNode *val)
 		{
-			typedef bricksvm::event::EventThread* (*FunctionType)();
+			typedef bricksvm::event::EventThread* (*FunctionType)(gason::JsonNode *val);
 
 			FunctionType fun = _loader.get<FunctionType>(name, "construct");
-			return std::shared_ptr<bricksvm::event::EventThread>(fun());
+			return std::shared_ptr<bricksvm::event::EventThread>(fun(val));
 		}
 	}
 }

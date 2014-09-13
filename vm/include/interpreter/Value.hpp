@@ -63,8 +63,15 @@ namespace bricksvm
 				static const int type = Double;
 			};
 
+			
 			template<>
 			struct DetectType < std::string, sizeof(std::string) >
+			{
+				static const int type = String;
+			};
+
+			template<>
+			struct DetectType < const std::string, sizeof(std::string) >
 			{
 				static const int type = String;
 			};
@@ -92,7 +99,7 @@ namespace bricksvm
 			template<typename T>
 			inline operator T&()
 			{
-				assert(_type == TypeTraits<ScalarType>::type);
+				int test = TypeTraits<T>::type;
 				return _value.getValue<T>();
 			}
 
@@ -101,8 +108,6 @@ namespace bricksvm
 			bricksvm::core::Any	_value;
 			Type				_type;
 		};
-
-		
 
 	}
 

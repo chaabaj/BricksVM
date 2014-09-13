@@ -3,6 +3,7 @@
 
 # include <iostream>
 # include <memory>
+# include "core/Utils.hpp"
 
 namespace bricksvm
 {
@@ -12,13 +13,90 @@ namespace bricksvm
 		{
 		public:
 			virtual ~IValue() {}
+			virtual bool isRefWrapper() const = 0;
+		};
+
+		template<typename ValueType, bool isRefWrapper>
+		class ValueHolder
+		{
+		public:
+
+			typedef ValueType	ReturnType;
+
+			ValueHolder()
+			{
+
+			}
+
+			ValueHolder(ValueType &value) : _value(value)
+			{
+
+			}
+
+			~ValueHolder()
+			{
+
+			}
+
+			ReturnType &get()
+			{
+				return _value;
+			}
+
+			ReturnType const &get() const
+			{
+				return _value;
+			}
+
+		private:
+			ValueType	_value;
+		};
+
+		template<typename ValueType>
+		class ValueHolder <ValueType, true>
+		{
+		public:
+			typedef typename ValueType::type ReturnType;
+
+			ValueHolder()
+			{
+
+			}
+
+			ValueHolder(ValueType &value) : _value(value)
+			{
+
+			}
+
+			~ValueHolder()
+			{
+
+			}
+
+			ReturnType &get()
+			{
+				return _value.get();
+			}
+
+			ReturnType const &get() const
+			{
+				return _value.get();
+			}
+			
+		private:
+			ValueType	_value;
 		};
 
 		template<typename ValueType>
 		class Value : public IValue
 		{
 		public:
-			Value(ValueType &value) : _value(value)
+
+			typedef ValueHolder<ValueType, TypeTraits<ValueType>::is_ref_wrapper>	ValueHolderType;
+			typedef typename ValueHolderType::ReturnType							ReturnType;
+
+
+			Value(ValueType &value) : _valueHolder(ValueHolderType(value))
 			{
 			}
 
@@ -27,13 +105,24 @@ namespace bricksvm
 
 			}
 
-			ValueType &get()
+			bool isRefWrapper() const
 			{
-				return _value;
+				return TypeTraits<ValueType>::is_ref_wrapper;
+			}
+
+			ReturnType &get()
+			{
+				return _valueHolder.get();
+			}
+
+			ReturnType const &get() const
+			{
+				return _valueHolder.get();
 			}
 
 		private:
-			ValueType	_value;
+			
+			ValueHolderType	_valueHolder;
 		};
 
 		class Any
@@ -76,11 +165,16 @@ namespace bricksvm
 			template<typename ValueType>
 			ValueType &getValue()
 			{
+				if (_value->isRefWrapper())
+				{
+					return static_cast<Value<std::reference_wrapper<ValueType> >&>(*_value).get();
+				}
 				return static_cast<Value<ValueType> &>(*_value).get();
 			}
 
 		private:
 			std::shared_ptr<IValue>	_value;
+			bool					_isRefWrapper;
 		};
 	}
 }

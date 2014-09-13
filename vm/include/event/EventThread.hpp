@@ -34,6 +34,11 @@ namespace bricksvm
 				this->pushItem(msg);
 			}
 
+			void emit(std::string const &eventName, std::shared_ptr<Message> &msg)
+			{
+				this->pushItem(msg);
+			}
+
 			std::string const &getName() const;
 
 			template<typename FunctionType>

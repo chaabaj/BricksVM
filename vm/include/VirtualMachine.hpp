@@ -5,6 +5,7 @@
 # include <istream>
 # include "interpreter/Program.hpp"
 # include "event/EventThread.hpp"
+# include "event/Message.hpp"
 # include "event/ParallelEventThread.hpp"
 
 namespace bricksvm
@@ -35,24 +36,8 @@ namespace bricksvm
 							 std::shared_ptr<interpreter::Program> &prg, 
 							 interpreter::Value const &retVal);
 
-		template<typename ... Args>
-		void emit(std::string eventName, Args ... args)
-		{
-			if (this->hasEvent(eventName))
-			{
-				EventThread::emit(eventName, std::ref(*this), args...);
-			}
-			else
-			{
-				for (std::shared_ptr<EventThread> &device : _devices)
-				{
-					if (device->hasEvent(eventName))
-					{
-						device->emit(eventName, std::ref(*this), args...);
-					}
-				}
-			}		
-		}
+		void emit(std::string const &eventName, std::shared_ptr<event::Message> &msg);
+
 
 	private:
 		typedef std::vector<std::shared_ptr<event::EventThread> >				EventThreadContainerType;

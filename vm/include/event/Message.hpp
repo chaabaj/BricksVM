@@ -28,8 +28,15 @@ namespace bricksvm
 
 			Message &operator=(Message const &other);
 
-
 			std::string const &getName() const;
+
+		    template<typename ArgType>
+			void pushParameter(ArgType &&arg)
+			{
+				bricksvm::core::Any	value(arg);
+
+				_parameters.push_back(value);
+			}
 
 			template<typename ValueType>
 			ValueType	&getParameter(unsigned int index)
@@ -50,14 +57,6 @@ namespace bricksvm
 
 				_parameters.push_back(value);
 				this->pushParameter(args...);
-			}
-
-			template<typename ArgType>
-			void pushParameter(ArgType &&arg)
-			{
-				bricksvm::core::Any	value(arg);
-
-				_parameters.push_back(value);
 			}
 
 		private:

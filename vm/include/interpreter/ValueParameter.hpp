@@ -15,6 +15,7 @@ namespace bricksvm
 			ValueParameter(Value const &&value);
 			~ValueParameter();
 
+
 			Value const	&getValue() const;
 
 		private:

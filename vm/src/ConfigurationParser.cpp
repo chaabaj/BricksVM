@@ -25,18 +25,23 @@ namespace bricksvm
 		
 		if (fileStream.is_open())
 		{
-			while (fileStream.read(buf, 4096))
+			std::cout << "Config file opened" << std::endl;
+			while (!fileStream.eof())
 			{
+				fileStream.read(buf, 4096);
 				jsonStream.write(buf, fileStream.gcount());
 			}
+			
 			char *src = const_cast<char*>(jsonStream.str().c_str());
+			std::cout << "json src" << jsonStream.str() << std::endl;
 			gason::JsonValue		root;
 			gason::JsonAllocator	allocator;
 
 			gason::JsonParseStatus status = gason::jsonParse(src, &endPtr, &root, allocator);
-			
+
 			if (status == gason::JSON_PARSE_OK)
 			{
+				std::cout << "ok" << std::endl;
 				this->parse(vm, root);
 			}
 			else
@@ -81,6 +86,7 @@ namespace bricksvm
 		{
 			if (deviceConfig->value.getTag() == gason::JSON_TAG_OBJECT)
 			{
+				libName = "";
 				for (auto obj : deviceConfig->value)
 				{
 					if (obj->key == "path")
@@ -91,6 +97,10 @@ namespace bricksvm
 					{
 						config = obj;
 					}
+				}
+				if (libName == "")
+				{
+					throw std::runtime_error("Missing path for the device");
 				}
 				device = core::Singleton<device::DeviceLoader>::get()->load(libName, config);
 				vm.addDevice(device);

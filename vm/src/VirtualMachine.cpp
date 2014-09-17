@@ -34,7 +34,6 @@ namespace bricksvm
 		VirtualMachine	&vm = msg.getParameter<VirtualMachine>(0);
 		event::Message	response("instruction:finished", std::ref(*this), progId, interpreter::Value(0));
 
-		std::cout << "Call instruction : " << progId << std::endl;
 		static_cast<VirtualMachine&>(thread).onInstructionFinished(thread, response);
 	}
 

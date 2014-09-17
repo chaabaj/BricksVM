@@ -174,7 +174,6 @@ namespace bricksvm
 
 		private:
 			std::shared_ptr<IValue>	_value;
-			bool					_isRefWrapper;
 		};
 	}
 }

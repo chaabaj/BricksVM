@@ -14,7 +14,7 @@ namespace bricksvm
 		class InstructionResolver
 		{
 		public:
-			InstructionResolver(Instruction &instructionToResolve);
+			InstructionResolver(std::shared_ptr<Instruction> const &instructionToResolve);
 			~InstructionResolver();
 
 			void setResolvedValue(Value const &resolvedValue);
@@ -32,8 +32,8 @@ namespace bricksvm
 
 			typedef std::list<std::shared_ptr<AParameter> >	ParameterContainerType;
 
-			ParameterContainerType		_paramsToResolve;
-			Instruction					&_instructionToResolve;
+			ParameterContainerType			_paramsToResolve;
+			std::shared_ptr<Instruction>	_instructionToResolve;
 			
 		};
 	}

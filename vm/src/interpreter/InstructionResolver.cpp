@@ -6,7 +6,7 @@ namespace bricksvm
 {
 	namespace interpreter
 	{
-		InstructionResolver::InstructionResolver(Instruction &instructionToResolve) : _instructionToResolve(instructionToResolve)
+		InstructionResolver::InstructionResolver(std::shared_ptr<Instruction> const &instructionToResolve) : _instructionToResolve(instructionToResolve)
 		{
 			this->next();
 		}
@@ -18,7 +18,7 @@ namespace bricksvm
 
 		bool InstructionResolver::isResolved() const
 		{
-			return _paramsToResolve.size() && _instructionToResolve.parametersIsResolved();
+			return _paramsToResolve.size() && _instructionToResolve->parametersIsResolved();
 		}
 
 		std::shared_ptr<Instruction> InstructionResolver::resolve()
@@ -50,9 +50,9 @@ namespace bricksvm
 					this->next();
 				}
 			}
-			else if (!_instructionToResolve.parametersIsResolved())
+			else if (!_instructionToResolve->parametersIsResolved())
 			{
-				auto newParam = _instructionToResolve.getUnresolvedParameter();
+				auto newParam = _instructionToResolve->getUnresolvedParameter();
 				
 				_paramsToResolve.push_back(newParam);
 				this->next();
@@ -67,7 +67,7 @@ namespace bricksvm
 			_paramsToResolve.pop_back();
 			if (_paramsToResolve.empty())
 			{
-				_instructionToResolve.resolveParameter(paramToResolve, resolvedValueParam);
+				_instructionToResolve->resolveParameter(paramToResolve, resolvedValueParam);
 			}
 			else
 			{

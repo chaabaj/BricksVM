@@ -14,6 +14,11 @@ namespace bricksvm
 
 		}
 
+		std::shared_ptr<AParameter> InstructionParameter::clone() const
+		{
+			return std::shared_ptr<AParameter>(new InstructionParameter(_instruction->clone()));
+		}
+
 		std::shared_ptr<Instruction> InstructionParameter::getInstruction()
 		{
 			return _instruction;

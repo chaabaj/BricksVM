@@ -99,7 +99,7 @@ namespace bricksvm
 				&& currentInstruction 
 				&& !currentInstruction->parametersIsResolved())
 			{
-				_resolver = std::shared_ptr<InstructionResolver>(new InstructionResolver(*currentInstruction));
+				_resolver = std::shared_ptr<InstructionResolver>(new InstructionResolver(currentInstruction->clone()));
 				_state = ResolveInstruction;
 				return _resolver->resolve();
 			}

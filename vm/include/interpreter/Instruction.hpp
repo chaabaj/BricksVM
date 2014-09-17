@@ -3,13 +3,15 @@
 
 # include <vector>
 # include <memory>
+# include "core/IClonable.hpp"
+# include "core/NonCopyable.hpp"
 # include "interpreter/AParameter.hpp"
 
 namespace bricksvm
 {
 	namespace interpreter
 	{
-		class Instruction
+		class Instruction : public bricksvm::core::IClonable<Instruction>
 		{
 		public:
 
@@ -17,6 +19,8 @@ namespace bricksvm
 
 			Instruction(unsigned const int lineNumber);
 			~Instruction();
+
+			std::shared_ptr<Instruction> clone() const;
 
 			void setName(std::string const &str);
 			void addParameter(std::shared_ptr<AParameter> const &parameter);

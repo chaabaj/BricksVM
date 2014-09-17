@@ -1,5 +1,6 @@
 #include <algorithm>
 #include "interpreter/Instruction.hpp"
+#include "interpreter/InstructionParameter.hpp"
 
 namespace bricksvm
 {
@@ -13,6 +14,30 @@ namespace bricksvm
 		Instruction::~Instruction()
 		{
 
+		}
+
+		std::shared_ptr<Instruction> Instruction::clone() const
+		{
+			std::shared_ptr<Instruction>	clonedInstruction = std::shared_ptr<Instruction>(new Instruction(_lineNumber));
+
+			clonedInstruction->_isResolved = _isResolved;
+			for (std::shared_ptr<AParameter> param : _parameters)
+			{
+				InstructionParameter *instructionParam;
+
+				if (param->getType() == AParameter::InstructionType)
+				{
+					instructionParam = dynamic_cast<InstructionParameter*>(param.get());
+					clonedInstruction->addParameter(instructionParam->clone());
+				}
+				else
+				{
+					clonedInstruction->addParameter(param);
+				}
+
+			}
+			clonedInstruction->_name = _name;
+			return clonedInstruction;
 		}
 
 		void Instruction::setName(std::string const &name)

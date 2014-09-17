@@ -1,5 +1,5 @@
 #include "VirtualMachine.hpp"
-#include "interpreter/Utils.hpp"
+#include "interpreter/ValueParameter.hpp"
 
 namespace bricksvm
 {

@@ -7,10 +7,11 @@
 # include "event/EventThread.hpp"
 # include "event/Message.hpp"
 # include "event/ParallelEventThread.hpp"
+# include "core/NonCopyable.hpp"
 
 namespace bricksvm
 {
-	class VirtualMachine : public event::ParallelEventThread
+	class VirtualMachine : public event::ParallelEventThread<4>, public core::NonCopyable
 	{
 	public:
 

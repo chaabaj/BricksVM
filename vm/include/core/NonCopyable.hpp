@@ -7,6 +7,7 @@ namespace bricksvm
 	{
 		class NonCopyable
 		{
+			NonCopyable() = default;
 			NonCopyable(NonCopyable const &other) = delete;
 			NonCopyable &operator=(NonCopyable const &other) = delete;
 		};

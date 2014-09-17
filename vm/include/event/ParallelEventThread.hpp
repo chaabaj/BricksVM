@@ -8,19 +8,35 @@ namespace bricksvm
 {
 	namespace event
 	{
+		template<int nbThread>
 		class ParallelEventThread : public EventThread
 		{
 		public:
-			ParallelEventThread(std::string const &name);
+			ParallelEventThread(std::string const &name) : EventThread(name),
+														   _pool(bricksvm::thread::WorkerPool(_nbWorker))
+			{
 
-			~ParallelEventThread();
+			}
 
-			void broadcastMsg(std::shared_ptr<Message> &msg);
+			~ParallelEventThread()
+			{
+
+			}
+
+			void broadcastMsg(std::shared_ptr<Message> &msg)
+			{
+				_pool.dispatch([msg, this]()
+				{
+					auto cpyMsg = msg;
+
+					EventThread::broadcastMsg(cpyMsg);
+				});
+			}
 
 		private:
 			bricksvm::thread::WorkerPool	_pool;
 
-			static const unsigned int		_nbWorker = 4;
+			static const unsigned int		_nbWorker = nbThread;
 		};
 	}
 }

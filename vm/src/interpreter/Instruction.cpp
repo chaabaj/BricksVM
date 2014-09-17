@@ -32,6 +32,7 @@ namespace bricksvm
 				}
 				else
 				{
+					/// Don't need to clone a value just keep a reference to the value
 					clonedInstruction->addParameter(param);
 				}
 

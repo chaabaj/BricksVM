@@ -3,7 +3,7 @@
 
 namespace bricksvm
 {
-	VirtualMachine::VirtualMachine() : event::ParallelEventThread("VM")
+	VirtualMachine::VirtualMachine() : event::ParallelEventThread<4>("VM")
 	{
 		this->on("instruction:finished", std::bind(&VirtualMachine::onInstructionFinished, this, std::placeholders::_1, std::placeholders::_2));
 		this->on("call", std::bind(&VirtualMachine::onCall, this, std::placeholders::_1, std::placeholders::_2));

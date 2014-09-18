@@ -1,8 +1,9 @@
 #ifndef __BRICKSVM_CONFIGURATIONPARSER_HPP__
 # define __BRICKSVM_CONFIGURATIONPARSER_HPP__
 
-# include "gason/gason.hpp"
 # include "VirtualMachine.hpp"
+# include "rapidjson/rapidjson.h"
+# include "rapidjson/document.h"
 
 namespace bricksvm
 {
@@ -15,9 +16,8 @@ namespace bricksvm
 		void parse(VirtualMachine &vm);
 
 	private:
-		void parse(VirtualMachine &vm, gason::JsonValue &val);
 
-		void parseDevice(VirtualMachine &vm, gason::JsonValue &val);
+		void parseDevice(VirtualMachine &vm, rapidjson::Value &deviceConfig);
 
 	private:
 		std::string const	_configFile;

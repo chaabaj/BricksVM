@@ -2,6 +2,7 @@
 #include "core/Singleton.hpp"
 #include "device/DeviceLoader.hpp"
 #include "event/EventThread.hpp"
+#include "exception/FileNotFoundException.hpp"
 #include "ConfigurationParser.hpp"
 
 namespace bricksvm
@@ -21,91 +22,42 @@ namespace bricksvm
 		char				*endPtr;
 		char				buf[4096];
 		std::stringstream	jsonStream;
+		rapidjson::Document	root;
 		std::ifstream		fileStream(_configFile);
 		
 		if (fileStream.is_open())
 		{
-			std::cout << "Config file opened" << std::endl;
 			while (!fileStream.eof())
 			{
 				fileStream.read(buf, 4096);
 				jsonStream.write(buf, fileStream.gcount());
 			}
-			
-			char *src = const_cast<char*>(jsonStream.str().c_str());
-			std::cout << "json src" << jsonStream.str() << std::endl;
-			gason::JsonValue		root;
-			gason::JsonAllocator	allocator;
+			root.Parse(jsonStream.str().c_str());
+		}
+		else
+		{
+			throw exception::FileNotFoundException("Cannot find config file");
+		}
 
-			gason::JsonParseStatus status = gason::jsonParse(src, &endPtr, &root, allocator);
+		rapidjson::Value &devices = root["devices"];
 
-			if (status == gason::JSON_PARSE_OK)
-			{
-				std::cout << "ok" << std::endl;
-				this->parse(vm, root);
-			}
-			else
-			{
-				throw std::runtime_error("Bad json file");
-			}
+		for (auto it = devices.Begin(); it != devices.End(); ++it)
+		{
+			this->parseDevice(vm, *it);
 		}
 	}
 
-	void ConfigurationParser::parse(VirtualMachine &vm, gason::JsonValue &val)
+	void ConfigurationParser::parseDevice(VirtualMachine &vm, rapidjson::Value &deviceConfig)
 	{
-		switch (val.getTag())
-		{
-			case gason::JSON_TAG_OBJECT:
-			{
-				for (auto obj : val)
-				{
-					if (obj->key == "devices")
-					{
-						if (obj->value.getTag() == gason::JSON_TAG_ARRAY)
-						{
-							this->parseDevice(vm, obj->value);
-						}
-						else
-						{
-							throw std::runtime_error("devices must be an object array");
-						}
-					}
-				}
-			}
-		}
-	}
+		std::string			file;
+		rapidjson::Value	*config = nullptr;
 
-	void ConfigurationParser::parseDevice(VirtualMachine &vm, gason::JsonValue &devicesConfig)
-	{
-		std::string							libName;
-		std::shared_ptr<event::EventThread>	device;
-		gason::JsonNode						*config;
-		
-
-		for (auto deviceConfig : devicesConfig)
+		file = deviceConfig["file"].GetString();
+		if (deviceConfig.HasMember("config"))
 		{
-			if (deviceConfig->value.getTag() == gason::JSON_TAG_OBJECT)
-			{
-				libName = "";
-				for (auto obj : deviceConfig->value)
-				{
-					if (obj->key == "path")
-					{
-						libName = obj->value.toString();
-					}
-					else if (obj->key == "config")
-					{
-						config = obj;
-					}
-				}
-				if (libName == "")
-				{
-					throw std::runtime_error("Missing path for the device");
-				}
-				device = core::Singleton<device::DeviceLoader>::get()->load(libName, config);
-				vm.addDevice(device);
-			}
+			config = &deviceConfig["config"];
 		}
+		vm.addDevice(core::Singleton<device::DeviceLoader>::get()->load(file, config));
 	}
 
 }

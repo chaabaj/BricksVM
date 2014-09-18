@@ -3,7 +3,8 @@
 
 # include "core/LibraryLoader.hpp"
 # include "event/EventThread.hpp"
-# include "gason/gason.hpp"
+# include "rapidjson/rapidjson.h"
+# include "rapidjson/document.h"
 
 
 namespace bricksvm
@@ -18,7 +19,7 @@ namespace bricksvm
 			~DeviceLoader();
 
 			std::shared_ptr<bricksvm::event::EventThread>	load(std::string const &name, 
-																 gason::JsonNode *val);
+																 rapidjson::Value *val);
 
 		private:
 			bricksvm::core::LibraryLoader	_loader;

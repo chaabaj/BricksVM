@@ -1,4 +1,5 @@
 #include "interpreter/Program.hpp"
+#include "exception/InvalidInstructionException.hpp"
 
 namespace bricksvm
 {
@@ -30,7 +31,7 @@ namespace bricksvm
 
 			if ((it = _subPrograms.find(name)) == _subPrograms.end())
 			{
-				throw std::runtime_error("No such label : " + name);
+				throw exception::InvalidInstructionException("Label not found : " + name);
 			}
 			_calls.push(std::weak_ptr<Program>(it->second));
 		}
@@ -55,10 +56,6 @@ namespace bricksvm
 				if (_currentIndex < _instructions.size())
 				{
 					instruction = _instructions[_currentIndex];
-				}
-				else
-				{
-					std::cout << "Program finished" << std::endl;
 				}
 			}
 			else

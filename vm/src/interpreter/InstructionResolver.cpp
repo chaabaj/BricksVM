@@ -1,6 +1,7 @@
 #include "interpreter/InstructionResolver.hpp"
 #include "interpreter/ValueParameter.hpp"
 #include "interpreter/InstructionParameter.hpp"
+#include "exception/InvalidInstructionException.hpp"
 
 namespace bricksvm
 {
@@ -25,7 +26,7 @@ namespace bricksvm
 		{
 			if (_paramsToResolve.empty())
 			{
-				throw std::runtime_error("No parameter to resolve");
+				throw exception::InvalidInstructionException("No such parameter to resolve");
 			}
 			else
 			{

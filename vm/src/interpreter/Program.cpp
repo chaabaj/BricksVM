@@ -1,5 +1,6 @@
 #include "interpreter/Program.hpp"
 #include "exception/InvalidInstructionException.hpp"
+#include "exception/StackOverflowException.hpp"
 
 namespace bricksvm
 {
@@ -34,6 +35,10 @@ namespace bricksvm
 				throw exception::InvalidInstructionException("Label not found : " + name);
 			}
 			_calls.push(std::weak_ptr<Program>(it->second));
+			if (_calls.size() > Program::_maxStackSize)
+			{
+				throw exception::StackOverflowException();
+			}
 		}
 
 		void Program::reset()

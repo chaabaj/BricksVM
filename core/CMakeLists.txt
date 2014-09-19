@@ -15,12 +15,9 @@ endif()
 find_package (Threads)
 
 
-#set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ../lib)
-
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ../../lib)
 
 include_directories(include)
-
-
 
 add_library(bricksvm_core SHARED ${SRCS} ${HEADERS})
 

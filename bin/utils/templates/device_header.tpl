@@ -15,8 +15,8 @@ namespace bricksvm
 			
 				$name(rapidjson::Value *config);
 				~$name();
-		}
-	};
+		};
+	}
 }
 
 #endif

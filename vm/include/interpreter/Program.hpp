@@ -57,6 +57,8 @@ namespace bricksvm
 			State									_state;
 			std::shared_ptr<InstructionResolver>	_resolver;
 			
+			static const int						_maxStackSize = 100000000;
+			
 		};
 	}
 }

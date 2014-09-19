@@ -6,13 +6,14 @@
 # include <thread>
 # include <condition_variable>
 # include <list>
+# include "core/DllExport.hpp"
 
 namespace bricksvm
 {
 	namespace thread
 	{
 		template<typename ItemType>
-		class AbstractWorker
+		class EXPORT_DLL AbstractWorker
 		{
 		public:
 			typedef std::unique_lock<std::mutex>	LockType;

@@ -3,13 +3,14 @@
 
 # include "event/EventThread.hpp"
 # include "thread/WorkerPool.hpp"
+# include "core/DllExport.hpp"
 
 namespace bricksvm
 {
 	namespace event
 	{
 		template<int nbThread>
-		class ParallelEventThread : public EventThread
+		class EXPORT_DLL ParallelEventThread : public EventThread
 		{
 		public:
 			ParallelEventThread(std::string const &name) : EventThread(name),

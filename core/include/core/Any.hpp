@@ -10,7 +10,7 @@ namespace bricksvm
 {
 	namespace core
 	{
-		class IValue
+		class EXPORT_DLL IValue
 		{
 		public:
 			virtual ~IValue() {}
@@ -18,7 +18,7 @@ namespace bricksvm
 		};
 
 		template<typename ValueType, bool isRefWrapper>
-		class ValueHolder
+		class EXPORT_DLL ValueHolder
 		{
 		public:
 
@@ -54,7 +54,7 @@ namespace bricksvm
 		};
 
 		template<typename ValueType>
-		class ValueHolder <ValueType, true>
+		class EXPORT_DLL ValueHolder <ValueType, true>
 		{
 		public:
 			typedef typename ValueType::type ReturnType;

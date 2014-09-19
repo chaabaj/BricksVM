@@ -1,12 +1,14 @@
 #ifndef __BRICKSVM_CORE_SINGLETON_HPP__
 # define __BRICKSVM_CORE_SINGLETON_HPP__
 
+# include "core/DllExport.hpp"
+
 namespace bricksvm
 {
 	namespace core
 	{
 		template<typename T>
-		class Singleton
+		class EXPORT_DLL Singleton
 		{
 		public:
 

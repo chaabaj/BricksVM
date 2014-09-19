@@ -5,13 +5,14 @@
 # include <list>
 # include <functional>
 # include "core/Any.hpp"
+# include "core/DllExport.hpp"
 
 namespace bricksvm
 {
 	namespace event
 	{
 		template<typename Signature>
-		class Channel
+		class EXPORT_DLL Channel
 		{
 		public:
 

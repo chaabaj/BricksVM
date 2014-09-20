@@ -35,9 +35,9 @@ namespace bricksvm
                 lessWorker->pushItem(stdFn);
             }
         private:
-            typedef std::vector<std::shared_ptr<Worker> >	WorkerContainerType;
+            typedef std::vector<std::shared_ptr<Worker> >   WorkerContainerType;
 
-            WorkerContainerType	_workers;
+            WorkerContainerType _workers;
         };
     }
 }

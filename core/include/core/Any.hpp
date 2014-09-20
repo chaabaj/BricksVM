@@ -30,7 +30,7 @@ namespace bricksvm
 		{
 		public:
 
-			typedef ValueType	ReturnType;
+			typedef ValueType   ReturnType;
 
 			ValueHolder()
 			{
@@ -58,7 +58,7 @@ namespace bricksvm
 			}
 
 		private:
-			ValueType	_value;
+			ValueType   _value;
 		};
 
 
@@ -72,7 +72,7 @@ namespace bricksvm
 		class EXPORT_DLL ValueHolder <ValueType, true>
 		{
 		public:
-			typedef typename ValueType::type ReturnType;
+			typedef typename ValueType::type    ReturnType;
 
 			ValueHolder()
 			{
@@ -100,7 +100,7 @@ namespace bricksvm
 			}
 			
 		private:
-			ValueType	_value;
+			ValueType   _value;
 		};
 
 		/**
@@ -112,8 +112,8 @@ namespace bricksvm
 		{
 		public:
 
-			typedef ValueHolder<ValueType, TypeTraits<ValueType>::is_ref_wrapper>	ValueHolderType;
-			typedef typename ValueHolderType::ReturnType							ReturnType;
+			typedef ValueHolder<ValueType, TypeTraits<ValueType>::is_ref_wrapper>   ValueHolderType;
+			typedef typename ValueHolderType::ReturnType                            ReturnType;
 
 
 			Value(ValueType &value) : _valueHolder(ValueHolderType(value))
@@ -142,7 +142,7 @@ namespace bricksvm
 
 		private:
 			
-			ValueHolderType	_valueHolder;
+			ValueHolderType _valueHolder;
 		};
 
 
@@ -208,7 +208,7 @@ namespace bricksvm
 
 		private:
 
-			std::shared_ptr<IValue>	_value;
+			std::shared_ptr<IValue> _value;
 		};
 	}
 }

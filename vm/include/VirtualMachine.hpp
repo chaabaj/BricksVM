@@ -44,8 +44,8 @@ namespace bricksvm
         typedef std::vector<std::shared_ptr<event::EventThread> >				EventThreadContainerType;
         typedef std::map<std::string, std::shared_ptr<interpreter::Program> >	ProgramContainerType;
 
-        ProgramContainerType		_programs;
-        EventThreadContainerType	_devices;
+        ProgramContainerType        _programs;
+        EventThreadContainerType    _devices;
     };
 }
 

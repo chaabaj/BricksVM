@@ -51,14 +51,14 @@ namespace bricksvm
             typedef std::vector<std::shared_ptr<Instruction> >			InstructionContainerType;
             typedef std::stack<std::weak_ptr<Program> >					StackCallContainerType;
 
-            SubProgramContainerType					_subPrograms;
-            InstructionContainerType				_instructions;
-            StackCallContainerType					_calls;
-            unsigned int							_currentIndex;
-            State									_state;
-            std::shared_ptr<InstructionResolver>	_resolver;
+            SubProgramContainerType                 _subPrograms;
+            InstructionContainerType                _instructions;
+            StackCallContainerType                  _calls;
+            unsigned int                            _currentIndex;
+            State                                   _state;
+            std::shared_ptr<InstructionResolver>    _resolver;
 
-            static const int						_maxStackSize = 100000000;
+            static const int                        _maxStackSize = 100000000;
 
         };
     }

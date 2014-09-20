@@ -21,7 +21,7 @@ namespace bricksvm
             Type const &getType() const;
 
         protected:
-            Type	_type;
+            Type    _type;
         };
     }
 }

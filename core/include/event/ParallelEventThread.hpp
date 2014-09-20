@@ -37,9 +37,9 @@ namespace bricksvm
             }
 
         private:
-            bricksvm::thread::WorkerPool	_pool;
+            bricksvm::thread::WorkerPool    _pool;
 
-            static const unsigned int		_nbWorker = nbThread;
+            static const unsigned int       _nbWorker = nbThread;
         };
     }
 }

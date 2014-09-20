@@ -38,10 +38,10 @@ namespace bricksvm
             std::string const			&getName() const;
 
         private:
-            bool					_isResolved;
-            std::string				_name;
-            ParameterContainerType	_parameters;
-            unsigned const int		_lineNumber;
+            bool                    _isResolved;
+            std::string             _name;
+            ParameterContainerType  _parameters;
+            unsigned const int      _lineNumber;
         };
     }
 }

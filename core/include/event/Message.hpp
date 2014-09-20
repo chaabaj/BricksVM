@@ -65,8 +65,8 @@ namespace bricksvm
 
             typedef std::vector<bricksvm::core::Any>	ParameterContainerType;
 
-            std::string				_name;
-            ParameterContainerType	_parameters;
+            std::string             _name;
+            ParameterContainerType  _parameters;
 
         };
     }

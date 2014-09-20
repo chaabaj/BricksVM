@@ -25,7 +25,7 @@ namespace bricksvm
             std::shared_ptr<const Instruction> getInstruction() const;
 
         private:
-            std::shared_ptr<Instruction> _instruction;
+            std::shared_ptr<Instruction>    _instruction;
         };
     }
 }

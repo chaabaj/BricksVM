@@ -68,12 +68,12 @@ namespace bricksvm
             void processItems(ItemContainerType &items);
 
         private:
-            typedef Channel<void(EventThread&, Message&)>	ChannelType;
-            typedef	std::map<std::string, ChannelType>		ChannelContainerType;
+            typedef Channel<void(EventThread&, Message&)>   ChannelType;
+            typedef	std::map<std::string, ChannelType>      ChannelContainerType;
 
 
-            std::string const		_name;
-            ChannelContainerType	_channels;
+            std::string const       _name;
+            ChannelContainerType    _channels;
         };
     }
 }

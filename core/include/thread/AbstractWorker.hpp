@@ -123,11 +123,11 @@ namespace bricksvm
             virtual void processItems(ItemContainerType &items) = 0;
 
         private:
-            bool					_started;
-            std::condition_variable	_condVar;
-            std::mutex				_mutex;
-            std::thread				_thread;
-            ItemContainerType		_items;
+            bool                    _started;
+            std::condition_variable _condVar;
+            std::mutex              _mutex;
+            std::thread             _thread;
+            ItemContainerType       _items;
         };
     }
 }

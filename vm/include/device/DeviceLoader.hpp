@@ -22,7 +22,7 @@ namespace bricksvm
                                                                  rapidjson::Value *val);
 
         private:
-            bricksvm::core::LibraryLoader	_loader;
+            bricksvm::core::LibraryLoader   _loader;
 
         };
     }

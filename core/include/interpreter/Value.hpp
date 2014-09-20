@@ -109,8 +109,8 @@ namespace bricksvm
             ~Value() {}
 
         private:
-            bricksvm::core::Any	_value;
-            Type				_type;
+            bricksvm::core::Any _value;
+            Type                _type;
         };
 
     }

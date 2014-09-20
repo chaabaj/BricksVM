@@ -10,8 +10,10 @@
 # ifdef WIN32
 #  include <Windows.h>
 # elif __gnu_linux__
+#  typedef int HMODULE;
 #  include <dlfnc.h>
 #endif
+
 
 namespace bricksvm
 {
@@ -20,7 +22,8 @@ namespace bricksvm
         class EXPORT_DLL LibraryLoader
         {
         public:
-            typedef std::conditional<WINDOWS, HMODULE, void*>::type	DynamicLibraryType;
+
+            typedef std::conditional<WINDOWS, HMODULE, void*>::type DynamicLibraryType;
 
             LibraryLoader();
 
@@ -53,7 +56,7 @@ namespace bricksvm
             void unload(DynamicLibraryType &lib);
 
         private:
-            std::map<std::string, DynamicLibraryType>	_libraries;
+            std::map<std::string, DynamicLibraryType>   _libraries;
         };
     }
 }

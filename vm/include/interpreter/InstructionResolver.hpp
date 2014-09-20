@@ -33,8 +33,8 @@ namespace bricksvm
 
             typedef std::list<std::shared_ptr<AParameter> >	ParameterContainerType;
 
-            ParameterContainerType			_paramsToResolve;
-            std::shared_ptr<Instruction>	_instructionToResolve;
+            ParameterContainerType          _paramsToResolve;
+            std::shared_ptr<Instruction>    _instructionToResolve;
 
         };
     }

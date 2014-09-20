@@ -18,7 +18,7 @@ namespace bricksvm
 		{
 		public:
 
-			typedef std::function<Signature>	FunctionType;
+			typedef std::function<Signature>    FunctionType;
 
 			Channel()
 			{
@@ -48,9 +48,9 @@ namespace bricksvm
 			}
 
 		private:
-			typedef std::list<FunctionType >	ListenerContainerType;
+			typedef std::list<FunctionType >    ListenerContainerType;
 
-			ListenerContainerType	_listeners;
+			ListenerContainerType   _listeners;
 		};
 	}
 }

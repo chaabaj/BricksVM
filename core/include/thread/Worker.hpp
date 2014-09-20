@@ -14,7 +14,7 @@ namespace bricksvm
                                   public bricksvm::core::NewPolicy < Worker >
         {
         public:
-            typedef AbstractWorker<std::function<void()> >	ParentClass;
+            typedef AbstractWorker<std::function<void()> >  ParentClass;
 
             Worker();
 

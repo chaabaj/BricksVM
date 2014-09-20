@@ -7,22 +7,22 @@
 
 namespace bricksvm
 {
-	class ConfigurationParser
-	{
-	public:
-		ConfigurationParser(std::string const &configFile);
-		~ConfigurationParser();
+    class ConfigurationParser
+    {
+    public:
+        ConfigurationParser(std::string const &configFile);
+        ~ConfigurationParser();
 
-		void parse(VirtualMachine &vm);
+        void parse(VirtualMachine &vm);
 
-	private:
+    private:
 
-		void parseDevice(VirtualMachine &vm, rapidjson::Value &deviceConfig);
+        void parseDevice(VirtualMachine &vm, rapidjson::Value &deviceConfig);
 
-	private:
-		std::string const	_configFile;
-		std::string			_rootPath;
-	};
+    private:
+        std::string const   _configFile;
+        std::string         _rootPath;
+    };
 }
 
 #endif

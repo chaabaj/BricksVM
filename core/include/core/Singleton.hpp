@@ -32,7 +32,7 @@ namespace bricksvm
             Singleton();
             ~Singleton();
         private:
-            static T	*_instance;
+            static T    *_instance;
         };
 
         template<typename T>

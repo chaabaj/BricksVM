@@ -9,12 +9,13 @@
 # include "interpreter/Instruction.hpp"
 # include "interpreter/Value.hpp"
 # include "interpreter/InstructionResolver.hpp"
+# include "core/NewPolicy.hpp"
 
 namespace bricksvm
 {
 	namespace interpreter
 	{
-		class Program
+		class Program : public bricksvm::core::NewPolicy<Program>
 		{
 		public:
 
@@ -56,6 +57,8 @@ namespace bricksvm
 			unsigned int							_currentIndex;
 			State									_state;
 			std::shared_ptr<InstructionResolver>	_resolver;
+			
+			static const int						_maxStackSize = 100000000;
 			
 		};
 	}

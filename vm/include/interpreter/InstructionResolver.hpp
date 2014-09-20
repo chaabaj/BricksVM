@@ -6,15 +6,16 @@
 # include "interpreter/Value.hpp"
 # include "interpreter/AParameter.hpp"
 # include "interpreter/Instruction.hpp"
+# include "core/NewPolicy.hpp"
 
 namespace bricksvm
 {
 	namespace interpreter
 	{
-		class InstructionResolver
+		class InstructionResolver : public bricksvm::core::NewPolicy<InstructionResolver>
 		{
 		public:
-			InstructionResolver(Instruction &instructionToResolve);
+			InstructionResolver(std::shared_ptr<Instruction> const &instructionToResolve);
 			~InstructionResolver();
 
 			void setResolvedValue(Value const &resolvedValue);
@@ -32,8 +33,8 @@ namespace bricksvm
 
 			typedef std::list<std::shared_ptr<AParameter> >	ParameterContainerType;
 
-			ParameterContainerType		_paramsToResolve;
-			Instruction					&_instructionToResolve;
+			ParameterContainerType			_paramsToResolve;
+			std::shared_ptr<Instruction>	_instructionToResolve;
 			
 		};
 	}

@@ -1,5 +1,7 @@
 #include <algorithm>
 #include "interpreter/Instruction.hpp"
+#include "interpreter/InstructionParameter.hpp"
+#include "core/Utils.hpp"
 
 namespace bricksvm
 {
@@ -13,6 +15,31 @@ namespace bricksvm
 		Instruction::~Instruction()
 		{
 
+		}
+
+		std::shared_ptr<Instruction> Instruction::clone() const
+		{
+			std::shared_ptr<Instruction>	clonedInstruction = std::shared_ptr<Instruction>(new Instruction(_lineNumber));
+
+			clonedInstruction->_isResolved = _isResolved;
+			for (std::shared_ptr<AParameter> param : _parameters)
+			{
+				InstructionParameter *instructionParam;
+
+				if (param->getType() == AParameter::InstructionType)
+				{
+					instructionParam = dynamic_cast<InstructionParameter*>(param.get());
+					clonedInstruction->addParameter(instructionParam->clone());
+				}
+				else
+				{
+					/// Don't need to clone a value just keep a reference to the value
+					clonedInstruction->addParameter(param);
+				}
+
+			}
+			clonedInstruction->_name = _name;
+			return clonedInstruction;
 		}
 
 		void Instruction::setName(std::string const &name)
@@ -69,10 +96,7 @@ namespace bricksvm
 					isResolved = true;
 				}
 			}
-			if (!isResolved)
-			{
-				throw std::runtime_error("No such parameter to resolve");
-			}
+			bricksvm::core::throwIf<std::runtime_error>(isResolved, "No such parameter to resolve");
 		}
 
 		Instruction::ParameterContainerType &Instruction::getParameters()

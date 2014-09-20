@@ -1,4 +1,6 @@
 #include "interpreter/Program.hpp"
+#include "exception/InvalidInstructionException.hpp"
+#include "exception/StackOverflowException.hpp"
 
 namespace bricksvm
 {
@@ -30,9 +32,13 @@ namespace bricksvm
 
 			if ((it = _subPrograms.find(name)) == _subPrograms.end())
 			{
-				throw std::runtime_error("No such label : " + name);
+				throw exception::InvalidInstructionException("Label not found : " + name);
 			}
 			_calls.push(std::weak_ptr<Program>(it->second));
+			if (_calls.size() > Program::_maxStackSize)
+			{
+				throw exception::StackOverflowException();
+			}
 		}
 
 		void Program::reset()
@@ -55,10 +61,6 @@ namespace bricksvm
 				if (_currentIndex < _instructions.size())
 				{
 					instruction = _instructions[_currentIndex];
-				}
-				else
-				{
-					std::cout << "Program finished" << std::endl;
 				}
 			}
 			else
@@ -99,7 +101,7 @@ namespace bricksvm
 				&& currentInstruction 
 				&& !currentInstruction->parametersIsResolved())
 			{
-				_resolver = std::shared_ptr<InstructionResolver>(new InstructionResolver(*currentInstruction));
+				_resolver = std::shared_ptr<InstructionResolver>(new InstructionResolver(currentInstruction->clone()));
 				_state = ResolveInstruction;
 				return _resolver->resolve();
 			}

@@ -6,16 +6,16 @@
 
 namespace bricksvm
 {
-	namespace exception
-	{
-		class EXPORT_DLL InvalidTypeException : public std::runtime_error
-		{
-		public:
-			InvalidTypeException(std::string const &error) throw();
-			~InvalidTypeException();
+    namespace exception
+    {
+        class EXPORT_DLL InvalidTypeException : public std::runtime_error
+        {
+        public:
+            InvalidTypeException(std::string const &error) throw();
+            ~InvalidTypeException();
 
-		};
-	}
+        };
+    }
 }
 
 #endif

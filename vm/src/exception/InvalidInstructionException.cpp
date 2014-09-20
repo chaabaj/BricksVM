@@ -2,16 +2,16 @@
 
 namespace bricksvm
 {
-	namespace exception
-	{
-		InvalidInstructionException::InvalidInstructionException(std::string const &error) : std::runtime_error(error)
-		{
+    namespace exception
+    {
+        InvalidInstructionException::InvalidInstructionException(std::string const &error) : std::runtime_error(error)
+        {
 
-		}
+        }
 
-		InvalidInstructionException::~InvalidInstructionException()
-		{
+        InvalidInstructionException::~InvalidInstructionException()
+        {
 
-		}
-	}
+        }
+    }
 }

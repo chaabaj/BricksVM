@@ -3,27 +3,27 @@
 
 namespace bricksvm
 {
-	namespace interpreter
-	{
-		class AParameter
-		{
-		public:
-			enum Type
-			{
-				ValueType,
-				InstructionType
-			};
+    namespace interpreter
+    {
+        class AParameter
+        {
+        public:
+            enum Type
+            {
+                ValueType,
+                InstructionType
+            };
 
-			AParameter(Type const &type);
+            AParameter(Type const &type);
 
-			virtual ~AParameter();
+            virtual ~AParameter();
 
-			Type const &getType() const;
+            Type const &getType() const;
 
-		protected:
-			Type	_type;
-		};
-	}
+        protected:
+            Type	_type;
+        };
+    }
 }
 
 #endif

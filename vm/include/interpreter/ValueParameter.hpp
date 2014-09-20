@@ -7,24 +7,24 @@
 
 namespace bricksvm
 {
-	namespace interpreter
-	{
-		class ValueParameter : public AParameter,
-							   public bricksvm::core::NewPolicy<ValueParameter>
-		{
-		public:
-			ValueParameter(Value const &value);
-			ValueParameter(Value const &&value);
-			~ValueParameter();
+    namespace interpreter
+    {
+        class ValueParameter : public AParameter,
+                               public bricksvm::core::NewPolicy < ValueParameter >
+        {
+        public:
+            ValueParameter(Value const &value);
+            ValueParameter(Value const &&value);
+            ~ValueParameter();
 
 
-			Value const	&getValue() const;
+            Value const	&getValue() const;
 
-		private:
-			Value const &_value;
+        private:
+            Value const &_value;
 
-		};
-	}
+        };
+    }
 }
 
 #endif

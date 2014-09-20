@@ -2,16 +2,16 @@
 
 namespace bricksvm
 {
-	namespace exception
-	{
-		StackOverflowException::StackOverflowException() : std::runtime_error("Stack overflow")
-		{
+    namespace exception
+    {
+        StackOverflowException::StackOverflowException() : std::runtime_error("Stack overflow")
+        {
 
-		}
+        }
 
-		StackOverflowException::~StackOverflowException()
-		{
+        StackOverflowException::~StackOverflowException()
+        {
 
-		}
-	}
+        }
+    }
 }

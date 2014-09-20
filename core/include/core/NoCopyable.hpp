@@ -7,11 +7,11 @@ namespace bricksvm
 {
 	namespace core
 	{
-		class EXPORT_DLL NonCopyable
+		class EXPORT_DLL NoCopyable
 		{
-			NonCopyable() = default;
-			NonCopyable(NonCopyable const &other) = delete;
-			NonCopyable &operator=(NonCopyable const &other) = delete;
+			NoCopyable() = default;
+			NoCopyable(NoCopyable const &other) = delete;
+			NoCopyable &operator=(NoCopyable const &other) = delete;
 		};
 	}
 }

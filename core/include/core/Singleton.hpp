@@ -5,39 +5,39 @@
 
 namespace bricksvm
 {
-	namespace core
-	{
-		template<typename T>
-		class EXPORT_DLL Singleton
-		{
-		public:
+    namespace core
+    {
+        template<typename T>
+        class EXPORT_DLL Singleton
+        {
+        public:
 
-			static T *get()
-			{
-				if (_instance == NULL)
-				{
-					_instance = new T();
-					atexit(Singleton<T>::release);
-				}
-				return _instance;
-			}
+            static T *get()
+            {
+                if (_instance == NULL)
+                {
+                    _instance = new T();
+                    atexit(Singleton<T>::release);
+                }
+                return _instance;
+            }
 
-		private:
+        private:
 
-			static void release()
-			{
-				delete _instance;
-			}
+            static void release()
+            {
+                delete _instance;
+            }
 
-			Singleton();
-			~Singleton();
-		private:
-			static T	*_instance;
-		};
+            Singleton();
+            ~Singleton();
+        private:
+            static T	*_instance;
+        };
 
-		template<typename T>
-		T *Singleton<T>::_instance = NULL;
-	}
+        template<typename T>
+        T *Singleton<T>::_instance = NULL;
+    }
 
 }
 

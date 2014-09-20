@@ -14,68 +14,68 @@
 
 namespace bricksvm
 {
-	namespace event
-	{
-		class EXPORT_DLL EventThread : public bricksvm::thread::AbstractWorker<std::shared_ptr<Message> >, 
-									   public bricksvm::core::NewPolicy<EventThread>
-		{
-		public:
+    namespace event
+    {
+        class EXPORT_DLL EventThread : public bricksvm::thread::AbstractWorker<std::shared_ptr<Message> >,
+                                       public bricksvm::core::NewPolicy < EventThread >
+        {
+        public:
 
-			typedef bricksvm::thread::AbstractWorker<std::shared_ptr<Message> >	ParentClass;
+            typedef bricksvm::thread::AbstractWorker<std::shared_ptr<Message> >	ParentClass;
 
-			EventThread(std::string const &name);
-			virtual ~EventThread();
+            EventThread(std::string const &name);
+            virtual ~EventThread();
 
-			bool hasEvent(std::string const &name) const;
+            bool hasEvent(std::string const &name) const;
 
-			template<typename ... Args>
-		    void emit(std::string const &eventName, EventThread &src, Args ... args)
-			{
-				std::shared_ptr<Message>	msg;
+            template<typename ... Args>
+            void emit(std::string const &eventName, EventThread &src, Args ... args)
+            {
+                std::shared_ptr<Message>	msg;
 
-				msg = std::shared_ptr<Message>(new Message(eventName, std::ref(src), args...));
-				this->pushItem(msg);
-			}
+                msg = std::shared_ptr<Message>(new Message(eventName, std::ref(src), args...));
+                this->pushItem(msg);
+            }
 
-			void emit(std::string const &eventName, std::shared_ptr<Message> &msg)
-			{
-				this->pushItem(msg);
-			}
+            void emit(std::string const &eventName, std::shared_ptr<Message> &msg)
+            {
+                this->pushItem(msg);
+            }
 
-			std::string const &getName() const;
+            std::string const &getName() const;
 
-			template<typename FunctionType>
-			void on(std::string const &expr, FunctionType fn)
-			{
-				std::vector<std::string>	eventNames;
-				std::stringstream			ss;
+            template<typename FunctionType>
+            void on(std::string const &expr, FunctionType fn)
+            {
+                std::vector<std::string>	eventNames;
+                std::stringstream			ss;
 
-				ss.str(expr);
-				std::copy(std::istream_iterator<std::string>(ss),
-					std::istream_iterator<std::string>(),
-					std::back_inserter<std::vector<std::string> >(eventNames));
+                ss.str(expr);
+                std::copy(std::istream_iterator<std::string>(ss),
+                    std::istream_iterator<std::string>(),
+                    std::back_inserter<std::vector<std::string> >(eventNames));
 
-				for (std::string const &eventName : eventNames)
-				{
-					_channels[eventName].on(fn);
-				}
-			}
+                for (std::string const &eventName : eventNames)
+                {
+                    _channels[eventName].on(fn);
+                }
+            }
 
-		protected:
-			typedef std::list<std::shared_ptr<Message> >	MessageContainerType;
+        protected:
+            typedef std::list<std::shared_ptr<Message> >	MessageContainerType;
 
-			virtual void broadcastMsg(std::shared_ptr<Message> &msg);
-			void processItems(ItemContainerType &items);
+            virtual void broadcastMsg(std::shared_ptr<Message> &msg);
+            void processItems(ItemContainerType &items);
 
-		private:
-			typedef Channel<void(EventThread&, Message&)>	ChannelType;
-			typedef	std::map<std::string, ChannelType>		ChannelContainerType;
+        private:
+            typedef Channel<void(EventThread&, Message&)>	ChannelType;
+            typedef	std::map<std::string, ChannelType>		ChannelContainerType;
 
 
-			std::string const		_name;
-			ChannelContainerType	_channels;
-		};
-	}
+            std::string const		_name;
+            ChannelContainerType	_channels;
+        };
+    }
 }
 
 #endif

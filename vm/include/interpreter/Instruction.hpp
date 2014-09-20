@@ -4,47 +4,46 @@
 # include <vector>
 # include <memory>
 # include "core/IClonable.hpp"
-# include "core/NonCopyable.hpp"
 # include "interpreter/AParameter.hpp"
 # include "core/NewPolicy.hpp"
 
 namespace bricksvm
 {
-	namespace interpreter
-	{
-		class Instruction : public bricksvm::core::IClonable<Instruction>,
-							public bricksvm::core::NewPolicy<Instruction>
-		{
-		public:
+    namespace interpreter
+    {
+        class Instruction : public bricksvm::core::IClonable<Instruction>,
+                            public bricksvm::core::NewPolicy < Instruction >
+        {
+        public:
 
-			typedef std::vector<std::shared_ptr<AParameter> >	ParameterContainerType;
+            typedef std::vector<std::shared_ptr<AParameter> >	ParameterContainerType;
 
-			Instruction(unsigned const int lineNumber);
-			~Instruction();
+            Instruction(unsigned const int lineNumber);
+            ~Instruction();
 
-			std::shared_ptr<Instruction> clone() const;
+            std::shared_ptr<Instruction> clone() const;
 
-			void setName(std::string const &str);
-			void addParameter(std::shared_ptr<AParameter> const &parameter);
+            void setName(std::string const &str);
+            void addParameter(std::shared_ptr<AParameter> const &parameter);
 
-			ParameterContainerType		&getParameters();
-			
-			bool						parametersIsResolved() const;
+            ParameterContainerType		&getParameters();
 
-			void						resolveParameter(std::shared_ptr<AParameter> const &paramToResolve,
-														 std::shared_ptr<AParameter> const &resolvedValue);
-		
-			std::shared_ptr<AParameter> getUnresolvedParameter();
+            bool						parametersIsResolved() const;
 
-			std::string const			&getName() const;
+            void						resolveParameter(std::shared_ptr<AParameter> const &paramToResolve,
+                                                         std::shared_ptr<AParameter> const &resolvedValue);
 
-		private:
-			bool					_isResolved;
-			std::string				_name;
-			ParameterContainerType	_parameters;
-			unsigned const int		_lineNumber;
-		};
-	}
+            std::shared_ptr<AParameter> getUnresolvedParameter();
+
+            std::string const			&getName() const;
+
+        private:
+            bool					_isResolved;
+            std::string				_name;
+            ParameterContainerType	_parameters;
+            unsigned const int		_lineNumber;
+        };
+    }
 }
 
 #endif

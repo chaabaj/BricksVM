@@ -2,21 +2,21 @@
 
 namespace bricksvm
 {
-	namespace interpreter
-	{
-		AParameter::AParameter(AParameter::Type const &type) : _type(type)
-		{
+    namespace interpreter
+    {
+        AParameter::AParameter(AParameter::Type const &type) : _type(type)
+        {
 
-		}
+        }
 
-		AParameter::~AParameter()
-		{
+        AParameter::~AParameter()
+        {
 
-		}
+        }
 
-		AParameter::Type const &AParameter::getType() const
-		{
-			return _type;
-		}
-	}
+        AParameter::Type const &AParameter::getType() const
+        {
+            return _type;
+        }
+    }
 }

@@ -15,47 +15,47 @@
 
 namespace bricksvm
 {
-	namespace core
-	{
-		class EXPORT_DLL LibraryLoader
-		{
-		public:
-			typedef std::conditional<WINDOWS, HMODULE, void*>::type	DynamicLibraryType;
+    namespace core
+    {
+        class EXPORT_DLL LibraryLoader
+        {
+        public:
+            typedef std::conditional<WINDOWS, HMODULE, void*>::type	DynamicLibraryType;
 
-			LibraryLoader();
+            LibraryLoader();
 
-			~LibraryLoader();
+            ~LibraryLoader();
 
-			template<typename FunctionType>
-			FunctionType	get(std::string const &libraryName, std::string const &name)
-			{
-				auto it = _libraries.find(libraryName);
+            template<typename FunctionType>
+            FunctionType	get(std::string const &libraryName, std::string const &name)
+            {
+                auto it = _libraries.find(libraryName);
 
-				if (it != _libraries.end())
-				{
-					DynamicLibraryType lib = it->second;
+                if (it != _libraries.end())
+                {
+                    DynamicLibraryType lib = it->second;
 
-					# ifdef WIN32
-						return reinterpret_cast<FunctionType>(GetProcAddress(_libraries[libraryName], name.c_str()));
-					# elif __gnu_linux__
-						return reinterpret_cast<FunctionType>(dlsym(_libraries[libraryName], name.c_str()));
-					# endif
-				}
-				this->load(libraryName);
-				return this->get<FunctionType>(libraryName, name);
-			}
-				
+                    # ifdef WIN32
+                        return reinterpret_cast<FunctionType>(GetProcAddress(_libraries[libraryName], name.c_str()));
+                    # elif __gnu_linux__
+                        return reinterpret_cast<FunctionType>(dlsym(_libraries[libraryName], name.c_str()));
+                    # endif
+                }
+                this->load(libraryName);
+                return this->get<FunctionType>(libraryName, name);
+            }
 
-		private:
 
-			void load(std::string const &libraryName);
+        private:
 
-			void unload(DynamicLibraryType &lib);
+            void load(std::string const &libraryName);
 
-		private:
-			std::map<std::string, DynamicLibraryType>	_libraries;
-		};
-	}
+            void unload(DynamicLibraryType &lib);
+
+        private:
+            std::map<std::string, DynamicLibraryType>	_libraries;
+        };
+    }
 }
 
 #endif

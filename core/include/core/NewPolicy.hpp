@@ -5,18 +5,18 @@
 
 namespace bricksvm
 {
-	namespace core
-	{
-		template<typename T>
-		struct NewPolicy
-		{
-			template<typename ... Args>
-			static std::shared_ptr<T> New(Args&& ... args)
-			{
-				return std::shared_ptr<T>(new T(args...));
-			}
-		};
-	}
+    namespace core
+    {
+        template<typename T>
+        struct NewPolicy
+        {
+            template<typename ... Args>
+            static std::shared_ptr<T> New(Args&& ... args)
+            {
+                return std::shared_ptr<T>(new T(args...));
+            }
+        };
+    }
 }
 
 #endif

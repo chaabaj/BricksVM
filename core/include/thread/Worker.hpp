@@ -8,23 +8,23 @@
 
 namespace bricksvm
 {
-	namespace thread
-	{
-		class EXPORT_DLL Worker : public AbstractWorker< std::function<void()> >,
-								  public bricksvm::core::NewPolicy<Worker>
-		{
-		public:
-			typedef AbstractWorker<std::function<void()> >	ParentClass;
+    namespace thread
+    {
+        class EXPORT_DLL Worker : public AbstractWorker< std::function<void()> >,
+                                  public bricksvm::core::NewPolicy < Worker >
+        {
+        public:
+            typedef AbstractWorker<std::function<void()> >	ParentClass;
 
-			Worker();
+            Worker();
 
-			~Worker();
+            ~Worker();
 
-		protected:
+        protected:
 
-			void processItems(ParentClass::ItemContainerType &items);
-		};
-	}
+            void processItems(ParentClass::ItemContainerType &items);
+        };
+    }
 }
 
 #endif

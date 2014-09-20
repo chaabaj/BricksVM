@@ -8,38 +8,38 @@
 
 namespace bricksvm
 {
-	namespace thread
-	{
-		class EXPORT_DLL WorkerPool
-		{
-		public:
+    namespace thread
+    {
+        class EXPORT_DLL WorkerPool
+        {
+        public:
 
-			WorkerPool(unsigned int size);
+            WorkerPool(unsigned int size);
 
-			~WorkerPool();
+            ~WorkerPool();
 
-			template<typename FunctionType>
-			void dispatch(FunctionType fn)
-			{
-				std::shared_ptr<Worker>	lessWorker;
-				std::function<void()>	stdFn = fn;
+            template<typename FunctionType>
+            void dispatch(FunctionType fn)
+            {
+                std::shared_ptr<Worker>	lessWorker;
+                std::function<void()>	stdFn = fn;
 
-				lessWorker = _workers[0];
-				for (std::shared_ptr<Worker> &worker : _workers)
-				{
-					if (worker->getItemSize() < lessWorker->getItemSize())
-					{
-						lessWorker = worker;
-					}
-				}
-				lessWorker->pushItem(stdFn);
-			}
-		private:
-			typedef std::vector<std::shared_ptr<Worker> >	WorkerContainerType;
+                lessWorker = _workers[0];
+                for (std::shared_ptr<Worker> &worker : _workers)
+                {
+                    if (worker->getItemSize() < lessWorker->getItemSize())
+                    {
+                        lessWorker = worker;
+                    }
+                }
+                lessWorker->pushItem(stdFn);
+            }
+        private:
+            typedef std::vector<std::shared_ptr<Worker> >	WorkerContainerType;
 
-			WorkerContainerType	_workers;
-		};
-	}
+            WorkerContainerType	_workers;
+        };
+    }
 }
 
 #endif

@@ -12,6 +12,7 @@ namespace bricksvm
 {
 	namespace event
 	{
+
 		template<typename Signature>
 		class EXPORT_DLL Channel : public bricksvm::core::NewPolicy<Channel<Signature> >
 		{

@@ -10,34 +10,34 @@
 
 namespace bricksvm
 {
-	namespace interpreter
-	{
-		class InstructionResolver : public bricksvm::core::NewPolicy<InstructionResolver>
-		{
-		public:
-			InstructionResolver(std::shared_ptr<Instruction> const &instructionToResolve);
-			~InstructionResolver();
+    namespace interpreter
+    {
+        class InstructionResolver : public bricksvm::core::NewPolicy < InstructionResolver >
+        {
+        public:
+            InstructionResolver(std::shared_ptr<Instruction> const &instructionToResolve);
+            ~InstructionResolver();
 
-			void setResolvedValue(Value const &resolvedValue);
+            void setResolvedValue(Value const &resolvedValue);
 
-			std::shared_ptr<Instruction> resolve();
+            std::shared_ptr<Instruction> resolve();
 
-			bool isResolved() const;
+            bool isResolved() const;
 
-		private:
+        private:
 
-			void next();
+            void next();
 
 
-		private:
+        private:
 
-			typedef std::list<std::shared_ptr<AParameter> >	ParameterContainerType;
+            typedef std::list<std::shared_ptr<AParameter> >	ParameterContainerType;
 
-			ParameterContainerType			_paramsToResolve;
-			std::shared_ptr<Instruction>	_instructionToResolve;
-			
-		};
-	}
+            ParameterContainerType			_paramsToResolve;
+            std::shared_ptr<Instruction>	_instructionToResolve;
+
+        };
+    }
 }
 
 #endif

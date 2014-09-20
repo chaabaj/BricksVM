@@ -5,15 +5,15 @@
 
 namespace bricksvm
 {
-	namespace exception
-	{
-		class FileNotFoundException : public std::runtime_error
-		{
-		public:
-			FileNotFoundException(std::string const &error) throw();
-			~FileNotFoundException() throw();
-		};
-	}
+    namespace exception
+    {
+        class FileNotFoundException : public std::runtime_error
+        {
+        public:
+            FileNotFoundException(std::string const &error) throw();
+            ~FileNotFoundException() throw();
+        };
+    }
 }
 
 #endif

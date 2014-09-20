@@ -8,26 +8,26 @@
 
 namespace bricksvm
 {
-	namespace interpreter
-	{
-		class InstructionParameter : public AParameter, 
-									 public bricksvm::core::IClonable<AParameter>,
-									 public bricksvm::core::NewPolicy<InstructionParameter>
-		{
-		public:
-			InstructionParameter(std::shared_ptr<Instruction> &instruction);
-			~InstructionParameter();
+    namespace interpreter
+    {
+        class InstructionParameter : public AParameter,
+                                     public bricksvm::core::IClonable<AParameter>,
+                                     public bricksvm::core::NewPolicy < InstructionParameter >
+        {
+        public:
+            InstructionParameter(std::shared_ptr<Instruction> &instruction);
+            ~InstructionParameter();
 
-			std::shared_ptr<Instruction> getInstruction();
+            std::shared_ptr<Instruction> getInstruction();
 
-			std::shared_ptr<AParameter> clone() const;
+            std::shared_ptr<AParameter> clone() const;
 
-			std::shared_ptr<const Instruction> getInstruction() const;
+            std::shared_ptr<const Instruction> getInstruction() const;
 
-		private:
-			std::shared_ptr<Instruction> _instruction;
-		};
-	}
+        private:
+            std::shared_ptr<Instruction> _instruction;
+        };
+    }
 }
 
 #endif

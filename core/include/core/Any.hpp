@@ -10,6 +10,9 @@ namespace bricksvm
 {
 	namespace core
 	{
+		/**
+		 * @interface IValue used for the implementation of type erasure
+		 */
 		class EXPORT_DLL IValue
 		{
 		public:
@@ -17,6 +20,11 @@ namespace bricksvm
 			virtual bool isRefWrapper() const = 0;
 		};
 
+		/**
+		 * @class ValueHolder
+		 * @tparam ValueType value type to store
+		 * @tparam isRefWrapper false if the value is not a std::reference_wrapper
+		 */
 		template<typename ValueType, bool isRefWrapper>
 		class EXPORT_DLL ValueHolder
 		{
@@ -53,6 +61,13 @@ namespace bricksvm
 			ValueType	_value;
 		};
 
+
+		/**
+		 * @class ValueHolder
+		 * @tparam ValueType value type
+		 * 
+		 * @desc this is a specialisation for holding std::reference_wrapper object
+		 */
 		template<typename ValueType>
 		class EXPORT_DLL ValueHolder <ValueType, true>
 		{
@@ -88,6 +103,10 @@ namespace bricksvm
 			ValueType	_value;
 		};
 
+		/**
+		 * @class Value
+		 * @tparam ValueType value to store
+		 */
 		template<typename ValueType>
 		class EXPORT_DLL Value : public IValue
 		{
@@ -126,15 +145,23 @@ namespace bricksvm
 			ValueHolderType	_valueHolder;
 		};
 
+
+		/**
+		 * @class Any
+		 * 
+		 * @desc Any can store any type of value. It's act like dynamic typing
+		 */
 		class EXPORT_DLL Any
 		{
 		public:
 
+			/// default constructor
 			Any()
 			{
 
 			}
 
+			/// constructor
 			template<typename ValueType>
 			Any(ValueType &value)
 			{
@@ -162,7 +189,13 @@ namespace bricksvm
 
 			}
 
+			template<typename ValueType>
+			void setValue(ValueType &value)
+			{
+				_value = std::shared_ptr<IValue>(new Value<ValueType>(value));
+			}
 
+			/// get a reference to the value
 			template<typename ValueType>
 			ValueType &getValue()
 			{

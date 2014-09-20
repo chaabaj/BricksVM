@@ -2,24 +2,24 @@
 
 namespace bricksvm
 {
-	namespace thread
-	{
-		Worker::Worker() : ParentClass()
-		{
+    namespace thread
+    {
+        Worker::Worker() : ParentClass()
+        {
 
-		}
+        }
 
-		Worker::~Worker()
-		{
+        Worker::~Worker()
+        {
 
-		}
+        }
 
-		void Worker::processItems(Worker::ParentClass::ItemContainerType &items)
-		{
-			for (std::function<void()> &fn : items)
-			{
-				fn();
-			}
-		}
-	}
+        void Worker::processItems(Worker::ParentClass::ItemContainerType &items)
+        {
+            for (std::function<void()> &fn : items)
+            {
+                fn();
+            }
+        }
+    }
 }

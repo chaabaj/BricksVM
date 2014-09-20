@@ -5,15 +5,15 @@
 
 namespace bricksvm
 {
-	namespace exception
-	{
-		class InvalidInstructionException : public std::runtime_error
-		{
-		public:
-			InvalidInstructionException(std::string const &error) throw();
-			~InvalidInstructionException();
-		};
-	}
+    namespace exception
+    {
+        class InvalidInstructionException : public std::runtime_error
+        {
+        public:
+            InvalidInstructionException(std::string const &error) throw();
+            ~InvalidInstructionException();
+        };
+    }
 }
 
 #endif

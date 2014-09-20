@@ -9,23 +9,23 @@
 
 namespace bricksvm
 {
-	namespace device
-	{
-		class DeviceLoader
-		{
-		public:
+    namespace device
+    {
+        class DeviceLoader
+        {
+        public:
 
-			DeviceLoader();
-			~DeviceLoader();
+            DeviceLoader();
+            ~DeviceLoader();
 
-			std::shared_ptr<bricksvm::event::EventThread>	load(std::string const &name, 
-																 rapidjson::Value *val);
+            std::shared_ptr<bricksvm::event::EventThread>	load(std::string const &name,
+                                                                 rapidjson::Value *val);
 
-		private:
-			bricksvm::core::LibraryLoader	_loader;
+        private:
+            bricksvm::core::LibraryLoader	_loader;
 
-		};
-	}
+        };
+    }
 }
 
 #endif

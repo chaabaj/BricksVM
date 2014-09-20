@@ -16,17 +16,25 @@ int main()
 	std::shared_ptr<interpreter::AParameter>	param(new interpreter::ValueParameter(val));
 	
 	
-	parser.parse(vm);
-	instr->setName("call");
-	instr->addParameter(param);
-	for (unsigned int i = 0; i < 1000; ++i)
+	try
 	{
-		prg->addInstruction(instr);
-		prg2->addInstruction(instr);
+		parser.parse(vm);
+		instr->setName("call");
+		instr->addParameter(param);
+		for (unsigned int i = 0; i < 1000; ++i)
+		{
+			prg->addInstruction(instr);
+			prg2->addInstruction(instr);
+		}
+		vm.addProgram("toto", prg);
+		vm.addProgram("test", prg2);
+		vm.start();
+		while (true);
 	}
-	vm.addProgram("toto", prg);
-	vm.addProgram("test", prg2);
-	vm.start();
-	while (true);
+	catch (std::runtime_error &err)
+	{
+		std::cerr << err.what() << std::endl;
+	}
+
 	return 0;
 }

@@ -8,7 +8,7 @@ namespace bricksvm
 		{
 			for (unsigned int i = 0; i < size; ++i)
 			{
-				_workers.push_back(std::shared_ptr<Worker>(new Worker()));
+				_workers.push_back(Worker::New());
 			}
 		}
 

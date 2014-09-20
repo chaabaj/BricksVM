@@ -56,7 +56,9 @@ namespace bricksvm
 		{
 			config = &deviceConfig["config"];
 		}
+		std::cout << "blabla" << std::endl;
 		vm.addDevice(core::Singleton<device::DeviceLoader>::get()->load(file, config));
+		std::cout << "bloblo" << std::endl;
 	}
 
 }

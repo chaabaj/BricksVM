@@ -3,12 +3,14 @@
 
 # include <assert.h>
 # include "core/Any.hpp"
+# include "core/DllExport.hpp"
+# include "exception/InvalidTypeException.hpp"
 
 namespace bricksvm
 {
 	namespace interpreter
 	{
-		enum Type
+		enum EXPORT_DLL Type
 		{
 			Int32,
 			Int64,
@@ -20,7 +22,7 @@ namespace bricksvm
 		};
 
 		template<typename ScalarType>
-		struct TypeTraits
+		struct EXPORT_DLL TypeTraits
 		{
 
 		private:
@@ -81,7 +83,7 @@ namespace bricksvm
 		};
 
 		
-		class Value
+		class EXPORT_DLL Value
 		{
 		public:
 
@@ -99,11 +101,12 @@ namespace bricksvm
 			template<typename T>
 			inline operator T&()
 			{
-				int test = TypeTraits<T>::type;
+				bricksvm::core::throwIf<bricksvm::exception::InvalidTypeException>(_type != TypeTraits<T>::type, "Type is not the same as the original");
 				return _value.getValue<T>();
 			}
 
 			~Value() {}
+
 		private:
 			bricksvm::core::Any	_value;
 			Type				_type;

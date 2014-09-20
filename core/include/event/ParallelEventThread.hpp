@@ -4,13 +4,15 @@
 # include "event/EventThread.hpp"
 # include "thread/WorkerPool.hpp"
 # include "core/DllExport.hpp"
+# include "core/NewPolicy.hpp"
 
 namespace bricksvm
 {
 	namespace event
 	{
 		template<int nbThread>
-		class EXPORT_DLL ParallelEventThread : public EventThread
+		class EXPORT_DLL ParallelEventThread : public EventThread,
+											   public bricksvm::core::NewPolicy<ParallelEventThread<nbThread> >
 		{
 		public:
 			ParallelEventThread(std::string const &name) : EventThread(name),

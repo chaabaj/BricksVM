@@ -6,12 +6,14 @@
 # include "core/IClonable.hpp"
 # include "core/NonCopyable.hpp"
 # include "interpreter/AParameter.hpp"
+# include "core/NewPolicy.hpp"
 
 namespace bricksvm
 {
 	namespace interpreter
 	{
-		class Instruction : public bricksvm::core::IClonable<Instruction>
+		class Instruction : public bricksvm::core::IClonable<Instruction>,
+							public bricksvm::core::NewPolicy<Instruction>
 		{
 		public:
 

@@ -5,6 +5,7 @@
 # include <list>
 # include <functional>
 # include "core/Any.hpp"
+# include "core/NewPolicy.hpp"
 # include "core/DllExport.hpp"
 
 namespace bricksvm
@@ -12,7 +13,7 @@ namespace bricksvm
 	namespace event
 	{
 		template<typename Signature>
-		class EXPORT_DLL Channel
+		class EXPORT_DLL Channel : public bricksvm::core::NewPolicy<Channel<Signature> >
 		{
 		public:
 

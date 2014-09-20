@@ -10,12 +10,14 @@
 # include "event/Message.hpp"
 # include "event/Channel.hpp"
 # include "core/DllExport.hpp"
+# include "core/NewPolicy.hpp"
 
 namespace bricksvm
 {
 	namespace event
 	{
-		class EXPORT_DLL EventThread : bricksvm::thread::AbstractWorker<std::shared_ptr<Message> >
+		class EXPORT_DLL EventThread : public bricksvm::thread::AbstractWorker<std::shared_ptr<Message> >, 
+									   public bricksvm::core::NewPolicy<EventThread>
 		{
 		public:
 

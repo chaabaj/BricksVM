@@ -6,12 +6,13 @@
 # include <memory>
 # include "core/Any.hpp"
 # include "core/DllExport.hpp"
+# include "core/NewPolicy.hpp"
 
 namespace bricksvm
 {
 	namespace event
 	{
-		class EXPORT_DLL Message
+		class EXPORT_DLL Message : public bricksvm::core::NewPolicy<Message>
 		{
 		public:
 

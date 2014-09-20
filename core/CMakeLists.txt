@@ -21,5 +21,4 @@ include_directories(include)
 
 add_library(bricksvm_core SHARED ${SRCS} ${HEADERS})
 
-
 TARGET_LINK_LIBRARIES(bricksvm_core ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_DL_LIBS})

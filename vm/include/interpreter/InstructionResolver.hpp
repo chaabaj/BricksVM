@@ -6,12 +6,13 @@
 # include "interpreter/Value.hpp"
 # include "interpreter/AParameter.hpp"
 # include "interpreter/Instruction.hpp"
+# include "core/NewPolicy.hpp"
 
 namespace bricksvm
 {
 	namespace interpreter
 	{
-		class InstructionResolver
+		class InstructionResolver : public bricksvm::core::NewPolicy<InstructionResolver>
 		{
 		public:
 			InstructionResolver(std::shared_ptr<Instruction> const &instructionToResolve);

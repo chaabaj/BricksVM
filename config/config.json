@@ -1,6 +1,8 @@
 {
 	"devices": 
 	[
-	
+		{
+			"file" : "./device/bla/build/Debug/bla.dll"
+		}
 	]
 }

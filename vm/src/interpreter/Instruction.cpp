@@ -1,6 +1,7 @@
 #include <algorithm>
 #include "interpreter/Instruction.hpp"
 #include "interpreter/InstructionParameter.hpp"
+#include "core/Utils.hpp"
 
 namespace bricksvm
 {
@@ -95,10 +96,7 @@ namespace bricksvm
 					isResolved = true;
 				}
 			}
-			if (!isResolved)
-			{
-				throw std::runtime_error("No such parameter to resolve");
-			}
+			bricksvm::core::throwIf<std::runtime_error>(isResolved, "No such parameter to resolve");
 		}
 
 		Instruction::ParameterContainerType &Instruction::getParameters()

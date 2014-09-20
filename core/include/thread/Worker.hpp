@@ -4,12 +4,14 @@
 # include <functional>
 # include "thread/AbstractWorker.hpp"
 # include "core/DllExport.hpp"
+# include "core/NewPolicy.hpp"
 
 namespace bricksvm
 {
 	namespace thread
 	{
-		class EXPORT_DLL Worker : public AbstractWorker< std::function<void()> >
+		class EXPORT_DLL Worker : public AbstractWorker< std::function<void()> >,
+								  public bricksvm::core::NewPolicy<Worker>
 		{
 		public:
 			typedef AbstractWorker<std::function<void()> >	ParentClass;

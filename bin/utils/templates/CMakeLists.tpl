@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.6)
 
 project($name)
 
+
+
 file(GLOB_RECURSE SRCS "src/*.cpp")
 file(GLOB_RECURSE HEADERS "include/*.hpp" "include/*.tpp")
 
@@ -10,6 +12,8 @@ if (UNIX OR APPLE)
 	add_definitions("-std=c++11")
 	
 endif()
+
+add_subdirectory(../../core ../../core_bin)
 
 include_directories(include ../../core/include)
 

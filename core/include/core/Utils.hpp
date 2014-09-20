@@ -5,6 +5,15 @@ namespace bricksvm
 {
 	namespace core
 	{
+		template<typename ExceptionType>
+		inline void throwIf(bool val, std::string const &msg)
+		{
+			if (val)
+			{
+				throw ExceptionType(msg);
+			}
+		}
+
 		template<typename Signature>
 		struct CountArgs;
 

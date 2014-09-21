@@ -31,8 +31,8 @@ namespace bricksvm
                 _pool.dispatch([msg, this]()
                 {
                     auto cpyMsg = msg;
-
-                    EventThread::broadcastMsg(cpyMsg);
+                    
+		    EventThread::broadcastMsg(cpyMsg);
                 });
             }
 

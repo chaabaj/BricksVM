@@ -10,8 +10,8 @@
 # ifdef WIN32
 #  include <Windows.h>
 # elif __gnu_linux__
-#  typedef int HMODULE;
-#  include <dlfnc.h>
+   typedef int HMODULE;
+#  include <dlfcn.h>
 #endif
 
 

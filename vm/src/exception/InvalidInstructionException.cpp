@@ -4,7 +4,7 @@ namespace bricksvm
 {
     namespace exception
     {
-        InvalidInstructionException::InvalidInstructionException(std::string const &error) : std::runtime_error(error)
+        InvalidInstructionException::InvalidInstructionException(std::string const &error) throw() : std::runtime_error(error)
         {
 
         }

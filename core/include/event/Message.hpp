@@ -1,6 +1,7 @@
 #ifndef __BRICKSVM_EVENT_MESSAGE_HPP__
 # define __BRICKSVM_EVENT_MESSAGE_HPP__
 
+# include <sstream>
 # include <vector>
 # include <string>
 # include <memory>
@@ -47,7 +48,10 @@ namespace bricksvm
                 {
                     return _parameters[index].getValue<ValueType>();
                 }
-                throw std::out_of_range("Cannot access to parameter n° : " + index);
+		std::stringstream ss;
+
+		ss << "Cannot access to parameter number : " << index;
+                throw std::out_of_range(ss.str());
             }
 
         private:

@@ -15,7 +15,7 @@ namespace bricksvm
                                      public bricksvm::core::NewPolicy < InstructionParameter >
         {
         public:
-            InstructionParameter(std::shared_ptr<Instruction> &instruction);
+            InstructionParameter(std::shared_ptr<Instruction> const &instruction);
             ~InstructionParameter();
 
             std::shared_ptr<Instruction> getInstruction();

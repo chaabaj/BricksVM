@@ -4,7 +4,7 @@ namespace bricksvm
 {
     namespace interpreter
     {
-        InstructionParameter::InstructionParameter(std::shared_ptr<Instruction> &instruction) : AParameter(AParameter::InstructionType), _instruction(instruction)
+        InstructionParameter::InstructionParameter(std::shared_ptr<Instruction> const &instruction) : AParameter(AParameter::InstructionType), _instruction(instruction)
         {
 
         }
@@ -16,7 +16,7 @@ namespace bricksvm
 
         std::shared_ptr<AParameter> InstructionParameter::clone() const
         {
-            return std::shared_ptr<AParameter>(new InstructionParameter(_instruction->clone()));
+	    return InstructionParameter::New(_instruction->clone());
         }
 
         std::shared_ptr<Instruction> InstructionParameter::getInstruction()

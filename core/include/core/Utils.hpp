@@ -26,14 +26,14 @@ namespace bricksvm
         template<typename T>
         class TypeTraits
         {
-            template<typename T>
+            template<typename U>
             struct isRefWrapper
             {
                 static const bool value = false;
             };
 
-            template<typename T>
-            struct isRefWrapper < std::reference_wrapper<T> >
+            template<typename U>
+            struct isRefWrapper < std::reference_wrapper<U> >
             {
                 static const bool value = true;
             };

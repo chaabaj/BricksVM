@@ -2,18 +2,18 @@ from string import Template
 import os, sys
 import argparse
 
-device_src_template_file = 'bin/utils/templates/device_source.tpl'
-device_header_template_file = 'bin/utils/templates/device_header.tpl'
-device_cmakelist_template_file = 'bin/utils/templates/CMakeLists.tpl'
+device_src_template_file = 'tools/device_generator/templates/device_source.tpl'
+device_header_template_file = 'tools/device_generator/templates/device_header.tpl'
+device_cmakelist_template_file = 'tools/device_generator/templates/CMakeLists.tpl'
 device_dir = 'device'
 
 def create_project_directories(name):
 
-    os.mkdir(os.path.join("device", name), 755 )
-    os.mkdir(os.path.join("device", name, 'src'), 755)
-    os.mkdir(os.path.join("device", name, 'include'), 755)
-    os.mkdir(os.path.join("device", name, 'src', name), 755)
-    os.mkdir(os.path.join("device", name, 'include', name), 755)
+    os.mkdir(os.path.join("device", name), 0755 )
+    os.mkdir(os.path.join("device", name, 'src'), 0755)
+    os.mkdir(os.path.join("device", name, 'include'), 0755)
+    os.mkdir(os.path.join("device", name, 'src', name), 0755)
+    os.mkdir(os.path.join("device", name, 'include', name), 0755)
 
 def write_template_file(tpl_file, dest, name):
     tpl_content = ''
@@ -31,7 +31,7 @@ def generate_project(project_name):
                                                 project_name + '.cpp')
     device_header_dest = os.path.join(device_dir, project_name, 'include',
                                                   project_name, project_name + '.hpp')
-    device_cmakelist_dest = os.path.join(device_dir, project_name, 'CMakelists.txt')
+    device_cmakelist_dest = os.path.join(device_dir, project_name, 'CMakeLists.txt')
 
     create_project_directories(project_name)
     write_template_file(device_src_template_file, device_src_dest, project_name)

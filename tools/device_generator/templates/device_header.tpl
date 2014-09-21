@@ -1,7 +1,7 @@
-#ifndef __BRICKSVM_DEVICE_${upper_name} _HPP__
+#ifndef __BRICKSVM_DEVICE_${upper_name}_HPP__
 # define __BRICKSVM_DEVICE_${upper_name}_HPP__
 
-# include "rapidjson/Document.h"
+# include "rapidjson/document.h"
 # include "core/DllExport.hpp"
 # include "event/EventThread.hpp"
 

@@ -13,6 +13,8 @@ if (UNIX OR APPLE)
 	
 endif()
 
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ../../../lib)
+
 add_subdirectory(../../core ../../core_bin)
 
 include_directories(include ../../core/include)

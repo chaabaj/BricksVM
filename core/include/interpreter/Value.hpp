@@ -21,14 +21,9 @@ namespace bricksvm
             String
         };
 
-        template<typename ScalarType>
-        struct EXPORT_DLL TypeTraits
-        {
-
-        private:
             template<typename ScalarType, int size>
             struct DetectType;
-
+            
             template<typename ScalarType>
             struct DetectType < ScalarType, sizeof(int) >
             {
@@ -53,34 +48,39 @@ namespace bricksvm
                 static const int type = Int8;
             };
 
-            template<>
+	    template<>
             struct DetectType < float, sizeof(float) >
             {
                 static const int type = Float;
             };
 
-            template<>
+	    template<>
             struct DetectType < double, sizeof(double) >
             {
                 static const int type = Double;
             };
 
-
-            template<>
+	    template<>
             struct DetectType < std::string, sizeof(std::string) >
             {
                 static const int type = String;
             };
 
-            template<>
+	    template<>
             struct DetectType < const std::string, sizeof(std::string) >
             {
                 static const int type = String;
             };
 
-        public:
-            static const int type = DetectType<ScalarType, sizeof(ScalarType)>::type;
-        };
+        template<typename T>
+        class EXPORT_DLL TypeTraits
+        {
+	  public:
+            static const int type = DetectType<T, sizeof(T)>::type;
+	};
+
+    
+      
 
 
         class EXPORT_DLL Value

@@ -6,7 +6,7 @@ namespace bricksvm
 {
     namespace interpreter
     {
-        Program::Program() : _currentIndex(0)
+        Program::Program() : _currentIndex(0), _state(Execution)
         {
 
         }

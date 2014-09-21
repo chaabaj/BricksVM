@@ -11,7 +11,7 @@ namespace bricksvm
         {
         public:
             FileNotFoundException(std::string const &error) throw();
-            ~FileNotFoundException() throw();
+	    ~FileNotFoundException();
         };
     }
 }

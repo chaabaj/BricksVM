@@ -3,6 +3,7 @@
 
 # include <map>
 # include <memory>
+# include <iterator>
 # include <sstream>
 # include <list>
 # include <vector>
@@ -61,10 +62,14 @@ namespace bricksvm
                 }
             }
 
+
+
+
         protected:
             typedef std::list<std::shared_ptr<Message> >	MessageContainerType;
 
             virtual void broadcastMsg(std::shared_ptr<Message> &msg);
+
             void processItems(ItemContainerType &items);
 
         private:

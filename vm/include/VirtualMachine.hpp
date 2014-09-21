@@ -11,7 +11,7 @@
 
 namespace bricksvm
 {
-    class VirtualMachine : public event::ParallelEventThread<4>, public core::NoCopyable
+    class VirtualMachine : public event::ParallelEventThread<4>
     {
     public:
 

@@ -25,7 +25,7 @@ namespace bricksvm
             #ifdef WIN32
                 library = LoadLibrary(libName.c_str());
             #elif __gnu_linux__
-                library = dlopen(name.c_str(), RTLD_LAZY);
+                library = dlopen(libName.c_str(), RTLD_LAZY);
             #endif
             if (!library)
                 throw std::runtime_error("Cannot load library : " + libName);

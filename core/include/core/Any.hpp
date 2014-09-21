@@ -165,18 +165,10 @@ namespace bricksvm
 			template<typename ValueType>
 			Any(ValueType &value)
 			{
+			  std::cout << "E oh" << std::endl;
 				_value = std::shared_ptr<IValue>(new Value<ValueType>(value));
 			}
 
-			Any(Any const &&other) : _value(other._value)
-			{
-
-			}
-
-			Any(Any const &other) : _value(other._value)
-			{
-			
-			}
 
 			Any &operator=(Any const &other)
 			{
@@ -210,6 +202,13 @@ namespace bricksvm
 
 			std::shared_ptr<IValue> _value;
 		};
+
+	  template<>
+	  Any::Any(Any const &other) : _value(other._value)
+	  {
+	    
+	  }
+
 	}
 }
 

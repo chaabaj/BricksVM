@@ -4,7 +4,7 @@ namespace bricksvm
 {
     namespace exception
     {
-        StackOverflowException::StackOverflowException() : std::runtime_error("Stack overflow")
+        StackOverflowException::StackOverflowException() throw() : std::runtime_error("Stack overflow")
         {
 
         }

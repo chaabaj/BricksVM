@@ -37,7 +37,7 @@ namespace bricksvm
 
             }
 
-            ValueHolder(ValueType &value) : _value(value)
+            ValueHolder(ValueType const &value) : _value(value)
             {
 
             }
@@ -79,7 +79,7 @@ namespace bricksvm
 
             }
 
-            ValueHolder(ValueType &value) : _value(value)
+            ValueHolder(ValueType const &value) : _value(value)
             {
 
             }
@@ -116,7 +116,7 @@ namespace bricksvm
             typedef typename ValueHolderType::ReturnType                            ReturnType;
 
 
-            Value(ValueType &value) : _valueHolder(ValueHolderType(value))
+            Value(ValueType const &value) : _valueHolder(ValueHolderType(value))
             {
             }
 
@@ -158,9 +158,8 @@ namespace bricksvm
             /// default constructor
             Any();
 
-            /// constructor
             template<typename ValueType>
-            Any(ValueType &value)
+            Any(ValueType const &value)
             {
                 _value = std::shared_ptr<IValue>(new Value<ValueType>(value));
             }
@@ -174,11 +173,6 @@ namespace bricksvm
 
             ~Any();
 
-            template<typename ValueType>
-            void setValue(ValueType &value)
-            {
-                _value = std::shared_ptr<IValue>(new Value<ValueType>(value));
-            }
 
             /// get a reference to the value
             template<typename ValueType>
@@ -191,11 +185,19 @@ namespace bricksvm
                 return static_cast<Value<ValueType> &>(*_value).get();
             }
 
+            template<typename ValueType>
+            ValueType const &getValue() const
+            {
+                if (_value->isRefWrapper())
+                {
+                    return static_cast<Value<std::reference_wrapper<ValueType> >&>(*_value).get();
+                }
+                return static_cast<Value<ValueType> &>(*_value).get();
+            }
+
         private:
             std::shared_ptr<IValue> _value;
         };
-
-
     }
 }
 

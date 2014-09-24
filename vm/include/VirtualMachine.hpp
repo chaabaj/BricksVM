@@ -31,7 +31,7 @@ namespace bricksvm
 
         void onInstructionFinished(bricksvm::event::EventThread &thread, bricksvm::event::Message &msg);
 
-        void onCall(bricksvm::event::EventThread &thread, bricksvm::event::Message &msg);
+        void onJump(bricksvm::event::EventThread &thread, bricksvm::event::Message &msg);
 
         void nextInstruction(std::string const &prgName,
             std::shared_ptr<interpreter::Program> &prg,

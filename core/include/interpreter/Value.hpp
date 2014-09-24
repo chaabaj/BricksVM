@@ -89,16 +89,20 @@ namespace bricksvm
             template<typename T>
             inline operator T&()
             {
-                bricksvm::core::throwIf<bricksvm::exception::InvalidTypeException>(_type < TypeTraits<T>::type,
-                    "Cannot cast to a bigger type original");
+                if (_type != TypeTraits<T>::type)
+                {
+                    return this->cast(static_cast<Type>(TypeTraits<T>::type));
+                }
                 return _value.getValue<T>();
             }
 
             template<typename T>
             inline operator const T&() const
             {
-                bricksvm::core::throwIf<bricksvm::exception::InvalidTypeException>(_type < TypeTraits<T>::type,
-                    "Cannot cast to a bigger type original");
+                if (_type != TypeTraits<T>::type)
+                {
+                    return this->cast(static_cast<Type>(TypeTraits<T>::type));
+                }
                 return _value.getValue<T>();
             }
 

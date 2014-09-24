@@ -12,14 +12,14 @@ int main()
     std::shared_ptr<interpreter::Program>		prg(new interpreter::Program);
     std::shared_ptr<interpreter::Program>		prg2(new interpreter::Program);
     std::shared_ptr<interpreter::Instruction>	instr(new interpreter::Instruction(0));
-    interpreter::Value							val(std::string("test"));
+    interpreter::Value							val(1);
     std::shared_ptr<interpreter::AParameter>	param(new interpreter::ValueParameter(val));
 
 
     try
     {
         parser.parse(vm);
-        instr->setName("call");
+        instr->setName("vm_jmp");
         instr->addParameter(param);
         for (unsigned int i = 0; i < 1000; ++i)
         {

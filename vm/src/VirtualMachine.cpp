@@ -6,7 +6,7 @@ namespace bricksvm
     VirtualMachine::VirtualMachine() : event::ParallelEventThread<4>("VM")
     {
         this->on("instruction:finished", std::bind(&VirtualMachine::onInstructionFinished, this, std::placeholders::_1, std::placeholders::_2));
-        this->on("call", std::bind(&VirtualMachine::onCall, this, std::placeholders::_1, std::placeholders::_2));
+        this->on("vm_jmp", std::bind(&VirtualMachine::onJump, this, std::placeholders::_1, std::placeholders::_2));
     }
 
     VirtualMachine::~VirtualMachine()
@@ -28,7 +28,7 @@ namespace bricksvm
         }
     }
 
-    void VirtualMachine::onCall(bricksvm::event::EventThread &thread, bricksvm::event::Message &msg)
+    void VirtualMachine::onJump(bricksvm::event::EventThread &thread, bricksvm::event::Message &msg)
     {
         std::string		progId = msg.getParameter<std::string>(1);
         VirtualMachine	&vm = msg.getParameter<VirtualMachine>(0);

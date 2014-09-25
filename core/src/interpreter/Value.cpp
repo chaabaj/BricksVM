@@ -16,7 +16,7 @@ namespace bricksvm
             return (*this);
         }
 
-        Value Value::cast(Type const type) const
+        Value  Value::cast(Type const type) const
         {
             switch (_type)
             {

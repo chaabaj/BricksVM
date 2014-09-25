@@ -32,8 +32,10 @@ namespace bricksvm
     {
         std::string		progId = msg.getParameter<std::string>(1);
         VirtualMachine	&vm = msg.getParameter<VirtualMachine>(0);
+        unsigned int    index = msg.getParameter<interpreter::Value>(2);
         event::Message	response("instruction:finished", std::ref(*this), progId, interpreter::Value(0));
 
+        _programs[progId]->jump(index);
         static_cast<VirtualMachine&>(thread).onInstructionFinished(thread, response);
     }
 
@@ -82,12 +84,13 @@ namespace bricksvm
     }
 
     void VirtualMachine::nextInstruction(std::string const &prgName,
-        std::shared_ptr<interpreter::Program> &prg,
-        interpreter::Value const &retVal)
+                                         std::shared_ptr<interpreter::Program> &prg,
+                                         interpreter::Value const &retVal)
     {
         std::shared_ptr<interpreter::Instruction>	currentInstruction;
 
         currentInstruction = prg->execute(retVal);
+        prg->next();
         if (currentInstruction != nullptr)
         {
             this->executeInstruction(prgName, *currentInstruction);

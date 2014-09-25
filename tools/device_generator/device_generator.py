@@ -9,11 +9,11 @@ device_dir = 'device'
 
 def create_project_directories(name):
 
-    os.mkdir(os.path.join("device", name), 0755 )
-    os.mkdir(os.path.join("device", name, 'src'), 0755)
-    os.mkdir(os.path.join("device", name, 'include'), 0755)
-    os.mkdir(os.path.join("device", name, 'src', name), 0755)
-    os.mkdir(os.path.join("device", name, 'include', name), 0755)
+    os.mkdir(os.path.join("device", name), 755 )
+    os.mkdir(os.path.join("device", name, 'src'), 755)
+    os.mkdir(os.path.join("device", name, 'include'), 755)
+    os.mkdir(os.path.join("device", name, 'src', name), 755)
+    os.mkdir(os.path.join("device", name, 'include', name), 755)
 
 def write_template_file(tpl_file, dest, name):
     tpl_content = ''

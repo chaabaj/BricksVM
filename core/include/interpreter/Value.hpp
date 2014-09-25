@@ -21,10 +21,10 @@ namespace bricksvm
         };
 
         template<typename ScalarType, int size>
-        struct DetectType;
+        struct EXPORT_DLL DetectType;
 
         template<typename ScalarType>
-        struct DetectType < ScalarType, sizeof(int) >
+        struct EXPORT_DLL DetectType < ScalarType, sizeof(int) >
         {
             static const int type = Int32;
         };
@@ -65,9 +65,6 @@ namespace bricksvm
         public:
             static const int type = DetectType<T, sizeof(T)>::type;
         };
-
-
-
 
 
         class EXPORT_DLL Value
@@ -122,6 +119,28 @@ namespace bricksvm
             Value cast(Type const type) const;
 
         private:
+
+            template<typename ScalarType>
+            Value cast(ScalarType scalar, Type const destType) const
+            {
+                switch (destType)
+                {
+                case Int8:
+                    return Value(static_cast<char>(scalar));
+                case Int16:
+                    return Value(static_cast<short int>(scalar));
+                case Int32:
+                    return Value(static_cast<int>(scalar));
+                case Int64:
+                    return Value(static_cast<long long int>(scalar));
+                case Float:
+                    return Value(static_cast<float>(scalar));
+                case Double:
+                    return Value(static_cast<double>(scalar));
+                default:
+                    throw bricksvm::exception::InvalidTypeException("Unknown type");
+                }
+            }
 
             template<typename OperationFunction>
             void doOperation(Value const &rhs, OperationFunction const &&op)
@@ -181,29 +200,6 @@ namespace bricksvm
                     throw bricksvm::exception::InvalidTypeException("Unknown type");
                 }
             }
-
-            template<typename ScalarType>
-            Value cast(ScalarType scalar, Type const destType) const
-            {
-                switch (destType)
-                {
-                case Int8:
-                    return Value(static_cast<char>(scalar));
-                case Int16:
-                    return Value(static_cast<short int>(scalar));
-                case Int32:
-                    return Value(static_cast<int>(scalar));
-                case Int64:
-                    return Value(static_cast<long long int>(scalar));
-                case Float:
-                    return Value(static_cast<float>(scalar));
-                case Double:
-                    return Value(static_cast<double>(scalar));
-                default:
-                    throw bricksvm::exception::InvalidTypeException("Unknown type");
-                }
-            }
-
 
         private:
             bricksvm::core::Any _value;

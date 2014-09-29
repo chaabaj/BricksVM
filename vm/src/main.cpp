@@ -23,7 +23,7 @@ int main()
     try
     {
         parser.parse(vm);
-        instr->setName("scpu_reg_write");
+        instr->setName("scpu_reg_read");
         instr->addParameter(param);
         instr->addParameter(param2);
         for (unsigned int i = 0; i < 1000; ++i)

@@ -21,6 +21,7 @@ namespace bricksvm
             std::shared_ptr<bricksvm::event::EventThread>	load(std::string const &name,
                                                                  rapidjson::Value *val);
 
+           
         private:
             bricksvm::core::LibraryLoader   _loader;
 

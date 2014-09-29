@@ -108,16 +108,23 @@ namespace bricksvm
                 return _value.getValue<T>();
             }
 
-            Value operator+(Value const &rhs);
-            Value operator-(Value const &rhs);
-            Value operator/(Value const &rhs);
-            Value operator*(Value const &rhs);
-            Value operator%(Value const &rhs);
-            Value operator|(Value const &rhs);
-            Value operator&(Value const &rhs);
-            Value operator>>(Value const &rhs);
-            Value operator<<(Value const &rhs);
-            Value operator^(Value const &rhs);
+            Value operator+(Value const &rhs) const;
+            Value operator-(Value const &rhs) const;
+            Value operator/(Value const &rhs) const;
+            Value operator*(Value const &rhs) const;
+            Value operator%(Value const &rhs) const;
+            Value operator|(Value const &rhs) const;
+            Value operator&(Value const &rhs) const;
+            Value operator>>(Value const &rhs) const;
+            Value operator<<(Value const &rhs) const;
+            Value operator^(Value const &rhs) const;
+
+            bool operator==(Value const &rhs) const;
+            bool operator>(Value const &rhs) const;
+            bool operator<(Value const &rhs) const;
+            bool operator>=(Value const &rhs) const;
+            bool operator<=(Value const &rhs) const;
+            bool operator!=(Value const &rhs) const;
 
             ~Value() {}
 
@@ -147,17 +154,16 @@ namespace bricksvm
                 }
             }
 
-            template<typename OperationFunction>
-            void doOperation(Value const &rhs, OperationFunction const &&op)
+            template<template<typename> class Operation>
+            void doOperation(Value const &rhs)
             {
-
                 switch (_type)
                 {
                 case Int8:
                 {
                     char lhsVal = _value.getValue<char>();
                     char rhsVal = rhs._value.getValue<char>();
-                    char result = op(lhsVal, rhsVal);
+                    char result = Operation<char>::compute(lhsVal, rhsVal);
 
                     _value = bricksvm::core::Any(result);
                 }
@@ -165,7 +171,7 @@ namespace bricksvm
                 {
                     short int lhsVal = _value.getValue<short int>();
                     short int rhsVal = rhs._value.getValue<short int>();
-                    short int result = op(lhsVal, rhsVal);
+                    short int result = Operation<short int>::compute(lhsVal, rhsVal);
 
                     _value = bricksvm::core::Any(result);
                 }
@@ -173,7 +179,7 @@ namespace bricksvm
                 {
                     int lhsVal = _value.getValue<int>();
                     int rhsVal = rhs._value.getValue<int>();
-                    int result = op(lhsVal, rhsVal);
+                    int result = Operation<int>::compute(lhsVal, rhsVal);
 
                     _value = bricksvm::core::Any(result);
                 }
@@ -181,7 +187,7 @@ namespace bricksvm
                 {
                     long long int lhsVal = _value.getValue<long long int>();
                     long long int rhsVal = rhs._value.getValue<long long int>();
-                    long long int result = op(lhsVal, rhsVal);
+                    long long int result = Operation<long long int>::compute(lhsVal, rhsVal);
 
                     _value = bricksvm::core::Any(result);
                 }
@@ -189,7 +195,7 @@ namespace bricksvm
                 {
                     float lhsVal = _value.getValue<float>();
                     float rhsVal = rhs._value.getValue<float>();
-                    float result = op(lhsVal, rhsVal);
+                    float result = Operation<float>::compute(lhsVal, rhsVal);
 
                     _value = bricksvm::core::Any(result);
                 }
@@ -197,7 +203,7 @@ namespace bricksvm
                 {
                     double lhsVal = _value.getValue<double>();
                     double rhsVal = rhs._value.getValue<double>();
-                    double result = op(lhsVal, rhsVal);
+                    double result = Operation<double>::compute(lhsVal, rhsVal);
 
                     _value = bricksvm::core::Any(result);
                 }

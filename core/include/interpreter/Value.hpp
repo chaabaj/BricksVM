@@ -75,7 +75,7 @@ namespace bricksvm
             template<typename ScalarType>
             Value(ScalarType const scalar)
             {
-                static_assert(std::is_scalar<T>::value, "T must be a scalar");
+                static_assert(std::is_scalar<ScalarType>::value, "T must be a scalar");
                 _value = bricksvm::core::Any(scalar);
                 _type = static_cast<Type>(TypeTraits<ScalarType>::type);
                 _typeSize = sizeof(ScalarType);

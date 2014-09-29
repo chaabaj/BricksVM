@@ -53,8 +53,8 @@ namespace bricksvm
 
                 ss.str(expr);
                 std::copy(std::istream_iterator<std::string>(ss),
-                    std::istream_iterator<std::string>(),
-                    std::back_inserter<std::vector<std::string> >(eventNames));
+                          std::istream_iterator<std::string>(),
+                          std::back_inserter<std::vector<std::string> >(eventNames));
 
                 for (std::string const &eventName : eventNames)
                 {

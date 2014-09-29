@@ -128,7 +128,7 @@ namespace bricksvm
 
             ~Value() {}
 
-            Value cast(Type const type) const;
+            Value cast(Type const destType) const;
 
         private:
 
@@ -155,7 +155,7 @@ namespace bricksvm
             }
 
             template<template<typename> class Operation>
-            void doOperation(Value const &rhs)
+            void compute(Value const &rhs)
             {
                 switch (_type)
                 {
@@ -217,9 +217,7 @@ namespace bricksvm
             Type                _type;
             unsigned int        _typeSize;
         };
-
     }
-
 }
 
 #endif

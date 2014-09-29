@@ -8,27 +8,27 @@
 extern "C"
 {
     EXPORT_DLL bricksvm::event::EventThread *construct(rapidjson::Value *config)
-	{
-		return new bricksvm::device::SimpleCPU(config);
-	}
+    {
+        return new bricksvm::device::SimpleCPU(config);
+    }
 }
 
 namespace bricksvm
 {
-	namespace device
-	{
-		SimpleCPU::SimpleCPU(rapidjson::Value *config) : bricksvm::event::EventThread("SimpleCPU")
-		{
+    namespace device
+    {
+        SimpleCPU::SimpleCPU(rapidjson::Value *config) : bricksvm::event::EventThread("SimpleCPU")
+        {
             using namespace std::placeholders;
 
-            this->on("scpu_reg_read", std::bind(&SimpleCPU::onReadRegister<RegisterContainerType>, this, 
+            this->on("scpu_reg_read", std::bind(&SimpleCPU::onReadRegister<RegisterContainerType>, this,
                                                 _1, _2, std::ref(_registers)));
-            this->on("scpu_reg_write", std::bind(&SimpleCPU::onWriteRegister<RegisterContainerType>, this, 
+            this->on("scpu_reg_write", std::bind(&SimpleCPU::onWriteRegister<RegisterContainerType>, this,
                                                  _1, _2, std::ref(_registers)));
             this->on("scpu_fpreg_read", std::bind(&SimpleCPU::onReadRegister<FloatingRegisterContainerType>, this,
                                                   _1, _2, std::ref(_fpRegisters)));
             this->on("scpu_fpreg_write", std::bind(&SimpleCPU::onWriteRegister<FloatingRegisterContainerType>, this,
-                                                   _1, _2, std::ref(_fpRegisters)));
+                                                    _1, _2, std::ref(_fpRegisters)));
             this->on("scpu_add", std::bind(&SimpleCPU::onAdd, this, _1, _2));
             this->on("scpu_sub", std::bind(&SimpleCPU::onSub, this, _1, _2));
             this->on("scpu_mul", std::bind(&SimpleCPU::onMultiply, this, _1, _2));
@@ -44,11 +44,11 @@ namespace bricksvm
             this->on("scpu_jlt", std::bind(&SimpleCPU::onJumpLowerThan, this, _1, _2));
             this->on("scpu_jgt", std::bind(&SimpleCPU::onJumpGreaterThan, this, _1, _2));
             this->on("scpu_je", std::bind(&SimpleCPU::onJumpEqual, this, _1, _2));
-		}
-		
-		SimpleCPU::~SimpleCPU()
-		{
-		}
+        }
+
+        SimpleCPU::~SimpleCPU()
+        {
+        }
 
 
         void SimpleCPU::onAdd(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
@@ -185,5 +185,5 @@ namespace bricksvm
             }
             src.emit("instruction:finished", std::ref(self), progId, interpreter::Value(static_cast<int>(state)));
         }
-	}
+    }
 }

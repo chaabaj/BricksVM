@@ -68,11 +68,11 @@ namespace bricksvm
 
                 if (compareFn(result))
                 {
-                    src.emit("vm_jump", std::ref(self), progId, jmpAddress);
+                    src.emit("vm_jump", self, progId, jmpAddress);
                 }
                 else
                 {
-                    src.emit("instruction:finished", std::ref(self), progId, interpreter::Value(0));
+                    src.emit("instruction:finished", self, progId, interpreter::Value(0));
                 }
             }
 
@@ -87,11 +87,11 @@ namespace bricksvm
 
                 try
                 {
-                    src.emit("instruction:finished", std::ref(self), progId, opFun(val1, val2));
+                    src.emit("instruction:finished", self, progId, opFun(val1, val2));
                 }
                 catch (bricksvm::exception::InvalidOperationException &err)
                 {
-                    src.emit("instruction:error", std::ref(self), progId, std::string(err.what()));
+                    src.emit("instruction:error", self, progId, std::string(err.what()));
                 }
             }
 
@@ -106,11 +106,11 @@ namespace bricksvm
                 if (index >= 0 && index < 16)
                 {
                     interpreter::Value  val(registers[progId][index]);
-                    src.emit("instruction:finished", std::ref(self), progId, val);
+                    src.emit("instruction:finished", self, progId, val);
                 }
                 else
                 {
-                    src.emit("instruction:error", std::ref(self), progId, "Invalid register");
+                    src.emit("instruction:error", self, progId, "Invalid register");
                 }
             }
 
@@ -129,11 +129,11 @@ namespace bricksvm
                 if (index >= 0 && index < 16)
                 {
                     registers[progId][index] = val;
-                    src.emit("instruction:finished", std::ref(self), progId, interpreter::Value(0));
+                    src.emit("instruction:finished", self, progId, interpreter::Value(0));
                 }
                 else
                 {
-                    src.emit("instruction:error", std::ref(self), progId, "Invalid register");
+                    src.emit("instruction:error", self, progId, "Invalid register");
                 }
             }
 

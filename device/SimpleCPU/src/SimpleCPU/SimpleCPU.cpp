@@ -26,9 +26,9 @@ namespace bricksvm
             this->on("scpu_reg_write", std::bind(&SimpleCPU::onWriteRegister<RegisterContainerType>, this, 
                                                  _1, _2, std::ref(_registers)));
             this->on("scpu_fpreg_read", std::bind(&SimpleCPU::onReadRegister<FloatingRegisterContainerType>, this,
-                                                _1, _2, std::ref(_fpRegisters)));
+                                                  _1, _2, std::ref(_fpRegisters)));
             this->on("scpu_fpreg_write", std::bind(&SimpleCPU::onWriteRegister<FloatingRegisterContainerType>, this,
-                                                 _1, _2, std::ref(_fpRegisters)));
+                                                   _1, _2, std::ref(_fpRegisters)));
             this->on("scpu_add", std::bind(&SimpleCPU::onAdd, this, _1, _2));
             this->on("scpu_sub", std::bind(&SimpleCPU::onSub, this, _1, _2));
             this->on("scpu_mul", std::bind(&SimpleCPU::onMultiply, this, _1, _2));
@@ -39,6 +39,11 @@ namespace bricksvm
             this->on("scpu_xor", std::bind(&SimpleCPU::onBinaryXor, this, _1, _2));
             this->on("scpu_lshift", std::bind(&SimpleCPU::onBinaryLeftShift, this, _1, _2));
             this->on("scpu_rshift", std::bind(&SimpleCPU::onBinrayRightShift, this, _1, _2));
+            this->on("scpu_cmp", std::bind(&SimpleCPU::onCompare, this, _1, _2));
+            this->on("scpu_jne", std::bind(&SimpleCPU::onJumpNotEqual, this, _1, _2));
+            this->on("scpu_jlt", std::bind(&SimpleCPU::onJumpLowerThan, this, _1, _2));
+            this->on("scpu_jgt", std::bind(&SimpleCPU::onJumpGreaterThan, this, _1, _2));
+            this->on("scpu_je", std::bind(&SimpleCPU::onJumpEqual, this, _1, _2));
 		}
 		
 		SimpleCPU::~SimpleCPU()
@@ -142,12 +147,19 @@ namespace bricksvm
             });
         }
 
-
         void SimpleCPU::onJumpEqual(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
         {
             this->onJumpCmp(self, msg, [](int val)
             {
                 return val == Equal;
+            });
+        }
+
+        void SimpleCPU::onJumpNotEqual(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
+        {
+            this->onJumpCmp(self, msg, [](int val)
+            {
+                return val != Equal;
             });
         }
 

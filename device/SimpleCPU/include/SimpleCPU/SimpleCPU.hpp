@@ -52,6 +52,8 @@ namespace bricksvm
 
             void onJumpEqual(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
 
+            void onJumpNotEqual(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
+
             void onCompare(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
         private:
 

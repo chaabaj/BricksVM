@@ -14,7 +14,6 @@ namespace bricksvm
         {
             _value = other._value;
         }
-
         Any::~Any()
         {
 

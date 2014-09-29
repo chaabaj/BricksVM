@@ -52,13 +52,12 @@ namespace bricksvm
         rapidjson::Value	*config = nullptr;
 
         file = deviceConfig["file"].GetString();
+        std::cout << file << std::endl;
         if (deviceConfig.HasMember("config"))
         {
             config = &deviceConfig["config"];
         }
-        std::cout << "blabla" << std::endl;
         vm.addDevice(core::Singleton<device::DeviceLoader>::get()->load(file, config));
-        std::cout << "bloblo" << std::endl;
     }
 
 }

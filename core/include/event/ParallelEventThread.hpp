@@ -32,7 +32,7 @@ namespace bricksvm
                 {
                     auto cpyMsg = msg;
                     
-		    EventThread::broadcastMsg(cpyMsg);
+		            EventThread::broadcastMsg(cpyMsg);
                 });
             }
 

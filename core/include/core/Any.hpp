@@ -5,6 +5,7 @@
 # include <memory>
 # include "core/DllExport.hpp"
 # include "core/Utils.hpp"
+# include "core/IClonable.hpp"
 
 namespace bricksvm
 {
@@ -47,6 +48,11 @@ namespace bricksvm
 
             }
 
+            ValueType getValue() const
+            {
+                return _value;
+            }
+
             ReturnType &get()
             {
                 return _value;
@@ -73,11 +79,6 @@ namespace bricksvm
         {
         public:
             typedef typename ValueType::type    ReturnType;
-
-            ValueHolder()
-            {
-
-            }
 
             ValueHolder(ValueType const &value) : _value(value)
             {
@@ -172,7 +173,6 @@ namespace bricksvm
             }
 
             ~Any();
-
 
             /// get a reference to the value
             template<typename ValueType>

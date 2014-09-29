@@ -59,6 +59,7 @@ namespace bricksvm
             static const int type = Double;
         };
 
+
         template<typename T>
         class EXPORT_DLL TypeTraits
         {
@@ -74,6 +75,7 @@ namespace bricksvm
             template<typename ScalarType>
             Value(ScalarType const scalar)
             {
+                static_assert(std::is_scalar<T>::value, "T must be a scalar");
                 _value = bricksvm::core::Any(scalar);
                 _type = static_cast<Type>(TypeTraits<ScalarType>::type);
                 _typeSize = sizeof(ScalarType);
@@ -83,9 +85,11 @@ namespace bricksvm
 
             Value &operator=(Value const &other);
 
+
             template<typename T>
-            inline operator T&()
+            inline operator const T() const
             {
+                static_assert(std::is_scalar<T>::value, "T must be a scalar");
                 if (_type != TypeTraits<T>::type)
                 {
                     return this->cast(static_cast<Type>(TypeTraits<T>::type));
@@ -94,8 +98,9 @@ namespace bricksvm
             }
 
             template<typename T>
-            inline operator const T&() const
+            inline T const as() const
             {
+                static_assert(std::is_scalar<T>::value, "T must be a scalar");
                 if (_type != TypeTraits<T>::type)
                 {
                     return this->cast(static_cast<Type>(TypeTraits<T>::type));
@@ -103,16 +108,16 @@ namespace bricksvm
                 return _value.getValue<T>();
             }
 
-            Value &operator+(Value const &rhs);
-            Value &operator-(Value const &rhs);
-            Value &operator/(Value const &rhs);
-            Value &operator*(Value const &rhs);
-            Value &operator%(Value const &rhs);
-            Value &operator|(Value const &rhs);
-            Value &operator&(Value const &rhs);
-            Value &operator>>(Value const &rhs);
-            Value &operator<<(Value const &rhs);
-            Value &operator^(Value const &rhs);
+            Value operator+(Value const &rhs);
+            Value operator-(Value const &rhs);
+            Value operator/(Value const &rhs);
+            Value operator*(Value const &rhs);
+            Value operator%(Value const &rhs);
+            Value operator|(Value const &rhs);
+            Value operator&(Value const &rhs);
+            Value operator>>(Value const &rhs);
+            Value operator<<(Value const &rhs);
+            Value operator^(Value const &rhs);
 
             ~Value() {}
 

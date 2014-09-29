@@ -1,3 +1,4 @@
+#include "exception/InvalidOperationException.hpp"
 #include "interpreter/Value.hpp"
 
 namespace bricksvm
@@ -61,11 +62,13 @@ namespace bricksvm
             }
         }
 
-        Value &Value::operator+(Value const &rhs)
+        Value Value::operator+(Value const &rhs)
         {
+            Value   result = (*this);
+
             if (_type != rhs._type)
             {
-                return (*this) + rhs.cast(_type);
+                return result + rhs.cast(_type);
             }
             else if (_type != Float && _type != Double)
             {
@@ -82,14 +85,16 @@ namespace bricksvm
                 });
             }
             
-            return (*this);
+            return result;
         }
 
-        Value &Value::operator-(Value const &rhs)
+        Value Value::operator-(Value const &rhs)
         {
+            Value   result = (*this);
+
             if (_type != rhs._type)
             {
-                return (*this) - rhs.cast(_type);
+                return result - rhs.cast(_type);
             }
             else if (_type != Float && _type != Double)
             {
@@ -105,14 +110,16 @@ namespace bricksvm
                     return a - b;
                 });
             }
-            return (*this);
+            return result;
         }
 
-        Value &Value::operator/(Value const &rhs)
+        Value Value::operator/(Value const &rhs)
         {
+            Value   result = (*this);
+
             if (_type != rhs._type)
             {
-                return (*this) / rhs.cast(_type);
+                return result / rhs.cast(_type);
             }
             else if (_type != Float && _type != Double)
             {
@@ -128,11 +135,13 @@ namespace bricksvm
                     return a / b;
                 });
             }
-            return (*this);
+            return result;
         }
 
-        Value &Value::operator*(Value const &rhs)
+        Value Value::operator*(Value const &rhs)
         {
+            Value   result = (*this);
+
             if (_type != rhs._type)
             {
                 return (*this) * rhs.cast(_type);
@@ -151,14 +160,16 @@ namespace bricksvm
                     return a * b;
                 });
             }
-            return (*this);
+            return result;
         }
 
-        Value &Value::operator%(Value const &rhs)
+        Value Value::operator%(Value const &rhs)
         {
+            Value   result = (*this);
+
             if (_type == Float || _type == Double)
             {
-                throw std::runtime_error("Cannot do modulo on float/double type");
+                throw bricksvm::exception::InvalidOperationException("Cannot do modulo on float/double type");
             }
             else if (_type != rhs._type)
             {
@@ -171,14 +182,16 @@ namespace bricksvm
                     return a % b;
                 });
             }
-            return (*this);
+            return result;
         }
 
-        Value &Value::operator|(Value const &rhs)
+        Value Value::operator|(Value const &rhs)
         {
+            Value result = (*this);
+
             if (_type == Float || _type == Double)
             {
-                throw std::runtime_error("Cannot do binary operation on float/double type");
+                throw bricksvm::exception::InvalidOperationException("Cannot do modulo on float/double type");
             }
             else if (_type != rhs._type)
             {
@@ -191,14 +204,16 @@ namespace bricksvm
                     return a | b;
                 });
             }
-            return (*this);
+            return result;
         }
 
-        Value &Value::operator&(Value const &rhs)
+        Value Value::operator&(Value const &rhs)
         {
+            Value result = (*this);
+
             if (_type == Float || _type == Double)
             {
-                throw std::runtime_error("Cannot do binary operation on float/double type");
+                throw bricksvm::exception::InvalidOperationException("Cannot do modulo on float/double type");
             }
             else if (_type != rhs._type)
             {
@@ -211,14 +226,16 @@ namespace bricksvm
                     return a & b;
                 });
             }
-            return (*this);
+            return result;
         }
 
-        Value &Value::operator>>(Value const &rhs)
+        Value Value::operator>>(Value const &rhs)
         {
+            Value   result = (*this);
+
             if (_type == Float || _type == Double)
             {
-                throw std::runtime_error("Cannot do binary operation on float/double type");
+                throw bricksvm::exception::InvalidOperationException("Cannot do modulo on float/double type");
             }
             else if (_type != rhs._type)
             {
@@ -231,14 +248,16 @@ namespace bricksvm
                     return a >> b;
                 });
             }
-            return (*this);
+            return result;
         }
 
-        Value &Value::operator<<(Value const &rhs)
+        Value Value::operator<<(Value const &rhs)
         {
+            Value   result = (*this);
+
             if (_type == Float || _type == Double)
             {
-                throw std::runtime_error("Cannot do binary operation on float/double type");
+                throw bricksvm::exception::InvalidOperationException("Cannot do modulo on float/double type");
             }
             else if (_type != rhs._type)
             {
@@ -251,14 +270,16 @@ namespace bricksvm
                     return a << b;
                 });
             }
-            return (*this);
+            return result;
         }
 
-        Value &Value::operator^(Value const &rhs)
+        Value Value::operator^(Value const &rhs)
         {
+            Value   result = (*this);
+
             if (_type == Float || _type == Double)
             {
-                throw std::runtime_error("Cannot do binary operation on float/double type");
+                throw bricksvm::exception::InvalidOperationException("Cannot do modulo on float/double type");
             }
             else if (_type != rhs._type)
             {
@@ -271,7 +292,7 @@ namespace bricksvm
                     return a ^ b;
                 });
             }
-            return (*this);
+            return result;
         }
 
     }

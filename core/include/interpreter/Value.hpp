@@ -15,9 +15,9 @@ namespace bricksvm
             Int8,
             Int16,
             Int32,
+            Int64,
             Float,
             Double,
-            Int64,
         };
 
         template<typename ScalarType, int size>
@@ -155,61 +155,75 @@ namespace bricksvm
             }
 
             template<template<typename> class Operation>
-            void compute(Value const &rhs)
+            Value compute(Value const &rhs) const
             {
-                switch (_type)
+                if (_type > rhs._type)
                 {
-                case Int8:
+                    return this->compute<Operation>(rhs.cast(_type));
+                }
+                else if (_type < rhs._type)
                 {
-                    char lhsVal = _value.getValue<char>();
-                    char rhsVal = rhs._value.getValue<char>();
-                    char result = Operation<char>::compute(lhsVal, rhsVal);
+                    Value lhs = (*this);
+                    
+                    return lhs.cast(rhs._type).compute<Operation>(rhs);
+                }
+                else
+                {
+                    switch (_type)
+                    {
+                    case Int8:
+                    {
+                        char lhsVal = _value.getValue<char>();
+                        char rhsVal = rhs._value.getValue<char>();
+                        char result = Operation<char>::compute(lhsVal, rhsVal);
 
-                    _value = bricksvm::core::Any(result);
-                }
-                case Int16:
-                {
-                    short int lhsVal = _value.getValue<short int>();
-                    short int rhsVal = rhs._value.getValue<short int>();
-                    short int result = Operation<short int>::compute(lhsVal, rhsVal);
+                        return Value(result);
+                    }
+                    case Int16:
+                    {
+                        short int lhsVal = _value.getValue<short int>();
+                        short int rhsVal = rhs._value.getValue<short int>();
+                        short int result = Operation<short int>::compute(lhsVal, rhsVal);
 
-                    _value = bricksvm::core::Any(result);
-                }
-                case Int32:
-                {
-                    int lhsVal = _value.getValue<int>();
-                    int rhsVal = rhs._value.getValue<int>();
-                    int result = Operation<int>::compute(lhsVal, rhsVal);
+                        return Value(result);
+                    }
+                    case Int32:
+                    {
+                        int lhsVal = _value.getValue<int>();
+                        int rhsVal = rhs._value.getValue<int>();
+                        int result = Operation<int>::compute(lhsVal, rhsVal);
 
-                    _value = bricksvm::core::Any(result);
-                }
-                case Int64:
-                {
-                    long long int lhsVal = _value.getValue<long long int>();
-                    long long int rhsVal = rhs._value.getValue<long long int>();
-                    long long int result = Operation<long long int>::compute(lhsVal, rhsVal);
+                        return Value(result);
+                    }
+                    case Int64:
+                    {
+                        long long int lhsVal = _value.getValue<long long int>();
+                        long long int rhsVal = rhs._value.getValue<long long int>();
+                        long long int result = Operation<long long int>::compute(lhsVal, rhsVal);
 
-                    _value = bricksvm::core::Any(result);
-                }
-                case Float:
-                {
-                    float lhsVal = _value.getValue<float>();
-                    float rhsVal = rhs._value.getValue<float>();
-                    float result = Operation<float>::compute(lhsVal, rhsVal);
+                        return Value(result);
+                    }
+                    case Float:
+                    {
+                        float lhsVal = _value.getValue<float>();
+                        float rhsVal = rhs._value.getValue<float>();
+                        float result = Operation<float>::compute(lhsVal, rhsVal);
 
-                    _value = bricksvm::core::Any(result);
-                }
-                case Double:
-                {
-                    double lhsVal = _value.getValue<double>();
-                    double rhsVal = rhs._value.getValue<double>();
-                    double result = Operation<double>::compute(lhsVal, rhsVal);
+                        return Value(result);
+                    }
+                    case Double:
+                    {
+                        double lhsVal = _value.getValue<double>();
+                        double rhsVal = rhs._value.getValue<double>();
+                        double result = Operation<double>::compute(lhsVal, rhsVal);
 
-                    _value = bricksvm::core::Any(result);
+                        return Value(result);
+                    }
+                    default:
+                        throw bricksvm::exception::InvalidTypeException("Unknown type");
+                    }
                 }
-                default:
-                    throw bricksvm::exception::InvalidTypeException("Unknown type");
-                }
+                
             }
 
         private:

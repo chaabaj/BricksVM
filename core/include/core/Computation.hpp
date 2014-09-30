@@ -30,7 +30,11 @@ namespace bricksvm
         {
             inline static T compute(T const a, T const b)
             {
-                return a / b;
+                if (b > 0)
+                {
+                    return a / b;
+                }
+                throw bricksvm::exception::InvalidOperationException("Floating point exception");
             }
         };
 

@@ -22,6 +22,7 @@ namespace bricksvm
         VirtualMachine::ProgramContainerType::iterator	it;
         interpreter::Value								&retVal = msg.getParameter<interpreter::Value>(2);
 
+        std::cout << "return value is : " << retVal.as<int>() << std::endl;
         if ((it = _programs.find(progId)) != _programs.end())
         {
             this->nextInstruction(progId, it->second, retVal);

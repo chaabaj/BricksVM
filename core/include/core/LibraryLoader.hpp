@@ -71,17 +71,15 @@ namespace bricksvm
 
         private:
 
-            #ifdef WIN32
                 static inline std::string const getError()
                 {
-                    return "Windows crap here";
+                    #ifdef WIN32
+                        return "Windows crap here";
+                    #elif __gnu_linux__
+                        return std::string(dlerror());
+                    #endif
                 }
-            #elif __gnu_linux__
-                static inline std::string const getError()
-                {
-                    return std::string(dlerror());
-                }
-            #endif
+
 
             
             void load(std::string const &libraryName);

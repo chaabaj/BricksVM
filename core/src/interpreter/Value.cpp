@@ -65,195 +65,82 @@ namespace bricksvm
 
         Value Value::operator+(Value const &rhs) const
         {
-            Value   result = (*this);
-
-            if (_type != rhs._type)
-            {
-                return result + rhs.cast(_type);
-            }
-            result.compute<bricksvm::core::Add>(rhs);
-            return result;
+            return this->compute<bricksvm::core::Add>(rhs);
         }
 
         Value Value::operator-(Value const &rhs) const
         {
-            Value   result = (*this);
-
-            if (_type != rhs._type)
-            {
-                return (*this) - rhs.cast(_type);
-            }
-            result.compute<bricksvm::core::Substract>(rhs);
-            return result;
+            return this->compute<bricksvm::core::Substract>(rhs);
         }
 
         Value Value::operator/(Value const &rhs) const
         {
-            Value   result = (*this);
-
-            if (_type != rhs._type)
-            {
-                return (*this) / rhs.cast(_type);
-            }
-            result.compute<bricksvm::core::Divide>(rhs);
-            return result;
+            return this->compute<bricksvm::core::Divide>(rhs);
         }
 
         Value Value::operator*(Value const &rhs) const
         {
-            Value   result = (*this);
-
-            if (_type != rhs._type)
-            {
-                return (*this) * rhs.cast(_type);
-            }
-            result.compute<bricksvm::core::Multiply>(rhs);
-            return result;
+            return this->compute<bricksvm::core::Multiply>(rhs);
         }
 
         Value Value::operator%(Value const &rhs) const
         {
-            Value   result = (*this);
-
-            if (_type != rhs._type)
-            {
-                return (*this) * rhs.cast(_type);
-            }
-            result.compute<bricksvm::core::Modulo>(rhs);
-            return result;
+            return this->compute<bricksvm::core::Modulo>(rhs);
         }
 
         Value Value::operator|(Value const &rhs) const
         {
-            Value result = (*this);
-
-            if (_type != rhs._type)
-            {
-                return (*this) * rhs.cast(_type);
-            }
-            result.compute<bricksvm::core::BinaryOr>(rhs);
-            return result;
+            return this->compute<bricksvm::core::BinaryOr>(rhs);
         }
 
         Value Value::operator&(Value const &rhs) const
         {
-            Value result = (*this);
-
-            if (_type != rhs._type)
-            {
-                return (*this) >> rhs.cast(_type);
-            }
-            result.compute<bricksvm::core::BinaryAnd>(rhs);
-            return result;
+            return this->compute<bricksvm::core::BinaryAnd>(rhs);
         }
 
         Value Value::operator>>(Value const &rhs) const
         {
-            Value   result = (*this);
-
-            if (_type != rhs._type)
-            {
-                return (*this) >> rhs.cast(_type);
-            }
-            result.compute<bricksvm::core::BinaryRightShift>(rhs);
-            return result;
+            return this->compute<bricksvm::core::BinaryRightShift>(rhs);
         }
 
         Value Value::operator<<(Value const &rhs) const
         {
-            Value   result = (*this);
-
-            if (_type != rhs._type)
-            {
-                return (*this) << rhs.cast(_type);
-            }
-            result.compute<bricksvm::core::BinaryLeftShift>(rhs);
-            return result;
+            return this->compute<bricksvm::core::BinaryLeftShift>(rhs);
         }
 
         Value Value::operator^(Value const &rhs) const
         {
-            Value   result = (*this);
-
-            if (_type != rhs._type)
-            {
-                return (*this) ^ rhs.cast(_type);
-            }
-            result.compute<bricksvm::core::BinaryXor>(rhs);
-            return result;
+            return this->compute<bricksvm::core::BinaryXor>(rhs);
         }
 
         bool Value::operator==(Value const &rhs) const
         {
-            Value   result = (*this);
-
-            if (_type != rhs._type)
-            {
-                return (*this) == rhs.cast(_type);
-            }
-            result.compute<bricksvm::core::Equal>(rhs);
-            return result.as<bool>();
+            return this->compute<bricksvm::core::Equal>(rhs).as<bool>();
         }
 
         bool Value::operator>(Value const &rhs) const
         {
-            Value   result = (*this);
-
-            if (_type != rhs._type)
-            {
-                return (*this) > rhs.cast(_type);
-            }
-            result.compute<bricksvm::core::GreaterThan>(rhs);
-            return result.as<bool>();
+            return this->compute<bricksvm::core::GreaterThan>(rhs).as<bool>();
         }
 
         bool Value::operator<(Value const &rhs) const
         {
-            Value   result = (*this);
-
-            if (_type != rhs._type)
-            {
-                return (*this) < rhs.cast(_type);
-            }
-            result.compute<bricksvm::core::LowerThan>(rhs);
-            return result.as<bool>();
+            return this->compute<bricksvm::core::LowerThan>(rhs).as<bool>();
         }
 
         bool Value::operator>=(Value const &rhs) const
         {
-            Value   result = (*this);
-
-            if (_type != rhs._type)
-            {
-                return (*this) >= rhs.cast(_type);
-            }
-            result.compute<bricksvm::core::GreaterOrEqualThan>(rhs);
-            return result.as<bool>();
+            return this->compute<bricksvm::core::GreaterOrEqualThan>(rhs).as<bool>();
         }
 
         bool Value::operator<=(Value const &rhs) const
         {
-            Value   result = (*this);
-
-            if (_type != rhs._type)
-            {
-                return (*this) <= rhs.cast(_type);
-            }
-            result.compute<bricksvm::core::LowerOrEqualThan>(rhs);
-            return result.as<bool>();
+            return this->compute<bricksvm::core::LowerOrEqualThan>(rhs).as<bool>();
         }
-
 
         bool Value::operator!=(Value const &rhs) const
         {
-            Value   result = (*this);
-
-            if (_type != rhs._type)
-            {
-                return (*this) != rhs.cast(_type);
-            }
-            result.compute<bricksvm::core::NotEqual>(rhs);
-            return result.as<bool>();
+            return this->compute<bricksvm::core::NotEqual>(rhs).as<bool>();
         }
     }
 }

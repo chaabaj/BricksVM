@@ -17,7 +17,6 @@ int main()
     std::shared_ptr<interpreter::AParameter>	param(new interpreter::ValueParameter(index));
     std::shared_ptr<interpreter::AParameter>	param2(new interpreter::ValueParameter(val));
 
-    double test = interpreter::Value(static_cast<char>(5)) / interpreter::Value(0);
 
     try
     {

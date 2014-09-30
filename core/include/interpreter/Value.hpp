@@ -1,7 +1,7 @@
 #ifndef __BRICKSVM_INTERPRETER_VALUE_HPP__
 # define __BRICKSVM_INTERPRETER_VALUE_HPP__
 
-# include <assert.h>
+# include <iostream>
 # include "core/Any.hpp"
 # include "core/DllExport.hpp"
 # include "exception/InvalidTypeException.hpp"
@@ -154,9 +154,11 @@ namespace bricksvm
                 }
             }
 
+
             template<template<typename> class Operation>
             Value compute(Value const &rhs) const
             {
+
                 if (_type > rhs._type)
                 {
                     return this->compute<Operation>(rhs.cast(_type));
@@ -164,7 +166,7 @@ namespace bricksvm
                 else if (_type < rhs._type)
                 {
                     Value lhs = (*this);
-                    
+
                     return lhs.cast(rhs._type).compute<Operation>(rhs);
                 }
                 else

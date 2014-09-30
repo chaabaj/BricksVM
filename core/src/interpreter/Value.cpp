@@ -71,7 +71,7 @@ namespace bricksvm
             {
                 return result + rhs.cast(_type);
             }
-            result.doOperation<bricksvm::core::Add>(rhs);
+            result.compute<bricksvm::core::Add>(rhs);
             return result;
         }
 
@@ -81,9 +81,9 @@ namespace bricksvm
 
             if (_type != rhs._type)
             {
-                return result - rhs.cast(_type);
+                return (*this) - rhs.cast(_type);
             }
-            result.doOperation<bricksvm::core::Substract>(rhs);
+            result.compute<bricksvm::core::Substract>(rhs);
             return result;
         }
 
@@ -93,9 +93,9 @@ namespace bricksvm
 
             if (_type != rhs._type)
             {
-                return result / rhs.cast(_type);
+                return (*this) / rhs.cast(_type);
             }
-            result.doOperation<bricksvm::core::Divide>(rhs);
+            result.compute<bricksvm::core::Divide>(rhs);
             return result;
         }
 
@@ -107,7 +107,7 @@ namespace bricksvm
             {
                 return (*this) * rhs.cast(_type);
             }
-            result.doOperation<bricksvm::core::Multiply>(rhs);
+            result.compute<bricksvm::core::Multiply>(rhs);
             return result;
         }
 
@@ -119,7 +119,7 @@ namespace bricksvm
             {
                 return (*this) * rhs.cast(_type);
             }
-            result.doOperation<bricksvm::core::Modulo>(rhs);
+            result.compute<bricksvm::core::Modulo>(rhs);
             return result;
         }
 
@@ -131,7 +131,7 @@ namespace bricksvm
             {
                 return (*this) * rhs.cast(_type);
             }
-            result.doOperation<bricksvm::core::BinaryOr>(rhs);
+            result.compute<bricksvm::core::BinaryOr>(rhs);
             return result;
         }
 
@@ -143,10 +143,7 @@ namespace bricksvm
             {
                 return (*this) >> rhs.cast(_type);
             }
-            else
-            {
-                result.doOperation<bricksvm::core::BinaryAnd>(rhs);
-            }
+            result.compute<bricksvm::core::BinaryAnd>(rhs);
             return result;
         }
 
@@ -158,10 +155,7 @@ namespace bricksvm
             {
                 return (*this) >> rhs.cast(_type);
             }
-            else
-            {
-                result.doOperation<bricksvm::core::BinaryRightShift>(rhs);
-            }
+            result.compute<bricksvm::core::BinaryRightShift>(rhs);
             return result;
         }
 
@@ -173,10 +167,7 @@ namespace bricksvm
             {
                 return (*this) << rhs.cast(_type);
             }
-            else
-            {
-                result.doOperation<bricksvm::core::BinaryLeftShift>(rhs);
-            }
+            result.compute<bricksvm::core::BinaryLeftShift>(rhs);
             return result;
         }
 
@@ -188,10 +179,7 @@ namespace bricksvm
             {
                 return (*this) ^ rhs.cast(_type);
             }
-            else
-            {
-                result.doOperation<bricksvm::core::BinaryXor>(rhs);
-            }
+            result.compute<bricksvm::core::BinaryXor>(rhs);
             return result;
         }
 
@@ -203,7 +191,7 @@ namespace bricksvm
             {
                 return (*this) == rhs.cast(_type);
             }
-            result.doOperation<bricksvm::core::Equal>(rhs);
+            result.compute<bricksvm::core::Equal>(rhs);
             return result.as<bool>();
         }
 
@@ -215,7 +203,7 @@ namespace bricksvm
             {
                 return (*this) > rhs.cast(_type);
             }
-            result.doOperation<bricksvm::core::GreaterThan>(rhs);
+            result.compute<bricksvm::core::GreaterThan>(rhs);
             return result.as<bool>();
         }
 
@@ -227,7 +215,7 @@ namespace bricksvm
             {
                 return (*this) < rhs.cast(_type);
             }
-            result.doOperation<bricksvm::core::LowerThan>(rhs);
+            result.compute<bricksvm::core::LowerThan>(rhs);
             return result.as<bool>();
         }
 
@@ -239,7 +227,7 @@ namespace bricksvm
             {
                 return (*this) >= rhs.cast(_type);
             }
-            result.doOperation<bricksvm::core::GreaterOrEqualThan>(rhs);
+            result.compute<bricksvm::core::GreaterOrEqualThan>(rhs);
             return result.as<bool>();
         }
 
@@ -251,7 +239,7 @@ namespace bricksvm
             {
                 return (*this) <= rhs.cast(_type);
             }
-            result.doOperation<bricksvm::core::LowerOrEqualThan>(rhs);
+            result.compute<bricksvm::core::LowerOrEqualThan>(rhs);
             return result.as<bool>();
         }
 
@@ -264,7 +252,7 @@ namespace bricksvm
             {
                 return (*this) != rhs.cast(_type);
             }
-            result.doOperation<bricksvm::core::NotEqual>(rhs);
+            result.compute<bricksvm::core::NotEqual>(rhs);
             return result.as<bool>();
         }
     }

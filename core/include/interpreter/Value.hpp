@@ -1,7 +1,7 @@
 #ifndef __BRICKSVM_INTERPRETER_VALUE_HPP__
 # define __BRICKSVM_INTERPRETER_VALUE_HPP__
 
-# include <assert.h>
+# include <iostream>
 # include "core/Any.hpp"
 # include "core/DllExport.hpp"
 # include "exception/InvalidTypeException.hpp"
@@ -128,7 +128,7 @@ namespace bricksvm
 
             ~Value() {}
 
-            Value cast(Type const type) const;
+            Value cast(Type const destType) const;
 
         private:
 
@@ -154,9 +154,11 @@ namespace bricksvm
                 }
             }
 
+
             template<template<typename> class Operation>
-            void doOperation(Value const &rhs)
+            void compute(Value const &rhs)
             {
+
                 switch (_type)
                 {
                 case Int8:
@@ -166,6 +168,7 @@ namespace bricksvm
                     char result = Operation<char>::compute(lhsVal, rhsVal);
 
                     _value = bricksvm::core::Any(result);
+                    break;
                 }
                 case Int16:
                 {
@@ -174,6 +177,7 @@ namespace bricksvm
                     short int result = Operation<short int>::compute(lhsVal, rhsVal);
 
                     _value = bricksvm::core::Any(result);
+                    break;
                 }
                 case Int32:
                 {
@@ -182,6 +186,7 @@ namespace bricksvm
                     int result = Operation<int>::compute(lhsVal, rhsVal);
 
                     _value = bricksvm::core::Any(result);
+                    break;
                 }
                 case Int64:
                 {
@@ -190,6 +195,7 @@ namespace bricksvm
                     long long int result = Operation<long long int>::compute(lhsVal, rhsVal);
 
                     _value = bricksvm::core::Any(result);
+                    break;
                 }
                 case Float:
                 {
@@ -198,6 +204,7 @@ namespace bricksvm
                     float result = Operation<float>::compute(lhsVal, rhsVal);
 
                     _value = bricksvm::core::Any(result);
+                    break;
                 }
                 case Double:
                 {
@@ -206,6 +213,7 @@ namespace bricksvm
                     double result = Operation<double>::compute(lhsVal, rhsVal);
 
                     _value = bricksvm::core::Any(result);
+                    break;
                 }
                 default:
                     throw bricksvm::exception::InvalidTypeException("Unknown type");
@@ -217,9 +225,7 @@ namespace bricksvm
             Type                _type;
             unsigned int        _typeSize;
         };
-
     }
-
 }
 
 #endif

@@ -19,6 +19,9 @@ int main()
 
 
     long long int test = val;
+    
+
+    double result = interpreter::Value(1.0f) / interpreter::Value(2.0);
 
     try
     {

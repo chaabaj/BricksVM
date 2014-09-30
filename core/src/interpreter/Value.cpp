@@ -6,7 +6,7 @@ namespace bricksvm
 {
     namespace interpreter
     {
-        Value::Value(Value const &other) : _value(other._value), _type(other._type)
+        Value::Value(Value const &other) : _value(other._value), _type(other._type), _typeSize(other._typeSize)
         {
 
         }
@@ -15,6 +15,7 @@ namespace bricksvm
         {
             _value = other._value;
             _type = other._type;
+            _typeSize = other._typeSize;
             return (*this);
         }
 
@@ -66,7 +67,7 @@ namespace bricksvm
         Value Value::operator+(Value const &rhs) const
         {
             Value   result = (*this);
-
+            
             if (_type != rhs._type)
             {
                 return result + rhs.cast(_type);

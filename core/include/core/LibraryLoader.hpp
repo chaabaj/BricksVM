@@ -53,9 +53,9 @@ namespace bricksvm
                     DynamicLibraryType lib = it->second;
 
                     # ifdef WIN32
-                        fun = reinterpret_cast<FunctionType>(GetProcAddress(_libraries[libraryName], name.c_str())); 
+                        fun = reinterpret_cast<FunctionType>(GetProcAddress(lib, name.c_str())); 
                     # elif __gnu_linux__
-                        fun = reinterpret_cast<FunctionType>(dlsym(_libraries[libraryName], name.c_str()));
+                        fun = reinterpret_cast<FunctionType>(dlsym(lib, name.c_str()));
                     # endif
 
                     if (!fun)

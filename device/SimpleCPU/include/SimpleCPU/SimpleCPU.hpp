@@ -101,7 +101,7 @@ namespace bricksvm
             {
                 bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
                 std::string                     progId = msg.getParameter<std::string>(1);
-                char                            index = msg.getParameter<interpreter::Value>(2);
+                int                             index = msg.getParameter<interpreter::Value>(2);
 
                 if (index >= 0 && index < 16)
                 {

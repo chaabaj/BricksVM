@@ -28,7 +28,7 @@ namespace bricksvm
                 library = dlopen(libName.c_str(), RTLD_LAZY);
             #endif
             if (!library)
-                throw std::runtime_error("Cannot load library : " + libName);
+                throw std::runtime_error(LibraryLoader::getError());
             _libraries[libName] = library;
         }
 

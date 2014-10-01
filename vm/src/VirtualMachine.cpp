@@ -32,7 +32,6 @@ namespace bricksvm
     void VirtualMachine::onJump(bricksvm::event::EventThread &thread, bricksvm::event::Message &msg)
     {
         std::string		progId = msg.getParameter<std::string>(1);
-        VirtualMachine	&vm = msg.getParameter<VirtualMachine>(0);
         unsigned int    index = msg.getParameter<interpreter::Value>(2);
         event::Message	response("instruction:finished", std::ref(*this), progId, interpreter::Value(0));
 

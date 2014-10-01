@@ -118,7 +118,8 @@ namespace bricksvm
             void onWriteRegister(bricksvm::event::EventThread &self, bricksvm::event::Message &msg,
                                  RegisterContainerType &registers)
             {
-                typedef typename std::remove_extent<RegisterContainerType::mapped_type>::type    ValueType;
+                typedef typename RegisterContainerType::mapped_type     MappedType;
+                typedef typename std::remove_extent<MappedType>::type   ValueType;
 
                 bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
                 std::string                     progId = msg.getParameter<std::string>(1);

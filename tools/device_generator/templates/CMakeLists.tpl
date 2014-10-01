@@ -21,4 +21,4 @@ include_directories(include ../../core/include)
 
 add_library($name SHARED $${SRCS} $${HEADERS})
 
-target_link_libraries ($name bricksvm_core) 
+target_link_libraries ($name bricksvm_core ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_DL_LIBS}) 

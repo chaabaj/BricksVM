@@ -3,6 +3,7 @@
 #include "ConfigurationParser.hpp"
 #include "interpreter/ValueParameter.hpp"
 
+
 int main()
 {
     using namespace bricksvm;
@@ -16,7 +17,6 @@ int main()
     interpreter::Value                          val(3);
     std::shared_ptr<interpreter::AParameter>	param(new interpreter::ValueParameter(index));
     std::shared_ptr<interpreter::AParameter>	param2(new interpreter::ValueParameter(val));
-
 
     try
     {

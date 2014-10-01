@@ -7,7 +7,7 @@ file(GLOB_RECURSE HEADERS "include/*.hpp" "include/*.tpp")
 
 if (UNIX OR APPLE)
 
-	add_definitions("-std=c++11 -ggdb")
+	set(CMAKE_CXX_FLAGS "-std=c++11 -ggdb -Wall -pthread")
 	
 endif()
 

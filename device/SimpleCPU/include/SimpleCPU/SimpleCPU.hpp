@@ -126,7 +126,6 @@ namespace bricksvm
                 int                             index = msg.getParameter<interpreter::Value>(2);
                 ValueType                       val = msg.getParameter<interpreter::Value>(3);
 
-                std::cout << "index : " << index << " value : " << val << std::endl;
                 if (index >= 0 && index < 16)
                 {
                     registers[progId][index] = val;

@@ -7,8 +7,7 @@ file(GLOB_RECURSE HEADERS "include/*.hpp" "include/*.tpp")
 
 if (UNIX OR APPLE)
 
-	target_link_libraries(pthread)
-	add_definitions("-std=c++11 -ggdb")
+	set(CMAKE_CXX_FLAGS "-std=c++11 -ggdb -Wall -pthread")
 	
 endif()
 
@@ -19,4 +18,4 @@ include_directories(include ../core/include)
 add_executable(bricksvm ${SRCS} ${HEADERS})
 install(TARGETS bricksvm DESTINATION ../bin)
 
-target_link_libraries (bricksvm bricksvm_core) 
+target_link_libraries (bricksvm bricksvm_core ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_DL_LIBS}) 

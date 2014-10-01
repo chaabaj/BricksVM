@@ -118,14 +118,14 @@ namespace bricksvm
             void onWriteRegister(bricksvm::event::EventThread &self, bricksvm::event::Message &msg,
                                  RegisterContainerType &registers)
             {
-                typedef typename std::remove_extent<RegisterContainerType::mapped_type>::type    ValueType;
+                typedef typename RegisterContainerType::mapped_type     MappedType;
+                typedef typename std::remove_extent<MappedType>::type   ValueType;
 
                 bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
                 std::string                     progId = msg.getParameter<std::string>(1);
                 int                             index = msg.getParameter<interpreter::Value>(2);
                 ValueType                       val = msg.getParameter<interpreter::Value>(3);
 
-                std::cout << "index : " << index << " value : " << val << std::endl;
                 if (index >= 0 && index < 16)
                 {
                     registers[progId][index] = val;

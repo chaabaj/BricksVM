@@ -7,8 +7,7 @@ file(GLOB_RECURSE HEADERS "include/*.hpp" "include/*.tpp")
 
 if (UNIX OR APPLE)
 
-	target_link_libraries(pthread)
-	add_definitions("-std=c++11")
+	add_definitions("-std=c++11 -Wall -ggdb")
 	
 endif()
 

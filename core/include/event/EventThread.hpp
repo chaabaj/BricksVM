@@ -34,6 +34,7 @@ namespace bricksvm
             {
                 std::shared_ptr<Message>	msg;
 
+                std::cout << "event name : " << eventName << std::endl;
                 msg = std::shared_ptr<Message>(new Message(eventName, std::ref(src), args...));
                 this->pushItem(msg);
             }

@@ -5,8 +5,12 @@ namespace bricksvm
 {
     VirtualMachine::VirtualMachine() : event::ParallelEventThread<4>("VM")
     {
-        this->on("instruction:finished", std::bind(&VirtualMachine::onInstructionFinished, this, std::placeholders::_1, std::placeholders::_2));
-        this->on("vm_jmp", std::bind(&VirtualMachine::onJump, this, std::placeholders::_1, std::placeholders::_2));
+        using namespace std::placeholders;
+
+        this->on("instruction:finished", std::bind(&VirtualMachine::onInstructionFinished, this, _1, _2));
+        this->on("vm_jmp", std::bind(&VirtualMachine::onJump, this, _1, _2));
+        this->on("vm_mem_write", std::bind(&Memory::onRead, _memory.get(), _1, _2));
+        this->on("vm_mem_read", std::bind(&Memory::onWrite, _memory.get(), _1, _2));
     }
 
     VirtualMachine::~VirtualMachine()
@@ -22,7 +26,6 @@ namespace bricksvm
         VirtualMachine::ProgramContainerType::iterator	it;
         interpreter::Value								&retVal = msg.getParameter<interpreter::Value>(2);
 
-        std::cout << "return value is : " << retVal.as<int>() << std::endl;
         if ((it = _programs.find(progId)) != _programs.end())
         {
             this->nextInstruction(progId, it->second, retVal);
@@ -106,5 +109,26 @@ namespace bricksvm
         {
             this->nextInstruction(program.first, program.second, retVal);
         }
+    }
+
+    Memory &VirtualMachine::getMemory()
+    {
+        return *_memory;
+    }
+
+    Memory const &VirtualMachine::getMemory() const
+    {
+        return *_memory;
+    }
+
+    void VirtualMachine::allocateMemory(uint64_t memSize)
+    {
+        std::vector<std::string>    progIds;
+
+        for (auto progam : _programs)
+        {
+            progIds.push_back(progam.first);
+        }
+        _memory = MemoryPtrType(new Memory(memSize, progIds));
     }
 }

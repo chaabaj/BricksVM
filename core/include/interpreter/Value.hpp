@@ -85,6 +85,11 @@ namespace bricksvm
 
             Value &operator=(Value const &other);
 
+            inline Type    type() const
+            {
+                return _type;
+            }
+
 
             template<typename T>
             inline operator const T() const

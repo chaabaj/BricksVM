@@ -48,11 +48,11 @@ namespace bricksvm
                 {
                     return _parameters[index].getValue<ValueType>();
                 }
-		std::stringstream ss;
+                std::stringstream ss;
 
-		ss << "Cannot access to parameter number : " << index;
+		        ss << "Cannot access to parameter number : " << index;
                 throw std::out_of_range(ss.str());
-            }
+           }
 
         private:
 

@@ -126,6 +126,7 @@ namespace bricksvm
                 int                             index = msg.getParameter<interpreter::Value>(2);
                 ValueType                       val = msg.getParameter<interpreter::Value>(3);
 
+                
                 if (index >= 0 && index < 16)
                 {
                     registers[progId][index] = val;
@@ -133,6 +134,7 @@ namespace bricksvm
                 }
                 else
                 {
+                    std::cout << "error" << std::endl;
                     src.emit("instruction:error", self, progId, "Invalid register");
                 }
             }

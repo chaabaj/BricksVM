@@ -4,6 +4,7 @@
 #include "event/EventThread.hpp"
 #include "exception/FileNotFoundException.hpp"
 #include "ConfigurationParser.hpp"
+#include "core/String.hpp"
 
 namespace bricksvm
 {
@@ -14,7 +15,7 @@ namespace bricksvm
 
     ConfigurationParser::~ConfigurationParser()
     {
-
+        
     }
 
     void ConfigurationParser::parse(VirtualMachine &vm)
@@ -38,12 +39,18 @@ namespace bricksvm
             throw exception::FileNotFoundException("Cannot find config file");
         }
 
+        std::string const & memSize = root["memSize"].GetString();
+
+        vm.allocateMemory(bricksvm::core::getMemSize(memSize));
+
         rapidjson::Value &devices = root["devices"];
 
         for (auto it = devices.Begin(); it != devices.End(); ++it)
         {
             this->parseDevice(vm, *it);
         }
+
+        
     }
 
     void ConfigurationParser::parseDevice(VirtualMachine &vm, rapidjson::Value &deviceConfig)

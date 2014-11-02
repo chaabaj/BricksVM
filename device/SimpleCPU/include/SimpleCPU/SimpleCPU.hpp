@@ -62,9 +62,9 @@ namespace bricksvm
                            CompareFunctionType &&compareFn)
             {
                 bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
-                std::string                     progId = msg.getParameter<std::string>(1);
-                int                             result = msg.getParameter<interpreter::Value>(2);
-                interpreter::Value              jmpAddress = msg.getParameter<interpreter::Value>(3);
+                std::string                     progId = msg.getParameter<std::string>(2);
+                int                             result = msg.getParameter<interpreter::Value>(3);
+                interpreter::Value              jmpAddress = msg.getParameter<interpreter::Value>(4);
 
                 if (compareFn(result))
                 {
@@ -81,12 +81,13 @@ namespace bricksvm
                            OperationFunctionType &&opFun)
             {
                 bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
-                std::string                     progId = msg.getParameter<std::string>(1);
-                interpreter::Value              val1 = msg.getParameter<interpreter::Value>(2);
-                interpreter::Value              val2 = msg.getParameter<interpreter::Value>(3);
+                std::string                     progId = msg.getParameter<std::string>(2);
+                interpreter::Value              val1 = msg.getParameter<interpreter::Value>(3);
+                interpreter::Value              val2 = msg.getParameter<interpreter::Value>(4);
 
                 try
                 {
+
                     src.emit("instruction:finished", self, progId, opFun(val1, val2));
                 }
                 catch (bricksvm::exception::InvalidOperationException &err)
@@ -100,8 +101,8 @@ namespace bricksvm
                                 RegisterContainerType &registers)
             {
                 bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
-                std::string                     progId = msg.getParameter<std::string>(1);
-                int                             index = msg.getParameter<interpreter::Value>(2);
+                std::string                     progId = msg.getParameter<std::string>(2);
+                int                             index = msg.getParameter<interpreter::Value>(3);
 
                 if (index >= 0 && index < 16)
                 {
@@ -122,14 +123,15 @@ namespace bricksvm
                 typedef typename std::remove_extent<MappedType>::type   ValueType;
 
                 bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
-                std::string                     progId = msg.getParameter<std::string>(1);
-                int                             index = msg.getParameter<interpreter::Value>(2);
-                ValueType                       val = msg.getParameter<interpreter::Value>(3);
+                std::string                     progId = msg.getParameter<std::string>(2);
+                int                             index = msg.getParameter<interpreter::Value>(3);
+                ValueType                       val = msg.getParameter<interpreter::Value>(4);
 
                 
                 if (index >= 0 && index < 16)
                 {
                     registers[progId][index] = val;
+                    std::cout << "compute" << std::endl;
                     src.emit("instruction:finished", self, progId, interpreter::Value(0));
                 }
                 else

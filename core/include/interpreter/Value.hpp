@@ -90,6 +90,11 @@ namespace bricksvm
                 return _type;
             }
 
+            inline uint32_t size() const
+            {
+                return _typeSize;
+            }
+
 
             template<typename T>
             inline operator const T() const

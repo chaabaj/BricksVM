@@ -4,7 +4,7 @@
 #include "interpreter/ValueParameter.hpp"
 
 
-int main()
+int main(int ac, char **av)
 {
     using namespace bricksvm;
 
@@ -20,17 +20,17 @@ int main()
 
     try
     {
-        parser.parse(vm);
         instr->setName("scpu_fpreg_write");
         instr->addParameter(param);
         instr->addParameter(param2);
-        for (unsigned int i = 0; i < 1000; ++i)
+        for (unsigned int i = 0; i < 100; ++i)
         {
             prg->addInstruction(instr);
             prg2->addInstruction(instr);
         }
         vm.addProgram("toto", prg);
         vm.addProgram("test", prg2);
+        parser.parse(vm);
         vm.start();
         while (true);
     }

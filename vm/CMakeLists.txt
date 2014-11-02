@@ -15,7 +15,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../../bin)
 
 include_directories(include ../core/include)
 
+
 add_executable(bricksvm ${SRCS} ${HEADERS})
+
 install(TARGETS bricksvm DESTINATION ../bin)
 
 target_link_libraries (bricksvm bricksvm_core ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_DL_LIBS}) 
+

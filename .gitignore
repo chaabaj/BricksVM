@@ -3,3 +3,5 @@ vm/build
 build
 Debug
 Release
+bin
+device/core_bin

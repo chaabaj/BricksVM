@@ -166,9 +166,9 @@ namespace bricksvm
         void SimpleCPU::onCompare(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
         {
             bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
-            std::string                     progId = msg.getParameter<std::string>(1);
-            interpreter::Value              &val1 = msg.getParameter<interpreter::Value>(2);
-            interpreter::Value              &val2 = msg.getParameter<interpreter::Value>(3);
+            std::string                     progId = msg.getParameter<std::string>(2);
+            interpreter::Value              &val1 = msg.getParameter<interpreter::Value>(3);
+            interpreter::Value              &val2 = msg.getParameter<interpreter::Value>(4);
             CompareState                    state;
 
             if (val1 > val2)

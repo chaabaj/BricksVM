@@ -8,7 +8,7 @@
 # include "event/Message.hpp"
 # include "event/ParallelEventThread.hpp"
 # include "core/NoCopyable.hpp"
-# include "Memory.hpp"
+# include "device/Memory.hpp"
 
 namespace bricksvm
 {
@@ -26,12 +26,7 @@ namespace bricksvm
 
         void start();
 
-        Memory const &getMemory() const;
-
-        Memory &getMemory();
-
         void addProgram(std::string const &name, std::shared_ptr<interpreter::Program> const &program);
-
 
     private:
 
@@ -55,7 +50,7 @@ namespace bricksvm
     private:
         typedef std::vector<std::shared_ptr<event::EventThread> >				EventThreadContainerType;
         typedef std::map<std::string, std::shared_ptr<interpreter::Program> >	ProgramContainerType;
-        typedef std::unique_ptr<Memory>                                         MemoryPtrType;
+        typedef std::unique_ptr<bricksvm::device::Memory>                       MemoryPtrType;
 
         ProgramContainerType        _programs;
         EventThreadContainerType    _devices;

@@ -4,6 +4,19 @@
 	[
 		{
 			"file" : "lib/SimpleCPU"
+		},
+		{
+			"file" : "lib/SimpleHardDrive",
+			"config" : {
+				"size" : "100MB",
+				"disk-file" : "drives/drive.hd" 
+			}
+		},
+		{
+			"file" : "lib/SimpleVideo"
+		},
+		{
+			"file" : "lib/SimpleAudio"
 		}
 	]
 }

@@ -5,6 +5,7 @@
 #include "exception/FileNotFoundException.hpp"
 #include "ConfigurationParser.hpp"
 #include "core/String.hpp"
+#include "core/Console.hpp"
 
 namespace bricksvm
 {
@@ -25,6 +26,8 @@ namespace bricksvm
         rapidjson::Document	root;
         std::ifstream		fileStream(_configFile);
 
+        bricksvm::core::Console::log("VM") << "Start parsing configuration file" << std::endl;
+        bricksvm::core::Console::log("VM") << "Opening " << _configFile << std::endl;
         if (fileStream.is_open())
         {
             while (!fileStream.eof())
@@ -44,12 +47,12 @@ namespace bricksvm
         vm.allocateMemory(bricksvm::core::getMemSize(memSize));
 
         rapidjson::Value &devices = root["devices"];
-
+        bricksvm::core::Console::log("VM") << "Start parsing device configuration" << std::endl;
         for (auto it = devices.Begin(); it != devices.End(); ++it)
         {
             this->parseDevice(vm, *it);
         }
-
+        bricksvm::core::Console::success("VM") << "All device are initialized" << std::endl;
         
     }
 
@@ -59,7 +62,6 @@ namespace bricksvm
         rapidjson::Value	*config = nullptr;
 
         file = deviceConfig["file"].GetString();
-        std::cout << file << std::endl;
         if (deviceConfig.HasMember("config"))
         {
             config = &deviceConfig["config"];

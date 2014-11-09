@@ -1,6 +1,9 @@
 #ifndef __BRICKSVM_CORE_UTILS_HPP__
 #define __BRICKSVM_CORE_UTILS_HPP__
 
+# include <string>
+# include <sstream>
+
 namespace bricksvm
 {
     namespace core
@@ -12,6 +15,28 @@ namespace bricksvm
             {
                 throw ExceptionType(msg);
             }
+        }
+
+        template<typename ... Args>
+        std::string string(Args&& ... args)
+        {
+            std::stringstream   stream;
+
+            string(stream, args...);
+            return stream.str();
+        }
+
+        template<typename Arg, typename ... Args>
+        void string(std::stringstream &stream, Arg &&arg, Args&& ... args)
+        {
+            stream << arg;
+            string(stream, args...);
+        }
+
+        template<typename Arg>
+        void string(std::stringstream &stream, Arg &&arg)
+        {
+            stream << arg;
         }
 
         template<typename Signature>

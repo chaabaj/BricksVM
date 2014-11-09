@@ -1,4 +1,5 @@
 #include "device/DeviceLoader.hpp"
+#include "core/Console.hpp"
 
 namespace bricksvm
 {
@@ -18,7 +19,7 @@ namespace bricksvm
         {
             typedef bricksvm::event::EventThread* (*FunctionType)(rapidjson::Value *config);
 
-                
+            bricksvm::core::Console::log("VM") << "Load device : " << name << std::endl;
             FunctionType fun = _loader.get<FunctionType>(name + bricksvm::core::LibraryLoader::getExtension(), "construct");
             return std::shared_ptr<bricksvm::event::EventThread>(fun(config));
         }

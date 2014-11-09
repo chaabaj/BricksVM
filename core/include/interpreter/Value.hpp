@@ -12,12 +12,12 @@ namespace bricksvm
     {
         enum EXPORT_DLL Type
         {
-            Int8,
-            Int16,
-            Int32,
-            Int64,
-            Float,
-            Double,
+            Int8 = 0,
+            Int16 = 1,
+            Int32 = 2,
+            Int64 = 3,
+            Float = 4,
+            Double = 5,
         };
 
         template<typename ScalarType, int size>

@@ -1,6 +1,7 @@
 #include <cassert>
 #include "interpreter/Value.hpp"
 #include "device/Memory.hpp"
+#include "core/Console.hpp"
 
 namespace bricksvm
 {
@@ -22,7 +23,10 @@ namespace bricksvm
                 index.second = i * step + step - 1;
                 _memIndexes[progId] = index;
             }
+            bricksvm::core::Console::success("Memory") << "Memory size " << size << " bytes" << std::endl;
+            bricksvm::core::Console::success("Memory") << "Program memory size" << step << " bytes" << std::endl;
         }
+        
 
         Memory::~Memory()
         {

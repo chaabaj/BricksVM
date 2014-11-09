@@ -4,6 +4,7 @@
 #include <interpreter/Value.hpp>
 #include "exception/InvalidOperationException.hpp"
 #include "SimpleCPU/SimpleCPU.hpp"
+#include "core/Console.hpp"
 
 extern "C"
 {
@@ -21,6 +22,7 @@ namespace bricksvm
         {
             using namespace std::placeholders;
 
+            bricksvm::core::Console::log(this->getName()) << "initialize " << this->getName() << std::endl;
             this->on("scpu_reg_read", std::bind(&SimpleCPU::onReadRegister<RegisterContainerType>, this,
                                                 _1, _2, std::ref(_registers)));
             this->on("scpu_reg_write", std::bind(&SimpleCPU::onWriteRegister<RegisterContainerType>, this,
@@ -44,10 +46,12 @@ namespace bricksvm
             this->on("scpu_jlt", std::bind(&SimpleCPU::onJumpLowerThan, this, _1, _2));
             this->on("scpu_jgt", std::bind(&SimpleCPU::onJumpGreaterThan, this, _1, _2));
             this->on("scpu_je", std::bind(&SimpleCPU::onJumpEqual, this, _1, _2));
+            bricksvm::core::Console::success(this->getName()) << this->getName() << " initialized" << std::endl;
         }
 
         SimpleCPU::~SimpleCPU()
         {
+            bricksvm::core::Console::log(this->getName()) << "closed" << std::endl;
         }
 
 

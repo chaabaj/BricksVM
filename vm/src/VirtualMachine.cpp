@@ -1,5 +1,6 @@
 #include "VirtualMachine.hpp"
 #include "interpreter/ValueParameter.hpp"
+#include "core/Console.hpp"
 
 namespace bricksvm
 {
@@ -107,6 +108,7 @@ namespace bricksvm
     {
         interpreter::Value	retVal(0);
 
+        bricksvm::core::Console::success("VM") << "Virtual machine started" << std::endl;
         for (auto &program : _programs)
         {
             this->nextInstruction(program.first, program.second, retVal);
@@ -117,6 +119,7 @@ namespace bricksvm
     {
         std::vector<std::string>    prgIds;
 
+ 
         for (auto elem : _programs)
         {
             prgIds.push_back(elem.first);

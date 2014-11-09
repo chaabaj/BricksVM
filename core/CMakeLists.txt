@@ -8,7 +8,11 @@ file(GLOB_RECURSE HEADERS "include/*.hpp" "include/*.tpp")
 if (UNIX OR APPLE)
 
 	add_definitions("-std=c++11 -Wall -ggdb")
-	
+	list(REMOVE_ITEM SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src/core/WinConsole.cpp)
+	list(REMOVE_ITEM HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/core/WinConsole.hpp)
+else()
+	list(REMOVE_ITEM SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src/core/UnixConsole.cpp)
+	list(REMOVE_ITEM HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/core/UnixConsole.hpp)
 endif()
 
 find_package (Threads)

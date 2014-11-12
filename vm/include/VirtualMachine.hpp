@@ -37,6 +37,8 @@ namespace bricksvm
         void executeInstruction(std::string const &program, interpreter::Instruction &instruction);
 
         void onInstructionFinished(bricksvm::event::EventThread &thread, bricksvm::event::Message &msg);
+        
+        void onInstructionError(bricksvm::event::EventThread &thread, bricksvm::event::Message &msg);
 
         void onJump(bricksvm::event::EventThread &thread, bricksvm::event::Message &msg);
 

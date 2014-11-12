@@ -4,7 +4,6 @@
 #include "interpreter/ValueParameter.hpp"
 #include "core/Console.hpp"
 
-
 int main(int ac, char **av)
 {
     using namespace bricksvm;

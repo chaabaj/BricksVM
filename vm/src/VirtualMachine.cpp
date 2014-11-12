@@ -9,6 +9,7 @@ namespace bricksvm
         using namespace std::placeholders;
 
         this->on("instruction:finished", std::bind(&VirtualMachine::onInstructionFinished, this, _1, _2));
+        this->on("instruction:error", std::bind(&VirtualMachine::onInstructionError, this, _1, _2));
         this->on("vm_jmp", std::bind(&VirtualMachine::onJump, this, _1, _2));
         this->on("vm_mem_write", std::bind(&bricksvm::device::Memory::onRead, _memory.get(), _1, _2));
         this->on("vm_mem_read", std::bind(&bricksvm::device::Memory::onWrite, _memory.get(), _1, _2));
@@ -27,10 +28,21 @@ namespace bricksvm
         VirtualMachine::ProgramContainerType::iterator	it;
         interpreter::Value								&retVal = msg.getParameter<interpreter::Value>(2);
 
-        std::cout << "instruction finished" << std::endl;
         if ((it = _programs.find(progId)) != _programs.end())
         {
             this->nextInstruction(progId, it->second, retVal);
+        }
+    }
+
+    void VirtualMachine::onInstructionError(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
+    {
+        std::string                                     progId = msg.getParameter<std::string>(1);
+        VirtualMachine::ProgramContainerType::iterator  it;
+        std::string                                     errMsg = msg.getParameter<std::string>(2);
+
+        if ((it = _programs.find(progId)) != _programs.end())
+        {
+            bricksvm::core::Console::error(progId) << errMsg << std::endl;
         }
     }
 

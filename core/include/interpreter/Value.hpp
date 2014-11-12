@@ -61,7 +61,7 @@ namespace bricksvm
 
 
         template<typename T>
-        class EXPORT_DLL TypeTraits
+        class EXPORT_DLL ValueTraits
         {
         public:
             static const int type = DetectType<T, sizeof(T)>::type;
@@ -77,7 +77,7 @@ namespace bricksvm
             {
                 static_assert(std::is_scalar<ScalarType>::value, "T must be a scalar");
                 _value = bricksvm::core::Any(scalar);
-                _type = static_cast<Type>(TypeTraits<ScalarType>::type);
+                _type = static_cast<Type>(ValueTraits<ScalarType>::type);
                 _typeSize = sizeof(ScalarType);
             }
 
@@ -100,9 +100,9 @@ namespace bricksvm
             inline operator const T() const
             {
                 static_assert(std::is_scalar<T>::value, "T must be a scalar");
-                if (_type != TypeTraits<T>::type)
+                if (_type != ValueTraits<T>::type)
                 {
-                    return this->cast(static_cast<Type>(TypeTraits<T>::type));
+                    return this->cast(static_cast<Type>(ValueTraits<T>::type));
                 }
                 return _value.getValue<T>();
             }
@@ -111,9 +111,9 @@ namespace bricksvm
             inline T const as() const
             {
                 static_assert(std::is_scalar<T>::value, "T must be a scalar");
-                if (_type != TypeTraits<T>::type)
+                if (_type != ValueTraits<T>::type)
                 {
-                    return this->cast(static_cast<Type>(TypeTraits<T>::type));
+                    return this->cast(static_cast<Type>(ValueTraits<T>::type));
                 }
                 return _value.getValue<T>();
             }

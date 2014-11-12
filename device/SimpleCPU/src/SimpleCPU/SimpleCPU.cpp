@@ -24,7 +24,7 @@ namespace bricksvm
         {
             using namespace std::placeholders;
 
-            bricksvm::core::Console::log(this->getName()) << "initialize " << this->getName() << std::endl;
+            bricksvm::core::Console::log(this->getName()) << "loading instruction set " << this->getName() << std::endl;
             this->on("scpu_reg_read", std::bind(&SimpleCPU::onReadRegister<RegisterContainerType>, this,
                                                 _1, _2, std::ref(_registers)));
             this->on("scpu_reg_write", std::bind(&SimpleCPU::onWriteRegister<RegisterContainerType>, this,
@@ -263,9 +263,9 @@ namespace bricksvm
             Memory                          &memory = msg.getParameter<Memory>(1);
             std::string                     progId = msg.getParameter<std::string>(2);
             uint64_t                        vecAddr1 = msg.getParameter<interpreter::Value>(3);
-            uint64_t                        vecAddr2 = msg.getParameter<interpreter::Value>(3);
-            uint64_t                        destAddr = msg.getParameter<interpreter::Value>(3);
-            uint8_t                         vecSize = msg.getParameter<interpreter::Value>(3);
+            uint64_t                        vecAddr2 = msg.getParameter<interpreter::Value>(4);
+            uint64_t                        destAddr = msg.getParameter<interpreter::Value>(5);
+            uint8_t                         vecSize = msg.getParameter<interpreter::Value>(6);
 
             try
             {
@@ -284,9 +284,9 @@ namespace bricksvm
             Memory                          &memory = msg.getParameter<Memory>(1);
             std::string                     progId = msg.getParameter<std::string>(2);
             uint64_t                        vecAddr1 = msg.getParameter<interpreter::Value>(3);
-            uint64_t                        vecAddr2 = msg.getParameter<interpreter::Value>(3);
-            uint64_t                        destAddr = msg.getParameter<interpreter::Value>(3);
-            uint8_t                         vecSize = msg.getParameter<interpreter::Value>(3);
+            uint64_t                        vecAddr2 = msg.getParameter<interpreter::Value>(4);
+            uint64_t                        destAddr = msg.getParameter<interpreter::Value>(5);
+            uint8_t                         vecSize = msg.getParameter<interpreter::Value>(6);
 
             try
             {
@@ -305,9 +305,9 @@ namespace bricksvm
             Memory                          &memory = msg.getParameter<Memory>(1);
             std::string                     progId = msg.getParameter<std::string>(2);
             uint64_t                        vecAddr1 = msg.getParameter<interpreter::Value>(3);
-            uint64_t                        vecAddr2 = msg.getParameter<interpreter::Value>(3);
-            uint64_t                        destAddr = msg.getParameter<interpreter::Value>(3);
-            uint8_t                         vecSize = msg.getParameter<interpreter::Value>(3);
+            uint64_t                        vecAddr2 = msg.getParameter<interpreter::Value>(4);
+            uint64_t                        destAddr = msg.getParameter<interpreter::Value>(5);
+            uint8_t                         vecSize = msg.getParameter<interpreter::Value>(6);
 
             try
             {
@@ -326,9 +326,9 @@ namespace bricksvm
             Memory                          &memory = msg.getParameter<Memory>(1);
             std::string                     progId = msg.getParameter<std::string>(2);
             uint64_t                        vecAddr1 = msg.getParameter<interpreter::Value>(3);
-            uint64_t                        vecAddr2 = msg.getParameter<interpreter::Value>(3);
-            uint64_t                        destAddr = msg.getParameter<interpreter::Value>(3);
-            uint8_t                         vecSize = msg.getParameter<interpreter::Value>(3);
+            uint64_t                        vecAddr2 = msg.getParameter<interpreter::Value>(4);
+            uint64_t                        destAddr = msg.getParameter<interpreter::Value>(5);
+            uint8_t                         vecSize = msg.getParameter<interpreter::Value>(6);
 
             try
             {

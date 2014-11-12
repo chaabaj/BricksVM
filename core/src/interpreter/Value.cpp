@@ -8,12 +8,12 @@ namespace bricksvm
     {
         Value::Value(Value const &other) : _type(other._type), _typeSize(other._typeSize)
         {
-            _value = other.cast(other._type)._value;
+            _value = other._value;
         }
 
         Value	&Value::operator=(Value const &other)
         {
-            _value = other.cast(other._type)._value;
+            _value = other._value;
             _type = other._type;
             _typeSize = other._typeSize;
             return (*this);

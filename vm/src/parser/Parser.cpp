@@ -29,7 +29,8 @@ namespace bricksvm
 			std::list<std::string> program;
 			program.push_back("function1(1)");
 			program.push_back("label:");
-			program.push_back("function2(1, function3(2))");
+			program.push_back("label2:");
+			program.push_back("function2(1, function3(2.2))");
 			program.push_back("jump(label)");
 			parser::Lexer lexer;
 			for (std::list<std::string>::iterator it = program.begin(); it != program.end(); it++)

@@ -90,6 +90,7 @@ namespace bricksvm
 			while (i < this->_instructions.size())
 			{
 				dumpFunction(this->_instructions[i]);
+				++i;
 			}
 		}
 
@@ -103,13 +104,14 @@ namespace bricksvm
 				if (instr->getParameters()[i]->getType() == AParameter::Type::ValueType)
 				{
 					std::shared_ptr<interpreter::ValueParameter> ram = std::static_pointer_cast<interpreter::ValueParameter>(instr->getParameters()[i]);
-					std::cout << "\t" <<  ram->getValue().as<float>() << std::endl;
+					std::cout << "\t" <<  ram->getValue().as<int>() << std::endl;
 				}
 				else
 				{
 					std::shared_ptr<interpreter::InstructionParameter> ram = std::static_pointer_cast<interpreter::InstructionParameter>(instr->getParameters()[i]);
 					this->dumpFunction(ram->getInstruction());
 				}
+				++i;
 			}
 		}
     }

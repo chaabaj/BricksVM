@@ -36,9 +36,9 @@ namespace bricksvm
 		private:
 			std::shared_ptr<interpreter::AParameter> getNextParameter();
 			interpreter::AParameter::Type getParameterType();
-			interpreter::Value const &convertStringToValue(std::string val, interpreter::Type type);
+			interpreter::Value convertStringToValue(std::string val, interpreter::Type type);
 			bool hasParameterIdentifier();
-			interpreter::Value const &Lexer::getLabelLine(std::string val);
+			interpreter::Value Lexer::getLabelLine(std::string val);
 			void functionCall(std::shared_ptr<interpreter::Instruction> &instruction);
 
 		};

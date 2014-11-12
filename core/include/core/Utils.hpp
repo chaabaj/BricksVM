@@ -105,12 +105,6 @@ namespace bricksvm
 
 		inline bool isDecimal(const std::string& s, char decimalSeparator = '.')
 		{
-			/*bool hasDecimalSeparator = false;
-
-			std::string::const_iterator it = s.begin();
-			while ( && std::isdigit(*it)) ++it;
-			return !s.empty() && it == s.end();*/
-
 			std::string::const_iterator it;
 			for (it = s.begin(); it != s.end(); ++it)
 			{

@@ -24,6 +24,7 @@ namespace bricksvm
 		{
 			_line = line; 
 			_lineNumber = lineNumber;
+			_position = 0;
 		}
 
 		// stdin()
@@ -67,15 +68,19 @@ namespace bricksvm
 		void Lexer::functionCall(std::shared_ptr<interpreter::Instruction> &instruction)
 		{
 			unsigned int parameterIdx = this->_position;
+			
 			while (this->_line.length() > this->_position && this->_line[this->_position] != ')')
 			{
-				// check if it's a ValueParameter
+				/* check if it's a ValueParameter */
 				if (this->_line[this->_position] == ',')
 				{
 					std::string parameter = this->_line.substr(parameterIdx, this->_position - parameterIdx);
 
 					if (core::isInteger(parameter))
-						instruction->addParameter(std::shared_ptr<interpreter::ValueParameter>(new interpreter::ValueParameter(convertStringToValue(parameter, interpreter::Type::Int32))));
+					{ 
+						interpreter::ValueParameter *param = new interpreter::ValueParameter(convertStringToValue(parameter, interpreter::Type::Int32));
+						instruction->addParameter(std::shared_ptr<interpreter::ValueParameter>(param));
+					}
 					else if (core::isDecimal(parameter))
 						instruction->addParameter(std::shared_ptr<interpreter::ValueParameter>(new interpreter::ValueParameter(convertStringToValue(parameter, interpreter::Type::Float))));
 					else if (core::isLabel(parameter))
@@ -84,15 +89,17 @@ namespace bricksvm
 					this->_position++;
 					parameterIdx = this->_position;
 				}
-				// check if is another function call (eg InstructionParameter)
+				/* check if is another function call (eg InstructionParameter)*/
 				else if (this->_line[this->_position] == '(')
 				{
 					std::shared_ptr<interpreter::Instruction> newInstruction(new interpreter::Instruction(this->_lineNumber));
 
+					newInstruction->setName(this->_line.substr(parameterIdx, _position - parameterIdx));
 					this->_position++;
 					this->functionCall(newInstruction);
 					instruction->addParameter(std::shared_ptr<interpreter::InstructionParameter>(new interpreter::InstructionParameter(newInstruction)));
 				}
+				
 				this->_position++;
 			}
 
@@ -101,7 +108,10 @@ namespace bricksvm
 				std::string parameter = this->_line.substr(parameterIdx, this->_position - parameterIdx);
 
 				if (core::isInteger(parameter))
-					instruction->addParameter(std::shared_ptr<interpreter::ValueParameter>(new interpreter::ValueParameter(convertStringToValue(parameter, interpreter::Type::Int32))));
+				{
+					interpreter::ValueParameter *param = new interpreter::ValueParameter(convertStringToValue(parameter, interpreter::Type::Int32));
+					instruction->addParameter(std::shared_ptr<interpreter::ValueParameter>(param));
+				}
 				else if (core::isDecimal(parameter))
 					instruction->addParameter(std::shared_ptr<interpreter::ValueParameter>(new interpreter::ValueParameter(convertStringToValue(parameter, interpreter::Type::Float))));
 				else if (core::isLabel(parameter))
@@ -112,7 +122,7 @@ namespace bricksvm
 			}
 		}
 
-		interpreter::Value const &Lexer::getLabelLine(std::string val)
+		interpreter::Value Lexer::getLabelLine(std::string val)
 		{
 			std::map<std::string, int>::const_iterator it;
 			for (it = this->_labels.begin(); it != this->_labels.end(); ++it)
@@ -164,7 +174,7 @@ namespace bricksvm
 			return (false);
 		}
 
-		interpreter::Value const &Lexer::convertStringToValue(std::string val, interpreter::Type type)
+		interpreter::Value  Lexer::convertStringToValue(std::string val, interpreter::Type type)
 		{
 			switch (type)
 			{

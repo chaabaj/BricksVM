@@ -52,7 +52,7 @@ namespace bricksvm
             State                                   _state;
             std::shared_ptr<InstructionResolver>    _resolver;
 
-			/* DEBUT */
+			/* DEBUG */
 		public:
 			void dumpProgram();
 			void dumpFunction(std::shared_ptr<Instruction> instr);

@@ -6,6 +6,7 @@
 # include "rapidjson/document.h"
 # include "core/DllExport.hpp"
 # include "event/EventThread.hpp"
+# include "SimpleCPU/MathUnit.hpp"
 
 namespace bricksvm
 {
@@ -54,8 +55,27 @@ namespace bricksvm
 
             void onJumpNotEqual(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
 
+            void onSqrt(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
+
             void onCompare(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
-        private:
+
+            void onSinus(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
+
+            void onCosinus(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
+            
+            void onTangente(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
+
+            void onPower(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
+
+            void onLogarithm(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
+
+            void onAddVector(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
+
+            void onSubVector(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
+
+            void onMulVector(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
+
+            void onDivVector(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
 
             template<typename CompareFunctionType>
             void onJumpCmp(bricksvm::event::EventThread &self, bricksvm::event::Message &msg,
@@ -150,6 +170,7 @@ namespace bricksvm
 
             RegisterContainerType           _registers;
             FloatingRegisterContainerType   _fpRegisters;
+            MathUnit                        _mathUnit;
 		};
 	}
 }

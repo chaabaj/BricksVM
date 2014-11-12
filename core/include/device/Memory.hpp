@@ -33,7 +33,7 @@ namespace bricksvm
                     throw bricksvm::exception::InvalidOperationException("Memory overflow");
                 }
                 dest = _memory.get() + realAddr;
-                std::memcpy(dest, buffer, size * sizeof(T));
+                std::memcpy(dest, buffer, static_cast<std::size_t>(size * sizeof(T)));
             }
 
             template<typename T>
@@ -43,7 +43,7 @@ namespace bricksvm
                 auto        lastAddr = (*_memIndexes.find(progId)).second.second;
                 char        *src;
 
-                if (realAddr + size > lastAddr)
+                if (realAddr + (size * sizeof(T)) > lastAddr)
                 {
                     throw bricksvm::exception::InvalidOperationException("Memory overflow");
                 }

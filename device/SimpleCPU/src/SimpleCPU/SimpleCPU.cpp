@@ -1,10 +1,12 @@
 #include <memory>
 #include <iostream>
 #include <functional>
+#include <cmath>
 #include <interpreter/Value.hpp>
 #include "exception/InvalidOperationException.hpp"
 #include "SimpleCPU/SimpleCPU.hpp"
 #include "core/Console.hpp"
+#include "exception/InvalidOperationException.hpp"
 
 extern "C"
 {
@@ -46,6 +48,16 @@ namespace bricksvm
             this->on("scpu_jlt", std::bind(&SimpleCPU::onJumpLowerThan, this, _1, _2));
             this->on("scpu_jgt", std::bind(&SimpleCPU::onJumpGreaterThan, this, _1, _2));
             this->on("scpu_je", std::bind(&SimpleCPU::onJumpEqual, this, _1, _2));
+            this->on("scpu_sqrt", std::bind(&SimpleCPU::onSqrt, this, _1, _2));
+            this->on("scpu_pow", std::bind(&SimpleCPU::onPower, this, _1, _2));
+            this->on("scpu_log", std::bind(&SimpleCPU::onLogarithm, this, _1, _2));
+            this->on("scpu_sin", std::bind(&SimpleCPU::onSinus, this, _1, _2));
+            this->on("scpu_cos", std::bind(&SimpleCPU::onCosinus, this, _1, _2));
+            this->on("scpu_tan", std::bind(&SimpleCPU::onTangente, this, _1, _2));
+            this->on("scpu_add_vec", std::bind(&SimpleCPU::onAddVector, this, _1, _2));
+            this->on("scpu_mul_vec", std::bind(&SimpleCPU::onMulVector, this, _1, _2));
+            this->on("scpu_sub_vec", std::bind(&SimpleCPU::onSubVector, this, _1, _2));
+            this->on("scpu_div_vec", std::bind(&SimpleCPU::onDivVector, this, _1, _2));
             bricksvm::core::Console::success(this->getName()) << this->getName() << " initialized" << std::endl;
         }
 
@@ -53,7 +65,6 @@ namespace bricksvm
         {
             bricksvm::core::Console::log(this->getName()) << "closed" << std::endl;
         }
-
 
         void SimpleCPU::onAdd(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
         {
@@ -187,7 +198,150 @@ namespace bricksvm
             {
                 state = Equal;
             }
-            src.emit("instruction:finished", std::ref(self), progId, interpreter::Value(static_cast<int>(state)));
+            src.emit("instruction:finished", self, progId, interpreter::Value(static_cast<int>(state)));
         }
+
+        void SimpleCPU::onSqrt(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
+        {
+            bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
+            std::string                     progId = msg.getParameter<std::string>(2);
+            interpreter::Value              &val = msg.getParameter<interpreter::Value>(3);
+
+            src.emit("instruction:finished", self,progId, _mathUnit.sqrt(val));
+        }
+
+        void SimpleCPU::onSinus(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
+        {
+            bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
+            std::string                     progId = msg.getParameter<std::string>(2);
+            interpreter::Value              &val = msg.getParameter<interpreter::Value>(3);
+
+            src.emit("instruction:finished", self, progId, _mathUnit.sin(val));
+        }
+
+        void SimpleCPU::onCosinus(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
+        {
+            bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
+            std::string                     progId = msg.getParameter<std::string>(2);
+            interpreter::Value              &val = msg.getParameter<interpreter::Value>(3);
+
+            src.emit("instruction:finished", self, progId, _mathUnit.cos(val));
+
+        }
+
+        void SimpleCPU::onTangente(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
+        {
+            bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
+            std::string                     progId = msg.getParameter<std::string>(2);
+            interpreter::Value              &val = msg.getParameter<interpreter::Value>(3);
+
+            src.emit("instruction:finished", self, progId, _mathUnit.tan(val));
+        }
+
+        void SimpleCPU::onPower(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
+        {
+            bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
+            std::string                     progId = msg.getParameter<std::string>(2);
+            interpreter::Value              &val1 = msg.getParameter<interpreter::Value>(3);
+            interpreter::Value              &val2 = msg.getParameter<interpreter::Value>(3);
+
+            src.emit("instruction:finished", self, progId, _mathUnit.pow(val1, val2));
+        }
+
+        void SimpleCPU::onLogarithm(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
+        {
+            bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
+            std::string                     progId = msg.getParameter<std::string>(2);
+            interpreter::Value              &val = msg.getParameter<interpreter::Value>(3);
+
+            src.emit("instruction:finished", self, progId, _mathUnit.log(val));
+        }
+
+        void SimpleCPU::onAddVector(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
+        {
+            bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
+            Memory                          &memory = msg.getParameter<Memory>(1);
+            std::string                     progId = msg.getParameter<std::string>(2);
+            uint64_t                        vecAddr1 = msg.getParameter<interpreter::Value>(3);
+            uint64_t                        vecAddr2 = msg.getParameter<interpreter::Value>(3);
+            uint64_t                        destAddr = msg.getParameter<interpreter::Value>(3);
+            uint8_t                         vecSize = msg.getParameter<interpreter::Value>(3);
+
+            try
+            {
+                _mathUnit.addVector(memory, progId, vecAddr1, vecAddr2, destAddr, vecSize);
+                src.emit("instruction:finished", self, progId, interpreter::Value(0));
+            }
+            catch (bricksvm::exception::InvalidOperationException &err)
+            {
+                src.emit("instruction:error", self, progId, std::string(err.what()));
+            }
+        }
+
+        void SimpleCPU::onSubVector(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
+        {
+            bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
+            Memory                          &memory = msg.getParameter<Memory>(1);
+            std::string                     progId = msg.getParameter<std::string>(2);
+            uint64_t                        vecAddr1 = msg.getParameter<interpreter::Value>(3);
+            uint64_t                        vecAddr2 = msg.getParameter<interpreter::Value>(3);
+            uint64_t                        destAddr = msg.getParameter<interpreter::Value>(3);
+            uint8_t                         vecSize = msg.getParameter<interpreter::Value>(3);
+
+            try
+            {
+                _mathUnit.subVector(memory, progId, vecAddr1, vecAddr2, destAddr, vecSize);
+                src.emit("instruction:finished", self, progId, interpreter::Value(0));
+            }
+            catch (bricksvm::exception::InvalidOperationException &err)
+            {
+                src.emit("instruction:error", self, progId, std::string(err.what()));
+            }
+        }
+
+        void SimpleCPU::onMulVector(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
+        {
+            bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
+            Memory                          &memory = msg.getParameter<Memory>(1);
+            std::string                     progId = msg.getParameter<std::string>(2);
+            uint64_t                        vecAddr1 = msg.getParameter<interpreter::Value>(3);
+            uint64_t                        vecAddr2 = msg.getParameter<interpreter::Value>(3);
+            uint64_t                        destAddr = msg.getParameter<interpreter::Value>(3);
+            uint8_t                         vecSize = msg.getParameter<interpreter::Value>(3);
+
+            try
+            {
+                _mathUnit.mulVector(memory, progId, vecAddr1, vecAddr2, destAddr, vecSize);
+                src.emit("instruction:finished", self, progId, interpreter::Value(0));
+            }
+            catch (bricksvm::exception::InvalidOperationException &err)
+            {
+                src.emit("instruction:error", self, progId, std::string(err.what()));
+            }
+        }
+
+        void SimpleCPU::onDivVector(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
+        {
+            bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
+            Memory                          &memory = msg.getParameter<Memory>(1);
+            std::string                     progId = msg.getParameter<std::string>(2);
+            uint64_t                        vecAddr1 = msg.getParameter<interpreter::Value>(3);
+            uint64_t                        vecAddr2 = msg.getParameter<interpreter::Value>(3);
+            uint64_t                        destAddr = msg.getParameter<interpreter::Value>(3);
+            uint8_t                         vecSize = msg.getParameter<interpreter::Value>(3);
+
+            try
+            {
+                _mathUnit.divVector(memory, progId, vecAddr1, vecAddr2, destAddr, vecSize);
+                src.emit("instruction:finished", self, progId, interpreter::Value(0));
+            }
+            catch (bricksvm::exception::InvalidOperationException &err)
+            {
+                src.emit("instruction:error", self, progId, std::string(err.what()));
+            }
+        }
+
     }
+
+    
 }

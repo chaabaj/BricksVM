@@ -1,19 +1,21 @@
 #include "exception/InvalidOperationException.hpp"
 #include "interpreter/Value.hpp"
+#include "core/Computation.hpp"
 
 namespace bricksvm
 {
     namespace interpreter
     {
-        Value::Value(Value const &other) : _value(other._value), _type(other._type)
+        Value::Value(Value const &other) : _type(other._type), _typeSize(other._typeSize)
         {
-
+            _value = other.cast(other._type)._value;
         }
 
         Value	&Value::operator=(Value const &other)
         {
-            _value = other._value;
+            _value = other.cast(other._type)._value;
             _type = other._type;
+            _typeSize = other._typeSize;
             return (*this);
         }
 
@@ -62,238 +64,84 @@ namespace bricksvm
             }
         }
 
-        Value Value::operator+(Value const &rhs)
+        Value Value::operator+(Value const &rhs) const
         {
-            Value   result = (*this);
-
-            if (_type != rhs._type)
-            {
-                return result + rhs.cast(_type);
-            }
-            else if (_type != Float && _type != Double)
-            {
-                this->doOperation(rhs, [](long long int a, long long int b)
-                {
-                    return a + b;
-                });
-            }
-            else
-            {
-                this->doOperation(rhs, [](double a, double b)
-                {
-                    return a + b;
-                });
-            }
-            
-            return result;
+            return this->compute<bricksvm::core::Add>(rhs);
         }
 
-        Value Value::operator-(Value const &rhs)
+        Value Value::operator-(Value const &rhs) const
         {
-            Value   result = (*this);
-
-            if (_type != rhs._type)
-            {
-                return result - rhs.cast(_type);
-            }
-            else if (_type != Float && _type != Double)
-            {
-                this->doOperation(rhs, [](long long int a, long long int b)
-                {
-                    return a - b;
-                });
-            }
-            else
-            {
-                this->doOperation(rhs, [](double a, double b)
-                {
-                    return a - b;
-                });
-            }
-            return result;
+            return this->compute<bricksvm::core::Substract>(rhs);
         }
 
-        Value Value::operator/(Value const &rhs)
+        Value Value::operator/(Value const &rhs) const
         {
-            Value   result = (*this);
-
-            if (_type != rhs._type)
-            {
-                return result / rhs.cast(_type);
-            }
-            else if (_type != Float && _type != Double)
-            {
-                this->doOperation(rhs, [](long long int a, long long int b)
-                {
-                    return a / b;
-                });
-            }
-            else
-            {
-                this->doOperation(rhs, [](double a, double b)
-                {
-                    return a / b;
-                });
-            }
-            return result;
+            return this->compute<bricksvm::core::Divide>(rhs);
         }
 
-        Value Value::operator*(Value const &rhs)
+        Value Value::operator*(Value const &rhs) const
         {
-            Value   result = (*this);
-
-            if (_type != rhs._type)
-            {
-                return (*this) * rhs.cast(_type);
-            }
-            else if (_type != Float && _type != Double)
-            {
-                this->doOperation(rhs, [](long long int a, long long int b)
-                {
-                    return a * b;
-                });
-            }
-            else
-            {
-                this->doOperation(rhs, [](double a, double b)
-                {
-                    return a * b;
-                });
-            }
-            return result;
+            return this->compute<bricksvm::core::Multiply>(rhs);
         }
 
-        Value Value::operator%(Value const &rhs)
+        Value Value::operator%(Value const &rhs) const
         {
-            Value   result = (*this);
-
-            if (_type == Float || _type == Double)
-            {
-                throw bricksvm::exception::InvalidOperationException("Cannot do modulo on float/double type");
-            }
-            else if (_type != rhs._type)
-            {
-                return (*this) % rhs.cast(_type);
-            }
-            else
-            {
-                this->doOperation(rhs, [](long long int a, long long int b)
-                {
-                    return a % b;
-                });
-            }
-            return result;
+            return this->compute<bricksvm::core::Modulo>(rhs);
         }
 
-        Value Value::operator|(Value const &rhs)
+        Value Value::operator|(Value const &rhs) const
         {
-            Value result = (*this);
-
-            if (_type == Float || _type == Double)
-            {
-                throw bricksvm::exception::InvalidOperationException("Cannot do modulo on float/double type");
-            }
-            else if (_type != rhs._type)
-            {
-                return (*this) | rhs.cast(_type);
-            }
-            else
-            {
-                this->doOperation(rhs, [](long long int a, long long int b)
-                {
-                    return a | b;
-                });
-            }
-            return result;
+            return this->compute<bricksvm::core::BinaryOr>(rhs);
         }
 
-        Value Value::operator&(Value const &rhs)
+        Value Value::operator&(Value const &rhs) const
         {
-            Value result = (*this);
-
-            if (_type == Float || _type == Double)
-            {
-                throw bricksvm::exception::InvalidOperationException("Cannot do modulo on float/double type");
-            }
-            else if (_type != rhs._type)
-            {
-                return (*this) & rhs.cast(_type);
-            }
-            else
-            {
-                this->doOperation(rhs, [](long long int a, long long int b)
-                {
-                    return a & b;
-                });
-            }
-            return result;
+            return this->compute<bricksvm::core::BinaryAnd>(rhs);
         }
 
-        Value Value::operator>>(Value const &rhs)
+        Value Value::operator>>(Value const &rhs) const
         {
-            Value   result = (*this);
-
-            if (_type == Float || _type == Double)
-            {
-                throw bricksvm::exception::InvalidOperationException("Cannot do modulo on float/double type");
-            }
-            else if (_type != rhs._type)
-            {
-                return (*this) >> rhs.cast(_type);
-            }
-            else
-            {
-                this->doOperation(rhs, [](long long int a, long long int b)
-                {
-                    return a >> b;
-                });
-            }
-            return result;
+            return this->compute<bricksvm::core::BinaryRightShift>(rhs);
         }
 
-        Value Value::operator<<(Value const &rhs)
+        Value Value::operator<<(Value const &rhs) const
         {
-            Value   result = (*this);
-
-            if (_type == Float || _type == Double)
-            {
-                throw bricksvm::exception::InvalidOperationException("Cannot do modulo on float/double type");
-            }
-            else if (_type != rhs._type)
-            {
-                return (*this) << rhs.cast(_type);
-            }
-            else
-            {
-                this->doOperation(rhs, [](long long int a, long long int b)
-                {
-                    return a << b;
-                });
-            }
-            return result;
+            return this->compute<bricksvm::core::BinaryLeftShift>(rhs);
         }
 
-        Value Value::operator^(Value const &rhs)
+        Value Value::operator^(Value const &rhs) const
         {
-            Value   result = (*this);
-
-            if (_type == Float || _type == Double)
-            {
-                throw bricksvm::exception::InvalidOperationException("Cannot do modulo on float/double type");
-            }
-            else if (_type != rhs._type)
-            {
-                return (*this) ^ rhs.cast(_type);
-            }
-            else
-            {
-                this->doOperation(rhs, [](long long int a, long long int b)
-                {
-                    return a ^ b;
-                });
-            }
-            return result;
+            return this->compute<bricksvm::core::BinaryXor>(rhs);
         }
 
+        bool Value::operator==(Value const &rhs) const
+        {
+            return this->compute<bricksvm::core::Equal>(rhs).as<bool>();
+        }
+
+        bool Value::operator>(Value const &rhs) const
+        {
+            return this->compute<bricksvm::core::GreaterThan>(rhs).as<bool>();
+        }
+
+        bool Value::operator<(Value const &rhs) const
+        {
+            return this->compute<bricksvm::core::LowerThan>(rhs).as<bool>();
+        }
+
+        bool Value::operator>=(Value const &rhs) const
+        {
+            return this->compute<bricksvm::core::GreaterOrEqualThan>(rhs).as<bool>();
+        }
+
+        bool Value::operator<=(Value const &rhs) const
+        {
+            return this->compute<bricksvm::core::LowerOrEqualThan>(rhs).as<bool>();
+        }
+
+        bool Value::operator!=(Value const &rhs) const
+        {
+            return this->compute<bricksvm::core::NotEqual>(rhs).as<bool>();
+        }
     }
 }

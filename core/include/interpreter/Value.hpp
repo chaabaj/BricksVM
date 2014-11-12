@@ -1,7 +1,7 @@
 #ifndef __BRICKSVM_INTERPRETER_VALUE_HPP__
 # define __BRICKSVM_INTERPRETER_VALUE_HPP__
 
-# include <assert.h>
+# include <iostream>
 # include "core/Any.hpp"
 # include "core/DllExport.hpp"
 # include "exception/InvalidTypeException.hpp"
@@ -12,12 +12,12 @@ namespace bricksvm
     {
         enum EXPORT_DLL Type
         {
-            Int8,
-            Int16,
-            Int32,
-            Float,
-            Double,
-            Int64,
+            Int8 = 0,
+            Int16 = 1,
+            Int32 = 2,
+            Int64 = 3,
+            Float = 4,
+            Double = 5,
         };
 
         template<typename ScalarType, int size>
@@ -61,7 +61,7 @@ namespace bricksvm
 
 
         template<typename T>
-        class EXPORT_DLL TypeTraits
+        class EXPORT_DLL ValueTraits
         {
         public:
             static const int type = DetectType<T, sizeof(T)>::type;
@@ -77,7 +77,7 @@ namespace bricksvm
             {
                 static_assert(std::is_scalar<ScalarType>::value, "T must be a scalar");
                 _value = bricksvm::core::Any(scalar);
-                _type = static_cast<Type>(TypeTraits<ScalarType>::type);
+                _type = static_cast<Type>(ValueTraits<ScalarType>::type);
                 _typeSize = sizeof(ScalarType);
             }
 
@@ -85,14 +85,24 @@ namespace bricksvm
 
             Value &operator=(Value const &other);
 
+            inline Type    type() const
+            {
+                return _type;
+            }
+
+            inline uint32_t size() const
+            {
+                return _typeSize;
+            }
+
 
             template<typename T>
             inline operator const T() const
             {
                 static_assert(std::is_scalar<T>::value, "T must be a scalar");
-                if (_type != TypeTraits<T>::type)
+                if (_type != ValueTraits<T>::type)
                 {
-                    return this->cast(static_cast<Type>(TypeTraits<T>::type));
+                    return this->cast(static_cast<Type>(ValueTraits<T>::type));
                 }
                 return _value.getValue<T>();
             }
@@ -101,27 +111,34 @@ namespace bricksvm
             inline T const as() const
             {
                 static_assert(std::is_scalar<T>::value, "T must be a scalar");
-                if (_type != TypeTraits<T>::type)
+                if (_type != ValueTraits<T>::type)
                 {
-                    return this->cast(static_cast<Type>(TypeTraits<T>::type));
+                    return this->cast(static_cast<Type>(ValueTraits<T>::type));
                 }
                 return _value.getValue<T>();
             }
 
-            Value operator+(Value const &rhs);
-            Value operator-(Value const &rhs);
-            Value operator/(Value const &rhs);
-            Value operator*(Value const &rhs);
-            Value operator%(Value const &rhs);
-            Value operator|(Value const &rhs);
-            Value operator&(Value const &rhs);
-            Value operator>>(Value const &rhs);
-            Value operator<<(Value const &rhs);
-            Value operator^(Value const &rhs);
+            Value operator+(Value const &rhs) const;
+            Value operator-(Value const &rhs) const;
+            Value operator/(Value const &rhs) const;
+            Value operator*(Value const &rhs) const;
+            Value operator%(Value const &rhs) const;
+            Value operator|(Value const &rhs) const;
+            Value operator&(Value const &rhs) const;
+            Value operator>>(Value const &rhs) const;
+            Value operator<<(Value const &rhs) const;
+            Value operator^(Value const &rhs) const;
+
+            bool operator==(Value const &rhs) const;
+            bool operator>(Value const &rhs) const;
+            bool operator<(Value const &rhs) const;
+            bool operator>=(Value const &rhs) const;
+            bool operator<=(Value const &rhs) const;
+            bool operator!=(Value const &rhs) const;
 
             ~Value() {}
 
-            Value cast(Type const type) const;
+            Value cast(Type const destType) const;
 
         private:
 
@@ -147,63 +164,78 @@ namespace bricksvm
                 }
             }
 
-            template<typename OperationFunction>
-            void doOperation(Value const &rhs, OperationFunction const &&op)
+
+            template<template<typename> class Operation>
+            Value compute(Value const &rhs) const
             {
 
-                switch (_type)
+                if (_type > rhs._type)
                 {
-                case Int8:
+                    return this->compute<Operation>(rhs.cast(_type));
+                }
+                else if (_type < rhs._type)
                 {
-                    char lhsVal = _value.getValue<char>();
-                    char rhsVal = rhs._value.getValue<char>();
-                    char result = op(lhsVal, rhsVal);
+                    Value lhs = (*this);
 
-                    _value = bricksvm::core::Any(result);
+                    return lhs.cast(rhs._type).compute<Operation>(rhs);
                 }
-                case Int16:
+                else
                 {
-                    short int lhsVal = _value.getValue<short int>();
-                    short int rhsVal = rhs._value.getValue<short int>();
-                    short int result = op(lhsVal, rhsVal);
+                    switch (_type)
+                    {
+                    case Int8:
+                    {
+                        char lhsVal = _value.getValue<char>();
+                        char rhsVal = rhs._value.getValue<char>();
+                        char result = Operation<char>::compute(lhsVal, rhsVal);
 
-                    _value = bricksvm::core::Any(result);
-                }
-                case Int32:
-                {
-                    int lhsVal = _value.getValue<int>();
-                    int rhsVal = rhs._value.getValue<int>();
-                    int result = op(lhsVal, rhsVal);
+                        return Value(result);
+                    }
+                    case Int16:
+                    {
+                        short int lhsVal = _value.getValue<short int>();
+                        short int rhsVal = rhs._value.getValue<short int>();
+                        short int result = Operation<short int>::compute(lhsVal, rhsVal);
 
-                    _value = bricksvm::core::Any(result);
-                }
-                case Int64:
-                {
-                    long long int lhsVal = _value.getValue<long long int>();
-                    long long int rhsVal = rhs._value.getValue<long long int>();
-                    long long int result = op(lhsVal, rhsVal);
+                        return Value(result);
+                    }
+                    case Int32:
+                    {
+                        int lhsVal = _value.getValue<int>();
+                        int rhsVal = rhs._value.getValue<int>();
+                        int result = Operation<int>::compute(lhsVal, rhsVal);
 
-                    _value = bricksvm::core::Any(result);
-                }
-                case Float:
-                {
-                    float lhsVal = _value.getValue<float>();
-                    float rhsVal = rhs._value.getValue<float>();
-                    float result = op(lhsVal, rhsVal);
+                        return Value(result);
+                    }
+                    case Int64:
+                    {
+                        long long int lhsVal = _value.getValue<long long int>();
+                        long long int rhsVal = rhs._value.getValue<long long int>();
+                        long long int result = Operation<long long int>::compute(lhsVal, rhsVal);
 
-                    _value = bricksvm::core::Any(result);
-                }
-                case Double:
-                {
-                    double lhsVal = _value.getValue<double>();
-                    double rhsVal = rhs._value.getValue<double>();
-                    double result = op(lhsVal, rhsVal);
+                        return Value(result);
+                    }
+                    case Float:
+                    {
+                        float lhsVal = _value.getValue<float>();
+                        float rhsVal = rhs._value.getValue<float>();
+                        float result = Operation<float>::compute(lhsVal, rhsVal);
 
-                    _value = bricksvm::core::Any(result);
+                        return Value(result);
+                    }
+                    case Double:
+                    {
+                        double lhsVal = _value.getValue<double>();
+                        double rhsVal = rhs._value.getValue<double>();
+                        double result = Operation<double>::compute(lhsVal, rhsVal);
+
+                        return Value(result);
+                    }
+                    default:
+                        throw bricksvm::exception::InvalidTypeException("Unknown type");
+                    }
                 }
-                default:
-                    throw bricksvm::exception::InvalidTypeException("Unknown type");
-                }
+                
             }
 
         private:
@@ -211,9 +243,7 @@ namespace bricksvm
             Type                _type;
             unsigned int        _typeSize;
         };
-
     }
-
 }
 
 #endif

@@ -21,7 +21,7 @@ namespace bricksvm
             Value const	&getValue() const;
 
         private:
-            Value const &_value;
+            Value const _value;
 
         };
     }

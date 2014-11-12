@@ -1,12 +1,18 @@
 #include "VirtualMachine.hpp"
 #include "interpreter/ValueParameter.hpp"
+#include "core/Console.hpp"
 
 namespace bricksvm
 {
     VirtualMachine::VirtualMachine() : event::ParallelEventThread<4>("VM")
     {
-        this->on("instruction:finished", std::bind(&VirtualMachine::onInstructionFinished, this, std::placeholders::_1, std::placeholders::_2));
-        this->on("vm_jmp", std::bind(&VirtualMachine::onJump, this, std::placeholders::_1, std::placeholders::_2));
+        using namespace std::placeholders;
+
+        this->on("instruction:finished", std::bind(&VirtualMachine::onInstructionFinished, this, _1, _2));
+        this->on("instruction:error", std::bind(&VirtualMachine::onInstructionError, this, _1, _2));
+        this->on("vm_jmp", std::bind(&VirtualMachine::onJump, this, _1, _2));
+        this->on("vm_mem_write", std::bind(&bricksvm::device::Memory::onRead, _memory.get(), _1, _2));
+        this->on("vm_mem_read", std::bind(&bricksvm::device::Memory::onWrite, _memory.get(), _1, _2));
     }
 
     VirtualMachine::~VirtualMachine()
@@ -28,10 +34,21 @@ namespace bricksvm
         }
     }
 
+    void VirtualMachine::onInstructionError(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
+    {
+        std::string                                     progId = msg.getParameter<std::string>(1);
+        VirtualMachine::ProgramContainerType::iterator  it;
+        std::string                                     errMsg = msg.getParameter<std::string>(2);
+
+        if ((it = _programs.find(progId)) != _programs.end())
+        {
+            bricksvm::core::Console::error(progId) << errMsg << std::endl;
+        }
+    }
+
     void VirtualMachine::onJump(bricksvm::event::EventThread &thread, bricksvm::event::Message &msg)
     {
         std::string		progId = msg.getParameter<std::string>(1);
-        VirtualMachine	&vm = msg.getParameter<VirtualMachine>(0);
         unsigned int    index = msg.getParameter<interpreter::Value>(2);
         event::Message	response("instruction:finished", std::ref(*this), progId, interpreter::Value(0));
 
@@ -74,6 +91,7 @@ namespace bricksvm
         interpreter::ValueParameter		*param;
 
         msg->pushParameter(std::ref(*this));
+        msg->pushParameter(std::ref(*_memory));
         msg->pushParameter(progName);
         for (auto &elem : instruction.getParameters())
         {
@@ -102,9 +120,22 @@ namespace bricksvm
     {
         interpreter::Value	retVal(0);
 
+        bricksvm::core::Console::success("VM") << "Virtual machine started" << std::endl;
         for (auto &program : _programs)
         {
             this->nextInstruction(program.first, program.second, retVal);
         }
+    }
+
+    void VirtualMachine::allocateMemory(uint64_t memSize)
+    {
+        std::vector<std::string>    prgIds;
+
+ 
+        for (auto elem : _programs)
+        {
+            prgIds.push_back(elem.first);
+        }
+        this->_memory = MemoryPtrType(new bricksvm::device::Memory(memSize, prgIds));
     }
 }

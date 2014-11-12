@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 
-project($name)
+project(SimpleCPU)
 
 
 
@@ -9,7 +9,7 @@ file(GLOB_RECURSE HEADERS "include/*.hpp" "include/*.tpp")
 
 if (UNIX OR APPLE)
 
-	add_definitions("-std=c++11 -Wall -ggdb")
+	add_definitions("-std=c++11 -ggdb -Wall")
 	
 endif()
 
@@ -19,6 +19,6 @@ add_subdirectory(../../core ../../core_bin)
 
 include_directories(include ../../core/include)
 
-add_library($name SHARED $${SRCS} $${HEADERS})
+add_library(SimpleCPU SHARED ${SRCS} ${HEADERS})
 
-target_link_libraries ($name bricksvm_core $${CMAKE_THREAD_LIBS_INIT} $${CMAKE_DL_LIBS})
+target_link_libraries (SimpleCPU bricksvm_core ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_DL_LIBS}) 

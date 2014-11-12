@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 
-project($name)
+project(SimpleVideo)
 
 
 
@@ -19,6 +19,6 @@ add_subdirectory(../../core ../../core_bin)
 
 include_directories(include ../../core/include)
 
-add_library($name SHARED $${SRCS} $${HEADERS})
+add_library(SimpleVideo SHARED ${SRCS} ${HEADERS})
 
-target_link_libraries ($name bricksvm_core $${CMAKE_THREAD_LIBS_INIT} $${CMAKE_DL_LIBS})
+target_link_libraries (SimpleVideo bricksvm_core ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_DL_LIBS})

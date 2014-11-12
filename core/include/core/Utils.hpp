@@ -1,8 +1,12 @@
 #ifndef __BRICKSVM_CORE_UTILS_HPP__
 #define __BRICKSVM_CORE_UTILS_HPP__
 
+
 #include <sstream>
-#include <cctype>
+# include <cctype>
+# include <string>
+# include <sstream>
+
 
 namespace bricksvm
 {

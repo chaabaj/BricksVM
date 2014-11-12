@@ -34,6 +34,7 @@ namespace bricksvm
             {
                 std::shared_ptr<Message>	msg;
 
+                std::cout << "event name : " << eventName << std::endl;
                 msg = std::shared_ptr<Message>(new Message(eventName, std::ref(src), args...));
                 this->pushItem(msg);
             }
@@ -53,8 +54,8 @@ namespace bricksvm
 
                 ss.str(expr);
                 std::copy(std::istream_iterator<std::string>(ss),
-                    std::istream_iterator<std::string>(),
-                    std::back_inserter<std::vector<std::string> >(eventNames));
+                          std::istream_iterator<std::string>(),
+                          std::back_inserter<std::vector<std::string> >(eventNames));
 
                 for (std::string const &eventName : eventNames)
                 {

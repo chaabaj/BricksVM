@@ -28,12 +28,14 @@ namespace bricksvm
 
             void broadcastMsg(std::shared_ptr<Message> &msg)
             {
-                _pool.dispatch([msg, this]()
+                std::function<void()> task = [this, msg]()
                 {
-                    auto cpyMsg = msg;
+                    std::shared_ptr<Message> cpyMsg = msg;
+
+                    EventThread::broadcastMsg(cpyMsg);
+                };
                     
-		            EventThread::broadcastMsg(cpyMsg);
-                });
+                _pool.dispatch(task);
             }
 
         private:

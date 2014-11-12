@@ -19,6 +19,8 @@ namespace bricksvm
 {
     namespace core
     {
+
+      
         class EXPORT_DLL LibraryLoader
         {
         public:
@@ -29,20 +31,38 @@ namespace bricksvm
 
             ~LibraryLoader();
 
+            static inline std::string const getExtension()
+            {
+                # ifdef WIN32
+                    return ".dll";
+                # elif __gnu_linux__
+                    return ".so";
+                # else
+                    return "";
+                #endif
+            }
+
             template<typename FunctionType>
             FunctionType	get(std::string const &libraryName, std::string const &name)
             {
-                auto it = _libraries.find(libraryName);
-
+                FunctionType    fun;
+                auto            it = _libraries.find(libraryName);
+            
                 if (it != _libraries.end())
                 {
                     DynamicLibraryType lib = it->second;
 
                     # ifdef WIN32
-                        return reinterpret_cast<FunctionType>(GetProcAddress(_libraries[libraryName], name.c_str()));
+                        fun = reinterpret_cast<FunctionType>(GetProcAddress(lib, name.c_str())); 
                     # elif __gnu_linux__
-                        return reinterpret_cast<FunctionType>(dlsym(_libraries[libraryName], name.c_str()));
+                        fun = reinterpret_cast<FunctionType>(dlsym(lib, name.c_str()));
                     # endif
+
+                    if (!fun)
+                    {
+                        throw std::runtime_error(LibraryLoader::getError());
+                    }
+                    return fun;
                 }
                 this->load(libraryName);
                 return this->get<FunctionType>(libraryName, name);
@@ -51,6 +71,17 @@ namespace bricksvm
 
         private:
 
+                static inline std::string const getError()
+                {
+                    #ifdef WIN32
+                        return "Windows crap here";
+                    #elif __gnu_linux__
+                        return std::string(dlerror());
+                    #endif
+                }
+
+
+            
             void load(std::string const &libraryName);
 
             void unload(DynamicLibraryType &lib);

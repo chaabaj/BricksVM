@@ -31,7 +31,7 @@ namespace bricksvm
 			}
 
 			template<typename ... Args>
-			void emit(Args ... args)
+			void emit(Args&& ... args)
 			{
 				for (FunctionType &fn : _listeners)
 				{
@@ -40,7 +40,7 @@ namespace bricksvm
 			}
 
 			template<typename ListenerType>
-			void on(ListenerType listener)
+			void on(ListenerType &&listener)
 			{
 				std::function<Signature>	fn = listener;
 

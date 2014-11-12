@@ -2,6 +2,9 @@
 #include "exception/InvalidInstructionException.hpp"
 #include "exception/StackOverflowException.hpp"
 
+#include "interpreter/ValueParameter.hpp"
+#include "interpreter/InstructionParameter.hpp"
+
 namespace bricksvm
 {
     namespace interpreter
@@ -54,30 +57,60 @@ namespace bricksvm
             return std::shared_ptr<Instruction>();
         }
 
-        std::shared_ptr<Instruction> Program::execute(Value const &retVal)
-        {
-            std::shared_ptr<Instruction>	currentInstruction = this->getCurrentInstruction();
+		std::shared_ptr<Instruction> Program::execute(Value const &retVal)
+		{
+			std::shared_ptr<Instruction>	currentInstruction = this->getCurrentInstruction();
 
-            if (_state == Execution
-                && currentInstruction
-                && !currentInstruction->parametersIsResolved())
-            {
-                _resolver = std::shared_ptr<InstructionResolver>(new InstructionResolver(currentInstruction->clone()));
-                _state = ResolveInstruction;
-                return _resolver->resolve();
-            }
-            else if (_state == ResolveInstruction)
-            {
-                if (_resolver->isResolved())
-                {
-                    _state = Execution;
-                    _resolver = nullptr;
-                    return this->execute(retVal);
-                }
-                _resolver->setResolvedValue(retVal);
-                return _resolver->resolve();
-            }
-            return currentInstruction;
-        }
+			if (_state == Execution
+				&& currentInstruction
+				&& !currentInstruction->parametersIsResolved())
+			{
+				_resolver = std::shared_ptr<InstructionResolver>(new InstructionResolver(currentInstruction->clone()));
+				_state = ResolveInstruction;
+				return _resolver->resolve();
+			}
+			else if (_state == ResolveInstruction)
+			{
+				if (_resolver->isResolved())
+				{
+					_state = Execution;
+					_resolver = nullptr;
+					return this->execute(retVal);
+				}
+				_resolver->setResolvedValue(retVal);
+				return _resolver->resolve();
+			}
+			return currentInstruction;
+		}
+
+		/* DEBUG */
+		void Program::dumpProgram()
+		{
+			int i = 0;
+			while (i < this->_instructions.size())
+			{
+				dumpFunction(this->_instructions[i]);
+			}
+		}
+
+		void Program::dumpFunction(std::shared_ptr<Instruction> instr)
+		{
+			std::cout << instr->getName() << std::endl;
+			int i = 0;
+
+			while (i < instr->getParameters().size())
+			{
+				if (instr->getParameters()[i]->getType() == AParameter::Type::ValueType)
+				{
+					std::shared_ptr<interpreter::ValueParameter> ram = std::static_pointer_cast<interpreter::ValueParameter>(instr->getParameters()[i]);
+					std::cout << "\t" <<  ram->getValue().as<float>() << std::endl;
+				}
+				else
+				{
+					std::shared_ptr<interpreter::InstructionParameter> ram = std::static_pointer_cast<interpreter::InstructionParameter>(instr->getParameters()[i]);
+					this->dumpFunction(ram->getInstruction());
+				}
+			}
+		}
     }
 }

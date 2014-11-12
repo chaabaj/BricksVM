@@ -2,6 +2,7 @@
 #include "VirtualMachine.hpp"
 #include "ConfigurationParser.hpp"
 #include "interpreter/ValueParameter.hpp"
+#include "parser/Parser.hpp"
 
 int main()
 {
@@ -22,6 +23,10 @@ int main()
 
     try
     {
+		parser::Parser pp;
+
+		pp.generateProgramFromFile("C:/Users/kovacs_s/tek4/BricksVM/program.txt");
+
         parser.parse(vm);
         instr->setName("scpu_reg_write");
         instr->addParameter(param);

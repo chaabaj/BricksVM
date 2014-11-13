@@ -55,7 +55,7 @@ namespace bricksvm
 			/* DEBUG */
 		public:
 			void dumpProgram();
-			void dumpFunction(std::shared_ptr<Instruction> instr);
+			void dumpFunction(std::shared_ptr<Instruction> instr, int depth = 0);
 
         };
     }

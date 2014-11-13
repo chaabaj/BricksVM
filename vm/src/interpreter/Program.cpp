@@ -94,9 +94,13 @@ namespace bricksvm
 			}
 		}
 
-		void Program::dumpFunction(std::shared_ptr<Instruction> instr)
+		void Program::dumpFunction(std::shared_ptr<Instruction> instr, int depth)
 		{
-			std::cout << instr->getName() << std::endl;
+			for (int f = depth; f > 0; --f)
+			{
+				std::cout << "\t";
+			}
+			std::cout << "INSTRUCTION:  " << instr->getName() << "()" << std::endl;
 			int i = 0;
 
 			while (i < instr->getParameters().size())
@@ -104,12 +108,12 @@ namespace bricksvm
 				if (instr->getParameters()[i]->getType() == AParameter::Type::ValueType)
 				{
 					std::shared_ptr<interpreter::ValueParameter> ram = std::static_pointer_cast<interpreter::ValueParameter>(instr->getParameters()[i]);
-					std::cout << "\t" <<  ram->getValue().as<int>() << std::endl;
+					std::cout << "\t Float:" << ram->getValue().as<float>() << " and Int:" << ram->getValue().as<int>() << std::endl;
 				}
 				else
 				{
 					std::shared_ptr<interpreter::InstructionParameter> ram = std::static_pointer_cast<interpreter::InstructionParameter>(instr->getParameters()[i]);
-					this->dumpFunction(ram->getInstruction());
+					this->dumpFunction(ram->getInstruction(), depth + 1);
 				}
 				++i;
 			}

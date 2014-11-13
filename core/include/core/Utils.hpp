@@ -83,11 +83,21 @@ namespace bricksvm
 			stream << val;
 		}
 
-		inline bool isInteger(const std::string& s)
+		inline bool isHexadecimal(const std::string &s)
+		{
+			return (s.size() > 2 && s[0] == '0' && s[1] == 'x');
+		}
+
+		inline bool isCharacter(const std::string &s)
+		{
+			return (s.size() == 3 && s[0] == '\'' && s[2] == '\'');
+		}
+
+		inline bool isInteger(const std::string &s)
 		{
 			std::string::const_iterator it = s.begin();
 			while (it != s.end() && std::isdigit(*it)) ++it;
-			return !s.empty() && it == s.end();
+			return (!s.empty() && it == s.end() /*|| isHexadecimal(s)*/);
 		}
 
 		inline bool isLabel(const std::string &s)
@@ -116,10 +126,7 @@ namespace bricksvm
 			return (it == s.end());
 		}
 
-		/*bool isValidNumber(std::string t)
-		{
-			return (true);
-		}*/
+	
 
     }
 }

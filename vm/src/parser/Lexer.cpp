@@ -121,10 +121,23 @@ namespace bricksvm
 		{
 			std::string parameter = this->_line.substr(parameterIdx, this->_position - parameterIdx);
 
-			parameter.erase(std::remove(parameter.begin(), parameter.end(), ' '), parameter.end());
+			if (parameter.find('\'') == std::string::npos)
+				parameter.erase(std::remove(parameter.begin(), parameter.end(), ' '), parameter.end());
+			else
+				parameter.erase(std::remove(parameter.begin(), parameter.begin() + parameter.find('\''), ' '), parameter.begin() + parameter.find('\''));
 			if (core::isInteger(parameter))
 			{
 				interpreter::ValueParameter *param = new interpreter::ValueParameter(convertStringToValue(parameter, interpreter::Type::Int32));
+				instruction->addParameter(std::shared_ptr<interpreter::ValueParameter>(param));
+			}
+			else if (core::isHexadecimal(parameter))
+			{
+				std::stringstream stream;
+				int convertedValue;
+
+				stream << std::hex << parameter;
+				stream >> convertedValue;
+				interpreter::ValueParameter *param = new interpreter::ValueParameter(convertedValue);
 				instruction->addParameter(std::shared_ptr<interpreter::ValueParameter>(param));
 			}
 			else if (core::isDecimal(parameter))
@@ -137,6 +150,11 @@ namespace bricksvm
 				std::string stringType = parameter.substr(0, separatorPosition);
 				parameter = parameter.substr(separatorPosition + 1, parameter.size() - separatorPosition);
 				instruction->addParameter(std::shared_ptr<interpreter::ValueParameter>(new interpreter::ValueParameter(convertStringToValue(parameter, convertStringTypeToEnumType(stringType)))));
+			}
+			else if (core::isCharacter(parameter))
+			{
+				int characterValue = parameter[1];
+				instruction->addParameter(std::shared_ptr<interpreter::ValueParameter>(new interpreter::ValueParameter(characterValue)));
 			}
 			else
 				throw new bricksvm::exception::InvalidTypeException("Invalid parameter");

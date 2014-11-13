@@ -24,5 +24,3 @@ scpu_reg_write(0, scpu_add(scpu_read(0), 16))
 scpu_reg_write(2, scpu_add(scpu_reg_read(2), 1))
 scpu_cmp(11, scpu_reg_read(2))
 scpu_jne hello_world
-
-end:

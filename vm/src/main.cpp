@@ -31,7 +31,7 @@ int main(int ac, char **av)
 
 		parser::Parser pp;
 
-		pp.generateProgramFromFile("C:/Users/kovacs_s/tek4/BricksVM/program.txt");
+		pp.generateProgramFromFile("C:/Users/kovacs_s/tek4/BricksVM/programs/hello_world.s");
 
         parser.parse(vm);
         instr->setName("scpu_reg_write");

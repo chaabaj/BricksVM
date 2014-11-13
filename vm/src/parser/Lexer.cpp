@@ -1,4 +1,7 @@
+#include <algorithm>
+
 #include "parser/Lexer.hpp"
+
 
 namespace bricksvm
 { 
@@ -7,12 +10,12 @@ namespace bricksvm
 		Lexer::Lexer()
 		{
 			_position = 0;
-			/*_stringTypes["Int8"] = ;
-			_stringTypes["Int16"] = ;
-			_stringTypes["Int32"] = ;
-			_stringTypes["Float"] = ;
-			_stringTypes["Double"] = ;
-			_stringTypes["Int64"] = ;*/
+			_stringTypes["Int8"] = interpreter::Int8;
+			_stringTypes["Int16"] = interpreter::Int16;
+			_stringTypes["Int32"] = interpreter::Int32;
+			_stringTypes["Float"] = interpreter::Float;
+			_stringTypes["Double"] = interpreter::Double;
+			_stringTypes["Int64"] = interpreter::Int64;
 		}
 
 		Lexer::~Lexer()
@@ -27,8 +30,6 @@ namespace bricksvm
 			_position = 0;
 		}
 
-		// stdin()
-		// int6: 
 
 
 		std::shared_ptr<interpreter::Instruction> Lexer::getNextInstruction()
@@ -41,6 +42,8 @@ namespace bricksvm
 				if (this->_line[this->_position] == '(')
 				{
 					instructionName = this->_line.substr(0, _position);
+
+					instructionName.erase(std::remove(instructionName.begin(), instructionName.end(), ' '), instructionName.end());
 					instruction->setName(instructionName);
 					this->_position++;
 					this->functionCall(instruction);
@@ -48,18 +51,10 @@ namespace bricksvm
 				else if (this->_line[this->_position] == ':')
 				{
 					instructionName = this->_line.substr(0, _position);
-					_labels[instructionName] = this->_lineNumber;
+
+					// More easier for Jalal to handle it during execution
+					_labels[instructionName] = this->_lineNumber - 1;
 				}
-				/*if (this->_line[this->_position] == '(')
-				{
-					
-					this->getNextParameter();
-					this->_parentheses++;
-				}
-				else if (this->_line[this->_position] == ')')
-				{
-					this->_parentheses--;
-				}*/
 				this->_position++;
 			}
 			return (instruction);
@@ -74,7 +69,8 @@ namespace bricksvm
 				/* check if it's a ValueParameter */
 				if (this->_line[this->_position] == ',')
 				{
-					std::string parameter = this->_line.substr(parameterIdx, this->_position - parameterIdx);
+					this->addNewValueParameter(instruction, parameterIdx);
+					/*std::string parameter = this->_line.substr(parameterIdx, this->_position - parameterIdx);
 
 					if (core::isInteger(parameter))
 					{ 
@@ -84,7 +80,7 @@ namespace bricksvm
 					else if (core::isDecimal(parameter))
 						instruction->addParameter(std::shared_ptr<interpreter::ValueParameter>(new interpreter::ValueParameter(convertStringToValue(parameter, interpreter::Type::Float))));
 					else if (core::isLabel(parameter))
-						instruction->addParameter(std::shared_ptr<interpreter::ValueParameter>(new interpreter::ValueParameter(getLabelLine(parameter))));
+						instruction->addParameter(std::shared_ptr<interpreter::ValueParameter>(new interpreter::ValueParameter(getLabelLine(parameter))));*/
 
 					this->_position++;
 					parameterIdx = this->_position;
@@ -94,32 +90,56 @@ namespace bricksvm
 				{
 					std::shared_ptr<interpreter::Instruction> newInstruction(new interpreter::Instruction(this->_lineNumber));
 
-					newInstruction->setName(this->_line.substr(parameterIdx, _position - parameterIdx));
+					std::string instructionName = this->_line.substr(parameterIdx, _position - parameterIdx);
+					instructionName.erase(std::remove(instructionName.begin(), instructionName.end(), ' '), instructionName.end());
+					//instructionName = .replace(instructionName.find(" "), 0, "");
+					newInstruction->setName(instructionName);
 					this->_position++;
 					this->functionCall(newInstruction);
 					instruction->addParameter(std::shared_ptr<interpreter::InstructionParameter>(new interpreter::InstructionParameter(newInstruction)));
+					parameterIdx = this->_position + 1;
 				}
-				
+				//else if (this->)
 				this->_position++;
 			}
 
-			if (this->_line.length() > this->_position)
+			/*while (this->_line.length() > this->_position && 
 			{
-				std::string parameter = this->_line.substr(parameterIdx, this->_position - parameterIdx);
+				this->_position++;
+			}*/
 
-				if (core::isInteger(parameter))
-				{
-					interpreter::ValueParameter *param = new interpreter::ValueParameter(convertStringToValue(parameter, interpreter::Type::Int32));
-					instruction->addParameter(std::shared_ptr<interpreter::ValueParameter>(param));
-				}
-				else if (core::isDecimal(parameter))
-					instruction->addParameter(std::shared_ptr<interpreter::ValueParameter>(new interpreter::ValueParameter(convertStringToValue(parameter, interpreter::Type::Float))));
-				else if (core::isLabel(parameter))
-					instruction->addParameter(std::shared_ptr<interpreter::ValueParameter>(new interpreter::ValueParameter(getLabelLine(parameter))));
-
+			if (this->_line.length() > this->_position && parameterIdx != this->_position)
+			{
+				this->addNewValueParameter(instruction, parameterIdx);
 				this->_position++;
 				parameterIdx = this->_position;
 			}
+		}
+
+		void Lexer::addNewValueParameter(std::shared_ptr<interpreter::Instruction> &instruction,
+										int parameterIdx)
+		{
+			std::string parameter = this->_line.substr(parameterIdx, this->_position - parameterIdx);
+
+			parameter.erase(std::remove(parameter.begin(), parameter.end(), ' '), parameter.end());
+			if (core::isInteger(parameter))
+			{
+				interpreter::ValueParameter *param = new interpreter::ValueParameter(convertStringToValue(parameter, interpreter::Type::Int32));
+				instruction->addParameter(std::shared_ptr<interpreter::ValueParameter>(param));
+			}
+			else if (core::isDecimal(parameter))
+				instruction->addParameter(std::shared_ptr<interpreter::ValueParameter>(new interpreter::ValueParameter(convertStringToValue(parameter, interpreter::Type::Float))));
+			else if (core::isLabel(parameter))
+				instruction->addParameter(std::shared_ptr<interpreter::ValueParameter>(new interpreter::ValueParameter(getLabelLine(parameter))));
+			else if (this->hasParameterIdentifier(parameter))
+			{
+				int separatorPosition = parameter.find(':');
+				std::string stringType = parameter.substr(0, separatorPosition);
+				parameter = parameter.substr(separatorPosition + 1, parameter.size() - separatorPosition);
+				instruction->addParameter(std::shared_ptr<interpreter::ValueParameter>(new interpreter::ValueParameter(convertStringToValue(parameter, convertStringTypeToEnumType(stringType)))));
+			}
+			else
+				throw new bricksvm::exception::InvalidTypeException("Invalid parameter");
 		}
 
 		interpreter::Value Lexer::getLabelLine(std::string val)
@@ -130,10 +150,10 @@ namespace bricksvm
 				if (it->first == val)
 					return interpreter::Value(it->second);
 			}
-			throw new std::exception("Invalid label");
+			throw new bricksvm::exception::InvalidTypeException("Invalid label");
 		}
 
-		std::shared_ptr<interpreter::AParameter> Lexer::getNextParameter()
+		/*std::shared_ptr<interpreter::AParameter> Lexer::getNextParameter()
 		{
 			std::shared_ptr<interpreter::AParameter> ptr;
 			interpreter::AParameter::Type type;
@@ -141,28 +161,13 @@ namespace bricksvm
 			type = this->getParameterType();
 
 			return (ptr);
-		}
+		}*/
 
-		interpreter::AParameter::Type Lexer::getParameterType()
+		bool Lexer::hasParameterIdentifier(std::string const &parameter)
 		{
-			if (hasParameterIdentifier())
+			if (parameter.find(':') != std::string::npos)
 			{
-
-			}
-
-			for (int i = this->_position; i < this->_line.length(); i++)
-			{
-				
-			}
-
-			return (interpreter::AParameter::ValueType);
-		}
-
-		bool Lexer::hasParameterIdentifier()
-		{
-			if (this->_line.find(':', this->_position) != std::string::npos)
-			{
-				std::string identifier = this->_line.substr(this->_position, this->_line.find(':', this->_position));
+				std::string identifier = parameter.substr(0, parameter.find(':'));
 				for (std::map<std::string, interpreter::Type>::const_iterator it = this->_stringTypes.begin();
 					it != this->_stringTypes.end();
 					++it)
@@ -174,24 +179,35 @@ namespace bricksvm
 			return (false);
 		}
 
-		interpreter::Value  Lexer::convertStringToValue(std::string val, interpreter::Type type)
+		interpreter::Type Lexer::convertStringTypeToEnumType(std::string type)
+		{
+			std::map<std::string, interpreter::Type>::const_iterator it;
+			for (it = this->_stringTypes.begin(); it != this->_stringTypes.end(); ++it)
+			{
+				if (it->first == type)
+					return interpreter::Value(it->second);
+			}
+			throw new bricksvm::exception::InvalidTypeException("Invalid parameter type");
+		}
+
+		interpreter::Value  Lexer::convertStringToValue(std::string val, interpreter::Type type) const
 		{
 			switch (type)
 			{
-				case interpreter::Int8:
-					return interpreter::Value(core::convert<char>(val));
-				case interpreter::Int16:
-					return interpreter::Value(core::convert<short>(val));
-				case interpreter::Int32:
-					return interpreter::Value(core::convert<int>(val));
-				case interpreter::Int64:
-					return interpreter::Value(core::convert<long long int>(val));
-				case interpreter::Double:
-					return interpreter::Value(core::convert<double>(val));
-				case interpreter::Float:
-					return interpreter::Value(core::convert<float>(val));
-				default:
-					throw exception::InvalidTypeException(core::stringBuilder(val, "has an unexpected type"));
+			case interpreter::Int8:
+				return interpreter::Value(core::convert<char>(val));
+			case interpreter::Int16:
+				return interpreter::Value(core::convert<short>(val));
+			case interpreter::Int32:
+				return interpreter::Value(core::convert<int>(val));
+			case interpreter::Int64:
+				return interpreter::Value(core::convert<long long int>(val));
+			case interpreter::Double:
+				return interpreter::Value(core::convert<double>(val));
+			case interpreter::Float:
+				return interpreter::Value(core::convert<float>(val));
+			default:
+				throw exception::InvalidTypeException(core::stringBuilder(val, "has an unexpected type"));
 			}
 		}
 

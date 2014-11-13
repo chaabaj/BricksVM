@@ -36,10 +36,13 @@ namespace bricksvm
 		private:
 			std::shared_ptr<interpreter::AParameter> getNextParameter();
 			interpreter::AParameter::Type getParameterType();
-			interpreter::Value convertStringToValue(std::string val, interpreter::Type type);
-			bool hasParameterIdentifier();
+			interpreter::Value convertStringToValue(std::string val, interpreter::Type type) const;
+			bool hasParameterIdentifier(std::string const &parameter);
 			interpreter::Value Lexer::getLabelLine(std::string val);
 			void functionCall(std::shared_ptr<interpreter::Instruction> &instruction);
+			void Lexer::addNewValueParameter(std::shared_ptr<interpreter::Instruction> &instruction,
+				int parameterIdx);
+			interpreter::Type Lexer::convertStringTypeToEnumType(std::string type);
 
 		};
 	}

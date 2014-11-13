@@ -2,10 +2,10 @@
 #define __BRICKSVM_CORE_UTILS_HPP__
 
 
-#include <sstream>
 # include <cctype>
 # include <string>
 # include <sstream>
+# include <iostream>
 
 
 namespace bricksvm
@@ -110,7 +110,7 @@ namespace bricksvm
 			{
 				if (!std::isdigit(*it) && *it != decimalSeparator)
 					return (false);
-				else if (*it == decimalSeparator && it != s.begin())
+				else if (*it == decimalSeparator && it == s.begin())
 					return (false);
 			}
 			return (it == s.end());

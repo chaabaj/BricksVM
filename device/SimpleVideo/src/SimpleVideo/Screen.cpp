@@ -1,6 +1,7 @@
 #include <SDL_ttf.h>
 #include "SimpleVideo/Screen.hpp"
 #include "core/Console.hpp"
+#include "core/Utils.hpp"
 #include "exception/InvalidOperationException.hpp"
 
 
@@ -8,6 +9,8 @@ namespace bricksvm
 {
     namespace device
     {
+        TTF_Font            *Screen::_font = initFont();
+
         Screen::Screen()
         {
             _window = nullptr;
@@ -26,6 +29,31 @@ namespace bricksvm
             SDL_DestroyWindow(_window);
             SDL_FreeSurface(_render);
             bricksvm::core::Console::log("SimpleVideo") << "closed" << std::endl;
+        }
+
+        TTF_Font *Screen::initFont()
+        {
+            TTF_Font    *font;
+
+            if (TTF_Init() != -1)
+            {
+                font = TTF_OpenFont("assets/fonts/BodoniFLF-Roman.ttf", 20);
+                bricksvm::core::Console::log("SimpleVideo") << " : " << std::string(TTF_GetError()) << std::endl;
+                std::atexit(Screen::freeFont);
+            }
+            else
+            {
+                bricksvm::core::Console::error("SimpleVideo") << std::string(TTF_GetError()) << std::endl;
+            }
+            return font;
+        }
+
+        void Screen::freeFont()
+        {
+            if (Screen::_font)
+            {
+                TTF_CloseFont(Screen::_font);
+            }
         }
 
         void Screen::display(uint16_t width, uint16_t height, uint8_t colors)
@@ -167,7 +195,28 @@ namespace bricksvm
                              uint8_t c,
                              uint32_t color)
         {
-
+            SDL_Color   rgbColor;
+            SDL_Rect    dstPos;
+            char        text[2] = { charSize, 0 };
+            SDL_Surface *textSurface;
+            
+            bricksvm::core::throwIf<bricksvm::exception::InvalidOperationException>(!Screen::_font, "Font is not loaded correctly");
+            rgbColor.r = (color >> 16) & 0xFF;
+            rgbColor.g = (color >> 8) & 0xFF;
+            rgbColor.b = (color & 0xFF);
+            dstPos.x = x;
+            dstPos.y = y;
+            textSurface = TTF_RenderText_Solid(Screen::_font, text, rgbColor);
+            if (!textSurface)
+            {
+                throw bricksvm::exception::InvalidOperationException(std::string(TTF_GetError()));
+            }
+            if (SDL_BlitSurface(textSurface, NULL, _render, &dstPos) == -1)
+            {
+                SDL_FreeSurface(textSurface);
+                throw bricksvm::exception::InvalidOperationException(std::string(SDL_GetError()));
+            }
+            SDL_FreeSurface(textSurface);
         }
     }
 }

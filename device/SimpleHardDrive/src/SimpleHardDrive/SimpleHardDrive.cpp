@@ -55,7 +55,6 @@ namespace bricksvm
 
             try
             {
-                bricksvm::core::Console::log("SHD write") << "hdAddr : " << hdAddr << " memAddr : " << memAddr << " size : " << size << std::endl;
                 bytesWritten = this->writeBytes(mem, prgId, hdAddr, memAddr, size);
                 src.emit("instruction:finished", std::ref(*this), prgId, interpreter::Value(bytesWritten));
 
@@ -119,13 +118,10 @@ namespace bricksvm
                 size = SimpleHardDrive::_maxReadWriteSize;
             }
             bytes.resize(size);
-            bricksvm::core::Console::log("SHD write") << hdAddr << std::endl;
             _fileStream.seekp(hdAddr, std::ios::beg);
             mem.read(prgId, memAddr, &bytes[0], size);
-            bricksvm::core::Console::log("SHD write ") << bytes[0] << std::endl;
             _fileStream.write(&bytes[0], size);
             _fileStream.flush();
-            bricksvm::core::Console::log("SHD write") << "size : " << _fileStream.gcount() << std::endl;
             return _fileStream.gcount();
         }
 	}

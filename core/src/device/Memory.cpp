@@ -51,11 +51,13 @@ namespace bricksvm
                     }
                     std::cout << std::endl;
                 }
+                std::cout << std::dec;
+                bricksvm::core::Console::log("Memory") << "End of memory dump" << std::endl;
             }
-            std::cout << std::dec;
-            throw bricksvm::exception::InvalidOperationException("No such program id registered");
-            
-            bricksvm::core::Console::log("Memory") << "End of memory dump" << std::endl;
+            else
+            {
+                throw bricksvm::exception::InvalidOperationException("No such program id registered");
+            }
         }
 
         void Memory::onDumpMemory(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
@@ -65,6 +67,20 @@ namespace bricksvm
 
             this->dumpMemory(progId);
             src.emit("instruction:finished", self, progId, interpreter::Value(0));
+        }
+
+        const char *Memory::getMemAddr(std::string const &progId, uint64_t addr, uint64_t size) const
+        {
+            uint64_t    realAddr = this->getRealAddr(progId, addr);
+            auto        lastAddr = (*_memIndexes.find(progId)).second.second;
+            char        *src;
+
+            if (realAddr + (size * sizeof(*src)) > lastAddr)
+            {
+                throw bricksvm::exception::InvalidOperationException("Memory overflow");
+            }
+            src = _memory.get() + realAddr;
+            return src;
         }
 
         void Memory::onRead(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)

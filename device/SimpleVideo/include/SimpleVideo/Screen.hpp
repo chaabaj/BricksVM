@@ -37,6 +37,9 @@ namespace bricksvm
         private:
             void display(uint16_t width, uint16_t height, uint8_t colors);
 
+            static TTF_Font *initFont();
+            static void freeFont();
+
         private:
 
             typedef std::unique_lock<std::mutex>    LockType;
@@ -48,7 +51,8 @@ namespace bricksvm
             std::mutex              _mutex;
             std::condition_variable _condVar;
 
-            static const int    _frequency = 60 / 25;
+            static const int            _frequency = 60 / 25;
+            static TTF_Font             *_font;
         };
     }
 }

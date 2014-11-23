@@ -51,6 +51,8 @@ namespace bricksvm
                 std::memcpy(buffer, src, size * sizeof(T));
             }
 
+            const char *getMemAddr(std::string const &progId, uint64_t addr, uint64_t size) const;
+
             void onRead(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
 
             void onWrite(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);

@@ -2,6 +2,7 @@
 #include "interpreter/Instruction.hpp"
 #include "interpreter/InstructionParameter.hpp"
 #include "core/Utils.hpp"
+#include "core/Console.hpp"
 
 namespace bricksvm
 {
@@ -9,7 +10,6 @@ namespace bricksvm
     {
         Instruction::Instruction(unsigned const int lineNumber) : _isResolved(true), _lineNumber(lineNumber)
         {
-
         }
 
         Instruction::~Instruction()
@@ -96,7 +96,11 @@ namespace bricksvm
                     isResolved = true;
                 }
             }
-            bricksvm::core::throwIf<std::runtime_error>(isResolved, "No such parameter to resolve");
+            if (!this->getUnresolvedParameter())
+            {
+                _isResolved = true;
+            }
+            bricksvm::core::throwIf<std::runtime_error>(!isResolved, "No such parameter to resolve");
         }
 
         Instruction::ParameterContainerType &Instruction::getParameters()

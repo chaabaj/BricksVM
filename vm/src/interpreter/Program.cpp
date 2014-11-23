@@ -71,15 +71,21 @@ namespace bricksvm
 			}
 			else if (_state == ResolveInstruction)
 			{
+                _resolver->setResolvedValue(retVal);
 				if (_resolver->isResolved())
 				{
+                    currentInstruction = _resolver->getResolvedInstruction();
+                    this->next();
 					_state = Execution;
 					_resolver = nullptr;
-					return this->execute(retVal);
+                    return currentInstruction;
 				}
-				_resolver->setResolvedValue(retVal);
 				return _resolver->resolve();
 			}
+            else
+            {
+                this->next();
+            }
 			return currentInstruction;
 		}
 

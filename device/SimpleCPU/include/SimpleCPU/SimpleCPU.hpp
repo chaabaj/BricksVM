@@ -88,7 +88,7 @@ namespace bricksvm
 
                 if (compareFn(result))
                 {
-                    src.emit("vm_jump", self, progId, jmpAddress);
+                    src.emit("vm_jmp", self, NULL, progId, jmpAddress);
                 }
                 else
                 {
@@ -151,12 +151,10 @@ namespace bricksvm
                 if (index >= 0 && index < 16)
                 {
                     registers[progId][index] = val;
-                    std::cout << "compute" << std::endl;
                     src.emit("instruction:finished", self, progId, interpreter::Value(0));
                 }
                 else
                 {
-                    std::cout << "error" << std::endl;
                     src.emit("instruction:error", self, progId, "Invalid register");
                 }
             }

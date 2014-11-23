@@ -59,6 +59,15 @@ namespace bricksvm
 			stream >> convertedValue;
 			return (convertedValue);
 		}
+        
+        template<typename T>
+        std::string toString(T const &value)
+        {
+            std::stringstream   stream;
+
+            stream << value;
+            return stream.str();
+        }
 
 		template<typename... T>
 		std::string stringBuilder(T ...args)

@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cstdint>
 #include "interpreter/Value.hpp"
 #include "device/Memory.hpp"
 #include "core/Console.hpp"
@@ -27,17 +28,67 @@ namespace bricksvm
             bricksvm::core::Console::success("Memory") << "Program memory size" << step << " bytes" << std::endl;
         }
         
-
         Memory::~Memory()
         {
+        }
+
+        void Memory::dumpMemory(std::string const &progId) const
+        {
+            bricksvm::core::Console::log("Memory") << "Dump memory of : " << progId << std::endl;
+            
+            auto    it = _memIndexes.find(progId);
+
+            if (it != _memIndexes.end())
+            {
+                auto        index = (*it).second;
+                
+                std::cout << std::hex;
+                for (std::uint64_t i = index.first; i < index.second; i += 16)
+                {
+                    for (std::uint64_t j = 0; j < 10 && j < index.second; ++j)
+                    {
+                        std::cout << "0x" << static_cast<std::uint16_t>((_memory.get())[i + j]) << " ";
+                    }
+                    std::cout << std::endl;
+                }
+                std::cout << std::dec;
+                bricksvm::core::Console::log("Memory") << "End of memory dump" << std::endl;
+            }
+            else
+            {
+                throw bricksvm::exception::InvalidOperationException("No such program id registered");
+            }
+        }
+
+        void Memory::onDumpMemory(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
+        {
+            auto                &src = msg.getParameter<bricksvm::event::EventThread>(0);
+            std::string const   &progId = msg.getParameter<std::string>(2);
+
+            this->dumpMemory(progId);
+            src.emit("instruction:finished", self, progId, interpreter::Value(0));
+        }
+
+        const char *Memory::getMemAddr(std::string const &progId, uint64_t addr, uint64_t size) const
+        {
+            uint64_t    realAddr = this->getRealAddr(progId, addr);
+            auto        lastAddr = (*_memIndexes.find(progId)).second.second;
+            char        *src;
+
+            if (realAddr + (size * sizeof(*src)) > lastAddr)
+            {
+                throw bricksvm::exception::InvalidOperationException("Memory overflow");
+            }
+            src = _memory.get() + realAddr;
+            return src;
         }
 
         void Memory::onRead(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
         {
             auto                &src = msg.getParameter<bricksvm::event::EventThread>(0);
-            std::string const   &progId = msg.getParameter<std::string>(1);
-            uint64_t            addr = msg.getParameter<uint64_t>(2);
-            interpreter::Type   type = static_cast<interpreter::Type>(msg.getParameter<interpreter::Value>(3).as<int>());
+            std::string const   &progId = msg.getParameter<std::string>(2);
+            uint64_t            addr = msg.getParameter<interpreter::Value>(3);
+            interpreter::Type   type = static_cast<interpreter::Type>(msg.getParameter<interpreter::Value>(4).as<int>());
             interpreter::Value  readValue(0);
 
             try
@@ -109,9 +160,9 @@ namespace bricksvm
         void Memory::onWrite(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
         {
             auto                &src = msg.getParameter<bricksvm::event::EventThread>(0);
-            std::string const   &progId = msg.getParameter<std::string>(1);
-            uint64_t            addr = msg.getParameter<uint64_t>(2);
-            interpreter::Value  value = msg.getParameter<interpreter::Value>(3);
+            std::string const   &progId = msg.getParameter<std::string>(2);
+            uint64_t            addr = msg.getParameter<interpreter::Value>(3);
+            interpreter::Value  value = msg.getParameter<interpreter::Value>(4);
 
             try
             {
@@ -183,7 +234,7 @@ namespace bricksvm
                 uint64_t    realAddr;
 
                 realAddr = index.first + virtualAddr;
-                if (realAddr <= index.second)
+                if (realAddr >= index.second)
                 {
                     throw bricksvm::exception::InvalidOperationException("Memory overflow");
                 }

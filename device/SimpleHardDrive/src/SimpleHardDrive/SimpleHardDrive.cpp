@@ -124,7 +124,8 @@ namespace bricksvm
             mem.read(prgId, memAddr, &bytes[0], size);
             bricksvm::core::Console::log("SHD write ") << bytes[0] << std::endl;
             _fileStream.write(&bytes[0], size);
-            bricksvm::core::Console::log("SHD write") << "size : " << size << std::endl;
+            _fileStream.flush();
+            bricksvm::core::Console::log("SHD write") << "size : " << _fileStream.gcount() << std::endl;
             return _fileStream.gcount();
         }
 	}

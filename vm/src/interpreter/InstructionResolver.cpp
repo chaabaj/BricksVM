@@ -19,7 +19,7 @@ namespace bricksvm
 
         bool InstructionResolver::isResolved() const
         {
-            return _paramsToResolve.size() && _instructionToResolve->parametersIsResolved();
+            return !_paramsToResolve.size() && _instructionToResolve->parametersIsResolved();
         }
 
         std::shared_ptr<Instruction> InstructionResolver::resolve()
@@ -58,6 +58,15 @@ namespace bricksvm
                 _paramsToResolve.push_back(newParam);
                 this->next();
             }
+        }
+
+        std::shared_ptr<Instruction> InstructionResolver::getResolvedInstruction() const
+        {
+            if (this->isResolved())
+            {
+                return _instructionToResolve;
+            }
+            return std::shared_ptr<Instruction>();
         }
 
         void InstructionResolver::setResolvedValue(Value const &resolvedValue)

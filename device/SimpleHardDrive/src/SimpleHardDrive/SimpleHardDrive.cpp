@@ -48,13 +48,14 @@ namespace bricksvm
             bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
             bricksvm::device::Memory        &mem = msg.getParameter<bricksvm::device::Memory>(1);
             std::string                     &prgId = msg.getParameter<std::string>(2);
-            uint64_t                        hdAddr = msg.getParameter<uint64_t>(3);
-            uint64_t                        memAddr = msg.getParameter<uint64_t>(4);
-            std::size_t                     size = msg.getParameter<std::size_t>(5);
+            uint64_t                        hdAddr = msg.getParameter<interpreter::Value>(3);
+            uint64_t                        memAddr = msg.getParameter<interpreter::Value>(4);
+            std::size_t                     size = msg.getParameter<interpreter::Value>(5);
             std::size_t                     bytesWritten;
 
             try
             {
+                bricksvm::core::Console::log("SHD write") << "hdAddr : " << hdAddr << " memAddr : " << memAddr << " size : " << size << std::endl;
                 bytesWritten = this->writeBytes(mem, prgId, hdAddr, memAddr, size);
                 src.emit("instruction:finished", std::ref(*this), prgId, interpreter::Value(bytesWritten));
 
@@ -70,9 +71,9 @@ namespace bricksvm
             bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
             bricksvm::device::Memory        &mem = msg.getParameter<bricksvm::device::Memory>(1);
             std::string                     &prgId = msg.getParameter<std::string>(2);
-            uint64_t                        hdAddr = msg.getParameter<uint64_t>(3);
-            uint64_t                        memAddr = msg.getParameter<uint64_t>(4);
-            std::size_t                     size = msg.getParameter<std::size_t>(5);
+            uint64_t                        hdAddr = msg.getParameter<interpreter::Value>(3);
+            uint64_t                        memAddr = msg.getParameter<interpreter::Value>(4);
+            std::size_t                     size = msg.getParameter<interpreter::Value>(5);
             std::size_t                     bytesReaded;
 
             try
@@ -118,9 +119,12 @@ namespace bricksvm
                 size = SimpleHardDrive::_maxReadWriteSize;
             }
             bytes.resize(size);
-            _fileStream.seekg(hdAddr, std::ios::beg);
+            bricksvm::core::Console::log("SHD write") << hdAddr << std::endl;
+            _fileStream.seekp(hdAddr, std::ios::beg);
             mem.read(prgId, memAddr, &bytes[0], size);
+            bricksvm::core::Console::log("SHD write ") << bytes[0] << std::endl;
             _fileStream.write(&bytes[0], size);
+            bricksvm::core::Console::log("SHD write") << "size : " << size << std::endl;
             return _fileStream.gcount();
         }
 	}

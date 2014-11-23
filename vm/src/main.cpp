@@ -15,6 +15,7 @@ int main(int ac, char **av)
     ConfigurationParser                         parser("config/config.json");
     VirtualMachine                              vm;
     std::shared_ptr<interpreter::Program>       prg;
+    std::shared_ptr<interpreter::Program>       prg2;
 
     try
     {
@@ -22,10 +23,13 @@ int main(int ac, char **av)
 		parser::Parser pp;
 
         bricksvm::core::Console::log("VM") << "Compiling program" << std::endl;
-		prg = pp.generateProgramFromFile("programs\hello_world.s");
+        prg = pp.generateProgramFromFile("programs/save_text.s");
+        prg2 = pp.generateProgramFromFile("programs/hello_world.s");
+
         bricksvm::core::Console::success("VM") << "Program compiled successfully" << std::endl;
         bricksvm::core::Console::log("VM") << "BricksVM 0.1" << std::endl;
         vm.addProgram("toto", prg);
+        vm.addProgram("bite", prg2);
         parser.parse(vm);
         vm.start();
         while (true);

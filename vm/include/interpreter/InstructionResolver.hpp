@@ -24,6 +24,8 @@ namespace bricksvm
 
             bool isResolved() const;
 
+            std::shared_ptr<Instruction> getResolvedInstruction() const;
+
         private:
 
             void next();

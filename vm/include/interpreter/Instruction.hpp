@@ -37,6 +37,7 @@ namespace bricksvm
 
             std::string const			&getName() const;
 
+
         private:
             bool                    _isResolved;
             std::string             _name;

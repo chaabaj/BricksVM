@@ -11,8 +11,6 @@ namespace bricksvm
         this->on("instruction:finished", std::bind(&VirtualMachine::onInstructionFinished, this, _1, _2));
         this->on("instruction:error", std::bind(&VirtualMachine::onInstructionError, this, _1, _2));
         this->on("vm_jmp", std::bind(&VirtualMachine::onJump, this, _1, _2));
-        this->on("vm_mem_write", std::bind(&bricksvm::device::Memory::onRead, _memory.get(), _1, _2));
-        this->on("vm_mem_read", std::bind(&bricksvm::device::Memory::onWrite, _memory.get(), _1, _2));
     }
 
     VirtualMachine::~VirtualMachine()
@@ -48,11 +46,11 @@ namespace bricksvm
 
     void VirtualMachine::onJump(bricksvm::event::EventThread &thread, bricksvm::event::Message &msg)
     {
-        std::string		progId = msg.getParameter<std::string>(1);
-        unsigned int    index = msg.getParameter<interpreter::Value>(2);
+        std::string		progId = msg.getParameter<std::string>(2);
+        unsigned int    index = msg.getParameter<interpreter::Value>(3);
         event::Message	response("instruction:finished", std::ref(*this), progId, interpreter::Value(0));
 
-        _programs[progId]->jump(index);
+        _programs[progId]->jump(index - 1);
         static_cast<VirtualMachine&>(thread).onInstructionFinished(thread, response);
     }
 
@@ -108,7 +106,6 @@ namespace bricksvm
         std::shared_ptr<interpreter::Instruction>	currentInstruction;
 
         currentInstruction = prg->execute(retVal);
-        prg->next();
         if (currentInstruction != nullptr)
         {
             this->executeInstruction(prgName, *currentInstruction);
@@ -129,6 +126,9 @@ namespace bricksvm
 
     void VirtualMachine::allocateMemory(uint64_t memSize)
     {
+        using namespace std::placeholders;
+
+
         std::vector<std::string>    prgIds;
 
  
@@ -137,5 +137,8 @@ namespace bricksvm
             prgIds.push_back(elem.first);
         }
         this->_memory = MemoryPtrType(new bricksvm::device::Memory(memSize, prgIds));
+        this->on("vm_mem_write", std::bind(&bricksvm::device::Memory::onWrite, _memory.get(), _1, _2));
+        this->on("vm_mem_read", std::bind(&bricksvm::device::Memory::onRead, _memory.get(), _1, _2));
+        this->on("vm_mem_dump", std::bind(&bricksvm::device::Memory::onDumpMemory, _memory.get(), _1, _2));
     }
 }

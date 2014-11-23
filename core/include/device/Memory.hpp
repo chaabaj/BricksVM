@@ -55,13 +55,16 @@ namespace bricksvm
 
             void onWrite(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
 
-        private:
             uint64_t    getRealAddr(std::string const &progId, uint64_t virtualAddr) const;
 
+            void dumpMemory(std::string const &progId) const;
+
+            void onDumpMemory(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
+
         private:
-            typedef std::pair<uint64_t, uint64_t>                       IndexMemoryType;
-            typedef std::unordered_map<std::string, IndexMemoryType>    IndexMemoryMapType;
-            typedef std::unique_ptr<char>                               MemoryBufferType;
+            typedef std::pair<uint64_t, uint64_t>             IndexMemoryType;
+            typedef std::map<std::string, IndexMemoryType>    IndexMemoryMapType;
+            typedef std::unique_ptr<char>                     MemoryBufferType;
 
             MemoryBufferType    _memory;
             unsigned int        _size;

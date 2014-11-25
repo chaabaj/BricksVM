@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "VirtualMachine.hpp"
 #include "interpreter/ValueParameter.hpp"
 #include "core/Console.hpp"
@@ -11,6 +12,7 @@ namespace bricksvm
         this->on("instruction:finished", std::bind(&VirtualMachine::onInstructionFinished, this, _1, _2));
         this->on("instruction:error", std::bind(&VirtualMachine::onInstructionError, this, _1, _2));
         this->on("vm_jmp", std::bind(&VirtualMachine::onJump, this, _1, _2));
+        this->on("vm_print", std::bind(&VirtualMachine::onPrintValue, this, _1, _2));
     }
 
     VirtualMachine::~VirtualMachine()
@@ -56,18 +58,24 @@ namespace bricksvm
 
     void VirtualMachine::emit(std::string const &eventName, std::shared_ptr<event::Message> &msg)
     {
+
         if (this->hasEvent(eventName))
         {
             EventThread::emit(eventName, msg);
         }
         else
         {
-            for (std::shared_ptr<EventThread> &device : _devices)
+            auto it = std::find_if(_devices.begin(), _devices.end(), [this, eventName](std::shared_ptr<EventThread> &device)
             {
-                if (device->hasEvent(eventName))
-                {
-                    device->emit(eventName, msg);
-                }
+                return device->hasEvent(eventName);
+            });
+            if (it != _devices.end())
+            {
+                it->get()->emit(eventName, msg);
+            }
+            else
+            {
+                bricksvm::core::Console::error("VM") << " No such instruction : " << eventName << std::endl;
             }
         }
     }
@@ -122,6 +130,16 @@ namespace bricksvm
         {
             this->nextInstruction(program.first, program.second, retVal);
         }
+    }
+
+    void VirtualMachine::onPrintValue(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
+    {
+        bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
+        std::string                     prgId = msg.getParameter<std::string>(2);
+        interpreter::Value              val = msg.getParameter<interpreter::Value>(3);
+
+        bricksvm::core::Console::log("VM") << val.toString() << std::endl;
+        src.emit("instruction:finished", self, prgId, interpreter::Value(0));
     }
 
     void VirtualMachine::allocateMemory(uint64_t memSize)

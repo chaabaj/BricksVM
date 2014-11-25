@@ -188,25 +188,19 @@ namespace bricksvm
             return _render->format->BitsPerPixel;
         }
 
-
-        void Screen::putChar(uint32_t x, 
-                             uint32_t y, 
-                             uint32_t charSize, 
-                             uint8_t c,
-                             uint32_t color)
+        void Screen::putText(uint32_t x, uint32_t y, uint32_t charSize, std::string const &str, uint32_t color)
         {
             SDL_Color   rgbColor;
             SDL_Rect    dstPos;
-            char        text[2] = { charSize, 0 };
             SDL_Surface *textSurface;
-            
+
             bricksvm::core::throwIf<bricksvm::exception::InvalidOperationException>(!Screen::_font, "Font is not loaded correctly");
             rgbColor.r = (color >> 16) & 0xFF;
             rgbColor.g = (color >> 8) & 0xFF;
             rgbColor.b = (color & 0xFF);
             dstPos.x = x;
             dstPos.y = y;
-            textSurface = TTF_RenderText_Solid(Screen::_font, text, rgbColor);
+            textSurface = TTF_RenderText_Solid(Screen::_font, str.c_str(), rgbColor);
             if (!textSurface)
             {
                 throw bricksvm::exception::InvalidOperationException(std::string(TTF_GetError()));
@@ -218,5 +212,7 @@ namespace bricksvm
             }
             SDL_FreeSurface(textSurface);
         }
+
+     
     }
 }

@@ -64,6 +64,36 @@ namespace bricksvm
             }
         }
 
+        std::string Value::toString() const
+        {
+            std::stringstream   stream;
+
+            switch (_type)
+            {
+            case Int8:
+                stream << this->as<char>();
+                break;
+            case Int16:
+                stream << this->as<int16_t>();
+                break;
+            case Int32:
+                stream << this->as<int32_t>();
+                break;
+            case Int64:
+                stream << this->as<int64_t>();
+                break;
+            case Float:
+                stream << this->as<float>();
+                break;
+            case Double:
+                stream << this->as<double>();
+                break;
+            default:
+                throw bricksvm::exception::InvalidTypeException("Unknown type");
+            }
+            return stream.str();
+        }
+
         Value Value::operator+(Value const &rhs) const
         {
             return this->compute<bricksvm::core::Add>(rhs);

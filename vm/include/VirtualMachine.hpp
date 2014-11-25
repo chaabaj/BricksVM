@@ -48,6 +48,8 @@ namespace bricksvm
 
         void emit(std::string const &eventName, std::shared_ptr<event::Message> &msg);
 
+        void onPrintValue(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
+
 
     private:
         typedef std::vector<std::shared_ptr<event::EventThread> >				EventThreadContainerType;

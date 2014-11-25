@@ -95,6 +95,7 @@ namespace bricksvm
                 return _typeSize;
             }
 
+            std::string toString() const;
 
             template<typename T>
             inline operator const T() const

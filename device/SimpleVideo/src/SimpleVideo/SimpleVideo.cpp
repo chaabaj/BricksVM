@@ -36,6 +36,7 @@ namespace bricksvm
             this->on("svid_get_width", std::bind(&SimpleVideo::onGetScreenWidth, this, _1, _2));
             this->on("svid_get_height", std::bind(&SimpleVideo::onGetScreenHeight, this, _1, _2));
             this->on("svid_get_pixel_format", std::bind(&SimpleVideo::onGetPixelFormat, this, _1, _2));
+            this->on("svid_put_number", std::bind(&SimpleVideo::onWriteNumber, this, _1, _2));
             bricksvm::core::Console::success(this->getName()) << this->getName() << " initialized" << std::endl;
 		}
 		
@@ -159,6 +160,26 @@ namespace bricksvm
             }
         }
 
+        void SimpleVideo::onWriteNumber(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
+        {
+            bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
+            std::string                     progId = msg.getParameter<std::string>(2);
+            int                             x = msg.getParameter<interpreter::Value>(3);
+            int                             y = msg.getParameter<interpreter::Value>(4);
+            interpreter::Value const        &number = msg.getParameter<interpreter::Value>(5);
+            uint32_t                        charSize = msg.getParameter<interpreter::Value>(6);
+            int                             hexColor = msg.getParameter<interpreter::Value>(7);
+
+            try
+            {
+                _screens[progId].putText(x, y, charSize, number.toString(), hexColor);
+            }
+            catch (bricksvm::exception::InvalidOperationException &err)
+            {
+                src.emit("instruction:error", self, progId, std::string(err.what()));
+            }
+        }
+
         void SimpleVideo::onWriteCharacter(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
         {
             bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
@@ -171,7 +192,11 @@ namespace bricksvm
 
             try
             {
-                _screens[progId].putChar(x, y, charSize, charCode, hexColor);
+                std::string str;
+
+                str.resize(1);
+                str[0] = charCode;
+                _screens[progId].putText(x, y, charSize, str, hexColor);
                 src.emit("instruction:finished", self, progId, interpreter::Value(0));
 
             }

@@ -243,7 +243,7 @@ namespace bricksvm
             bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
             std::string                     progId = msg.getParameter<std::string>(2);
             interpreter::Value              &val1 = msg.getParameter<interpreter::Value>(3);
-            interpreter::Value              &val2 = msg.getParameter<interpreter::Value>(3);
+            interpreter::Value              &val2 = msg.getParameter<interpreter::Value>(4);
 
             src.emit("instruction:finished", self, progId, _mathUnit.pow(val1, val2));
         }

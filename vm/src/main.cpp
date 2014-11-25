@@ -34,10 +34,9 @@ int main(int ac, char **av)
         vm.start();
         while (true);
     }
-    catch (std::runtime_error &err)
+    catch (std::exception &err)
     {
         bricksvm::core::Console::error("VM") << err.what() << std::endl;
     }
-
     return 0;
 }

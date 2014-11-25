@@ -59,7 +59,7 @@ namespace bricksvm
 
             uint64_t    getRealAddr(std::string const &progId, uint64_t virtualAddr) const;
 
-            void dumpMemory(std::string const &progId) const;
+            void dumpMemory(std::string const &progId, std::pair<uint64_t, uint64_t> const &range) const;
 
             void onDumpMemory(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
 

@@ -6,6 +6,7 @@
 # include <mutex>
 # include <condition_variable>
 # include <SDL.h>
+# include "interpreter/Value.hpp"
 # include "core/DllExport.hpp"
 
 namespace bricksvm
@@ -24,12 +25,13 @@ namespace bricksvm
                                   uint32_t y, 
                                   uint8_t *pixels, 
                                   uint32_t size);
-            uint32_t    getPixelColor(uint32_t x, uint32_t y) const;
-            void        putChar(uint32_t x, 
-                                uint32_t y, 
-                                uint32_t charSize, 
-                                uint8_t c,
+
+            void        putText(uint32_t x,
+                                uint32_t y,
+                                uint32_t charSize,
+                                std::string const &str,
                                 uint32_t color);
+            uint32_t    getPixelColor(uint32_t x, uint32_t y) const;
             uint32_t    getWidth() const;
             uint32_t    getHeight() const;
             uint32_t    getPixelFormat() const;
@@ -39,6 +41,7 @@ namespace bricksvm
 
             static TTF_Font *initFont();
             static void freeFont();
+
 
         private:
 

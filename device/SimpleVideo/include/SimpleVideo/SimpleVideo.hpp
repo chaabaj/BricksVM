@@ -27,6 +27,7 @@ namespace bricksvm
             void onGetScreenHeight(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
             void onGetPixelFormat(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
             void onWriteCharacter(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
+            void onWriteNumber(bricksvm::event::EventThread &self, bricksvm::event::Message &msg);
 
 
         private:

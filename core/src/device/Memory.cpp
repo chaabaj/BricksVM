@@ -32,20 +32,37 @@ namespace bricksvm
         {
         }
 
-        void Memory::dumpMemory(std::string const &progId) const
+        void Memory::dumpMemory(std::string const &progId, std::pair<uint64_t, uint64_t> const &range) const
         {
-            bricksvm::core::Console::log("Memory") << "Dump memory of : " << progId << std::endl;
+            std::pair<uint64_t, uint64_t>  index;
             
+            bricksvm::core::Console::log("Memory") << "Dump memory of : " << progId << std::endl;
             auto    it = _memIndexes.find(progId);
 
             if (it != _memIndexes.end())
             {
-                auto        index = (*it).second;
+                auto        prgIndex = (*it).second;
                 
                 std::cout << std::hex;
+                if (range.first == -1)
+                {
+                    index.first = prgIndex.first;
+                }
+                else
+                {
+                    index.first = this->getRealAddr(progId, range.first);
+                }
+                if (range.second == -1)
+                {
+                    index.second = prgIndex.second;
+                }
+                else
+                {
+                    index.second = this->getRealAddr(progId, range.second);
+                }
                 for (std::uint64_t i = index.first; i < index.second; i += 16)
                 {
-                    for (std::uint64_t j = 0; j < 10 && j < index.second; ++j)
+                    for (std::uint64_t j = 0; j < 10 && i + j < index.second; ++j)
                     {
                         std::cout << "0x" << static_cast<std::uint16_t>((_memory.get())[i + j]) << " ";
                     }
@@ -64,8 +81,10 @@ namespace bricksvm
         {
             auto                &src = msg.getParameter<bricksvm::event::EventThread>(0);
             std::string const   &progId = msg.getParameter<std::string>(2);
+            uint64_t            begin = msg.getParameter<interpreter::Value>(3);
+            uint64_t            end = msg.getParameter<interpreter::Value>(4);
 
-            this->dumpMemory(progId);
+            this->dumpMemory(progId, std::make_pair(begin, end));
             src.emit("instruction:finished", self, progId, interpreter::Value(0));
         }
 
@@ -191,7 +210,7 @@ namespace bricksvm
                 }
                 case interpreter::Int64:
                 {
-                    int64_t int64Value;
+                    int64_t int64Value = value;
 
                     this->write(progId, addr, &int64Value, 1);
                     break;

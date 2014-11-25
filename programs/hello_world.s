@@ -26,7 +26,7 @@ scpu_reg_write(1, 10)
 
 put_string:
 vm_print(scpu_reg_read(0))
-svid_put_char(scpu_reg_read(1), 10, 10, vm_mem_read(scpu_reg_read(0), 0), 0xFFFFFF)
+svid_put_char(scpu_reg_read(1), 10, vm_mem_read(scpu_reg_read(0), 0), 10, 0xFFFFFF)
 scpu_reg_write(0, scpu_add(scpu_reg_read(0), 1))
 scpu_reg_write(1, scpu_add(scpu_reg_read(1), 10))
 scpu_jne(scpu_cmp(vm_mem_read(scpu_reg_read(0), 0), 0), put_string)

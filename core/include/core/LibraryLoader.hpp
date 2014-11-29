@@ -31,7 +31,7 @@ namespace bricksvm
 
             ~LibraryLoader();
 
-            static inline std::string const getExtension()
+            static inline std::string getExtension()
             {
                 # ifdef WIN32
                     return ".dll";
@@ -41,6 +41,17 @@ namespace bricksvm
                     return "";
                 #endif
             }
+	   
+	    static inline std::string getLibraryPrefix()
+	    {
+               # ifdef WIN32
+                    return "";
+                # elif __gnu_linux__
+                    return "lib";
+                # else
+                    return "";
+                #endif
+	    }
 
             template<typename FunctionType>
             FunctionType	get(std::string const &libraryName, std::string const &name)

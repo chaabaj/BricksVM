@@ -113,7 +113,6 @@ namespace bricksvm
         void SimpleAudio::onStopMusic(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
         {
             bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
-            Memory                          &mem = msg.getParameter<Memory>(1);
             std::string                     &progId = msg.getParameter<std::string>(2);
             uint8_t                         channel = msg.getParameter<interpreter::Value>(3);
 
@@ -131,7 +130,6 @@ namespace bricksvm
         void SimpleAudio::onStopSound(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
         {
             bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
-            Memory                          &mem = msg.getParameter<Memory>(1);
             std::string                     &progId = msg.getParameter<std::string>(2);
             uint8_t                         channel = msg.getParameter<interpreter::Value>(3);
 
@@ -149,7 +147,6 @@ namespace bricksvm
         void SimpleAudio::onUnloadMusic(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
         {
             bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
-            Memory                          &mem = msg.getParameter<Memory>(1);
             std::string                     &progId = msg.getParameter<std::string>(2);
             uint8_t                         channel = msg.getParameter<interpreter::Value>(3);
 
@@ -167,7 +164,6 @@ namespace bricksvm
         void SimpleAudio::onUnloadSound(bricksvm::event::EventThread &self, bricksvm::event::Message &msg)
         {
             bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
-            Memory                          &mem = msg.getParameter<Memory>(1);
             std::string                     &progId = msg.getParameter<std::string>(2);
             uint8_t                         channel = msg.getParameter<interpreter::Value>(3);
 

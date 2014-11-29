@@ -1,4 +1,5 @@
 #include <SDL_ttf.h>
+#include <cstring>
 #include "SimpleVideo/Screen.hpp"
 #include "core/Console.hpp"
 #include "core/Utils.hpp"
@@ -33,12 +34,12 @@ namespace bricksvm
 
         TTF_Font *Screen::initFont()
         {
-            TTF_Font    *font;
+            TTF_Font    *font = NULL;
 
             if (TTF_Init() != -1)
             {
                 font = TTF_OpenFont("assets/fonts/BodoniFLF-Roman.ttf", 20);
-                bricksvm::core::Console::log("SimpleVideo") << " : " << std::string(TTF_GetError()) << std::endl;
+                bricksvm::core::Console::error("SimpleVideo") << " : " << std::string(TTF_GetError()) << std::endl;
                 std::atexit(Screen::freeFont);
             }
             else

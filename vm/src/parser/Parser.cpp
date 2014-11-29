@@ -38,7 +38,7 @@ namespace bricksvm
 			{*/
 			while (std::getline(source, line))
 			{
-				if (line.size() == 0 || (line[0] == '//' && line[1] == '/'))
+				if (line.size() == 0 || (line[0] == '/' && line[1] == '/'))
 						continue;
 				lexer.addNewLine(line, lineNumber);
 				std::shared_ptr<interpreter::Instruction> instr = lexer.getNextInstruction();

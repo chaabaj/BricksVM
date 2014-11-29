@@ -2,11 +2,9 @@
 #include "VirtualMachine.hpp"
 #include "ConfigurationParser.hpp"
 #include "interpreter/ValueParameter.hpp"
-
 #include "parser/Parser.hpp"
-
 #include "core/Console.hpp"
-
+#include "core/String.hpp"
 
 int main(int ac, char **av)
 {

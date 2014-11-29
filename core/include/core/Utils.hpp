@@ -1,5 +1,5 @@
 #ifndef __BRICKSVM_CORE_UTILS_HPP__
-#define __BRICKSVM_CORE_UTILS_HPP__
+# define __BRICKSVM_CORE_UTILS_HPP__
 
 
 # include <cctype>
@@ -49,48 +49,7 @@ namespace bricksvm
             static const bool is_ref_wrapper = isRefWrapper<T>::value;
         };
 
-		template<typename T>
-		T convert(std::string const &value)
-		{
-			std::stringstream stream;
-			T convertedValue;
-
-			stream << value;
-			stream >> convertedValue;
-			return (convertedValue);
-		}
         
-        template<typename T>
-        std::string toString(T const &value)
-        {
-            std::stringstream   stream;
-
-            stream << value;
-            return stream.str();
-        }
-
-		template<typename... T>
-		std::string stringBuilder(T ...args)
-		{
-			std::stringstream stream;
-			std::string  newString;
-
-			append(stream, args...);
-			return (stream.str());
-		}
-
-		template<typename T, typename ... U>
-		void append(std::stringstream &stream, T const &val, U &...others)
-		{
-			stream << val;
-			append(stream, others...);
-		}
-
-		template<typename T>
-		void append(std::stringstream &stream, T const &val)
-		{
-			stream << val;
-		}
 
 		inline bool isHexadecimal(const std::string &s)
 		{

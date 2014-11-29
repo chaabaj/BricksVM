@@ -1,7 +1,7 @@
 #include <algorithm>
 
 #include "parser/Lexer.hpp"
-
+#include "core/String.hpp"
 
 namespace bricksvm
 { 
@@ -225,7 +225,7 @@ namespace bricksvm
 			case interpreter::Float:
 				return interpreter::Value(core::convert<float>(val));
 			default:
-				throw exception::InvalidTypeException(core::stringBuilder(val, "has an unexpected type"));
+				throw exception::InvalidTypeException(core::stringBuilder(val, " has an unexpected type"));
 			}
 		}
 

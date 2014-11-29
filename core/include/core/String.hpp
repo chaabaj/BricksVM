@@ -3,7 +3,9 @@
 
 # include <string>
 # include <cstdint>
+# include <sstream>
 # include "core/DllExport.hpp"
+
 
 namespace bricksvm
 {
@@ -17,6 +19,57 @@ namespace bricksvm
         };
 
         EXPORT_DLL uint64_t  getMemSize(std::string const &str);
+        template<typename T>
+        std::string toString(T const &value)
+        {
+            std::stringstream   stream;
+
+            stream << value;
+            return stream.str();
+        }
+        
+        template<typename ... U>
+        std::string append(std::stringstream &stream, U&& ... values)
+        {
+            return append(stream);
+        }
+        
+        template<typename T, typename ... U>
+        std::string append(std::stringstream &stream, T const &&value, U&& ... values)
+        {
+            stream << value;
+            
+            return append(stream, values...);
+        }
+        
+        template<typename T>
+        std::string append(std::stringstream &stream, T const &&value)
+        {
+            stream << value;
+            
+            return stream.str();
+        }
+        
+        template<typename ... U>
+        std::string stringBuilder(U&& ... values)
+        {
+            std::stringstream   stream;
+            
+            return append(stream, values...);
+        }
+        
+        
+        
+        template<typename T>
+        T convert(std::string const &value)
+        {
+            std::stringstream stream;
+            T convertedValue;
+
+            stream << value;
+            stream >> convertedValue;
+            return (convertedValue);
+        }
     }
 }
 

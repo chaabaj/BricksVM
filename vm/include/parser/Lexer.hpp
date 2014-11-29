@@ -11,6 +11,7 @@
 # include "interpreter/Value.hpp"
 # include "core/Utils.hpp"
 
+
 namespace bricksvm
 {
 	namespace parser
@@ -38,11 +39,11 @@ namespace bricksvm
 			interpreter::AParameter::Type getParameterType();
 			interpreter::Value convertStringToValue(std::string val, interpreter::Type type) const;
 			bool hasParameterIdentifier(std::string const &parameter);
-			interpreter::Value Lexer::getLabelLine(std::string val);
+			interpreter::Value getLabelLine(std::string val);
 			void functionCall(std::shared_ptr<interpreter::Instruction> &instruction);
-			void Lexer::addNewValueParameter(std::shared_ptr<interpreter::Instruction> &instruction,
+			void addNewValueParameter(std::shared_ptr<interpreter::Instruction> &instruction,
 				int parameterIdx);
-			interpreter::Type Lexer::convertStringTypeToEnumType(std::string type);
+			interpreter::Type convertStringTypeToEnumType(std::string type);
 
 		};
 	}

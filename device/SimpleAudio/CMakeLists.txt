@@ -10,7 +10,7 @@ file(GLOB_RECURSE HEADERS "include/*.hpp" "include/*.tpp")
 if (UNIX OR APPLE)
 
 	add_definitions("-std=c++11 -Wall -ggdb")
-	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lsfml-system -lsfml-audio")
+	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -lsfml-system -lsfml-audio")
 	
 endif()
 

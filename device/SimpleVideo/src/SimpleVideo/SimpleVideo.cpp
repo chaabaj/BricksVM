@@ -23,7 +23,7 @@ namespace bricksvm
 		{            
             using namespace std::placeholders;
 
-            if (SDL_Init(SDL_INIT_VIDEO) < 0 == -1)
+            if (SDL_Init(SDL_INIT_VIDEO) == -1)
             {
                 throw bricksvm::exception::InvalidOperationException(SDL_GetError());
             }

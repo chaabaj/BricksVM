@@ -5,14 +5,14 @@
 # include "interpreter/Value.hpp"
 # include "rapidjson/document.h"
 # include "core/DllExport.hpp"
-# include "event/EventThread.hpp"
+# include "event/ParallelEventThread.hpp"
 # include "SimpleCPU/MathUnit.hpp"
 
 namespace bricksvm
 {
 	namespace device
 	{
-		class EXPORT_DLL SimpleCPU : public bricksvm::event::EventThread
+		class EXPORT_DLL SimpleCPU : public bricksvm::event::ParallelEventThread<4>
 		{
 			public:
                 enum CompareState

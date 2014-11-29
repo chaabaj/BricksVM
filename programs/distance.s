@@ -7,7 +7,6 @@ scpu_fpreg_write(2, 50.9)
 scpu_fpreg_write(3, 60.2)
 
 
-
 scpu_fpreg_write(4, scpu_sub(scpu_fpreg_read(0), scpu_fpreg_read(2)))
 scpu_fpreg_write(4, scpu_pow(scpu_fpreg_read(4), 2))
 scpu_fpreg_write(5, scpu_sub(scpu_fpreg_read(1), scpu_fpreg_read(3)))

@@ -20,7 +20,7 @@ namespace bricksvm
 {
     namespace device
     {
-        SimpleCPU::SimpleCPU(rapidjson::Value *config) : bricksvm::event::EventThread("SimpleCPU")
+        SimpleCPU::SimpleCPU(rapidjson::Value *config) : bricksvm::event::ParallelEventThread<4>("SimpleCPU")
         {
             using namespace std::placeholders;
 

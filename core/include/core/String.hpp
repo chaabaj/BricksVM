@@ -28,14 +28,17 @@ namespace bricksvm
             return stream.str();
         }
         
+#ifdef __gnu_linux__
         template<typename ... U>
         std::string append(std::stringstream &stream, U&& ... values)
         {
-            return append(stream);
+            return append(stream, values...);
         }
+#endif
         
+
         template<typename T, typename ... U>
-        std::string append(std::stringstream &stream, T const &&value, U&& ... values)
+        std::string append(std::stringstream &stream, T const value, U ... values)
         {
             stream << value;
             
@@ -43,7 +46,7 @@ namespace bricksvm
         }
         
         template<typename T>
-        std::string append(std::stringstream &stream, T const &&value)
+        std::string append(std::stringstream &stream, T const value)
         {
             stream << value;
             
@@ -51,7 +54,7 @@ namespace bricksvm
         }
         
         template<typename ... U>
-        std::string stringBuilder(U&& ... values)
+        std::string stringBuilder(U ... values)
         {
             std::stringstream   stream;
             

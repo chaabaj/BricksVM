@@ -4,8 +4,10 @@
 # include <type_traits>
 # include <map>
 # include <string>
+# include <iostream>
 # include "core/constants.hpp"
 # include "core/DllExport.hpp"
+# include "core/String.hpp"
 
 # ifdef WIN32
 #  include <Windows.h>
@@ -85,7 +87,7 @@ namespace bricksvm
                 static inline std::string const getError()
                 {
                     #ifdef WIN32
-                        return "Windows crap here";
+                        return core::stringBuilder("Error code : ", GetLastError());
                     #elif __gnu_linux__
                         return std::string(dlerror());
                     #endif

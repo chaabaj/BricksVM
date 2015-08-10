@@ -12,9 +12,10 @@ namespace bricksvm
     {
         TTF_Font            *Screen::_font = initFont();
 
-        Screen::Screen()
+        Screen::Screen(uint64_t const videoBufferSize)
         {
             _window = nullptr;
+            _videoMem.resize(videoBufferSize);
             bricksvm::core::Console::log("SimpleVideo") << "Create a new screen" << std::endl;
             _running = false;
         }
@@ -137,41 +138,89 @@ namespace bricksvm
             }
         }
 
-        uint32_t Screen::getPixelColor(uint32_t x, uint32_t y) const
+        uint32_t Screen::rgbToHex(uint8_t *buffer, uint8_t bpp) const
         {
-            int         bpp = _render->format->BytesPerPixel;
-            uint8_t     *pixel = reinterpret_cast<uint8_t*>(_render->pixels) + y * _render->pitch + x * bpp;
-
             switch (bpp)
             {
             case 1:
-                return *pixel;
+                return *buffer;
             case 2:
-                return *reinterpret_cast<uint16_t*>(pixel);
+                return *reinterpret_cast<uint16_t*>(buffer);
             case 3:
             {
                 if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
                 {
-                    return pixel[0] << 16 | pixel[1] << 8 | pixel[2];
+                    return buffer[0] << 16 | buffer[1] << 8 | buffer[2];
                 }
-                return pixel[0] | pixel[1] << 8 | pixel[2] << 16;
+                return buffer[0] | buffer[1] << 8 | buffer[2] << 16;
             }
             case 4:
-                return *reinterpret_cast<uint32_t*>(pixel);
+                return *reinterpret_cast<uint32_t*>(buffer);
             default:
                 return 0;
             }
         }
 
-        void Screen::putPixels(uint32_t x, 
-                               uint32_t y, 
-                               uint8_t *pixels,
-                               uint32_t size)
+        uint32_t Screen::getPixelColor(uint32_t x, uint32_t y) const
         {
             int         bpp = _render->format->BytesPerPixel;
-            uint8_t     *dstPtr = reinterpret_cast<uint8_t*>(_render->pixels) + y * _render->pitch + x * bpp;
+            uint8_t     *pixel = reinterpret_cast<uint8_t*>(_render->pixels) + y * _render->pitch + x * bpp;
 
-            std::memcpy(dstPtr, pixels, size);
+            return this->rgbToHex(pixel, bpp);
+        }
+
+        void Screen::writeVideoMemory(uint64_t index, uint8_t *buffer, uint64_t size)
+        {
+            if (index + size < this->_videoMem.size())
+            {
+                std::memcpy(&this->_videoMem[index], buffer, size);
+            }
+            else
+            {
+                throw bricksvm::exception::InvalidOperationException("Video memory overflow");
+            }
+        }
+
+        void Screen::drawFromVideoMemory(uint64_t index,
+                                         uint16_t x,
+                                         uint16_t y,
+                                         uint16_t width,
+                                         uint16_t height, 
+                                         uint8_t bpp)
+        {
+            uint16_t    oldX = x;
+            uint32_t    size = width * height * bpp;
+
+            if (index + size < this->_videoMem.size())
+            {
+                uint8_t     *ptr = reinterpret_cast<uint8_t*>(&this->_videoMem[index]);
+
+                for (int i = 0; i < size; i += bpp)
+                {                    
+                    this->putPixel(x, y, this->rgbToHex(&ptr[i], bpp));
+                    ++x;
+                    if (x >= oldX + width)
+                    {
+                        x = oldX;
+                        ++y;
+                    }
+                }
+            }
+            else
+            {
+                throw bricksvm::exception::InvalidOperationException("Video memory overflow");
+            }
+        }
+
+        void        Screen::clearScreen()
+        {
+            SDL_Rect    rect;
+
+            rect.x = 0;
+            rect.y = 0;
+            rect.w = this->_render->w;
+            rect.h = this->_render->h;
+            SDL_FillRect(this->_render, &rect, 0x000000);
         }
 
         uint32_t    Screen::getWidth() const

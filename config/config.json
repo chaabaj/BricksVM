@@ -1,5 +1,5 @@
 {
-	"memSize" : "10MB",
+	"memSize" : "2MB",
 	"devices": 
 	[
 		{
@@ -13,7 +13,10 @@
 			}
 		},
 		{
-			"file" : "lib/SimpleVideo"
+			"file" : "lib/SimpleVideo",
+			"config" : {
+				"videoBufferSize" : "512KB"
+			}
 		},
 		{
 			"file" : "lib/SimpleAudio"

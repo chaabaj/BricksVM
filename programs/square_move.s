@@ -1,0 +1,3 @@
+carousel :
+autoplay
+nav button

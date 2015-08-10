@@ -125,6 +125,7 @@ namespace bricksvm
     {
         interpreter::Value	retVal(0);
 
+
         bricksvm::core::Console::success("VM") << "Virtual machine started" << std::endl;
         for (auto &program : _programs)
         {

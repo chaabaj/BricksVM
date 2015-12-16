@@ -15,7 +15,7 @@ namespace bricksvm
 
 # ifdef WIN32 
 #  include "core/WinConsole.hpp"
-# elif __gnu_linux__
+# elif __gnu_linux__ || __APPLE__
 #  include "core/UnixConsole.hpp"
 # endif
 

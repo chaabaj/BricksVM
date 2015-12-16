@@ -24,7 +24,7 @@ namespace bricksvm
 
             #ifdef WIN32
                 library = LoadLibrary(libName.c_str());
-            #elif __gnu_linux__
+            #elif __gnu_linux__ || __APPLE__
                 library = dlopen(libName.c_str(), RTLD_LAZY);
             #endif
             if (!library)
@@ -36,7 +36,7 @@ namespace bricksvm
         {
             #ifdef WIN32
                 FreeLibrary(lib);
-            #elif __gnu_linux__
+            #elif __gnu_linux__ || __APPLE__
                 dlclose(lib);
             #endif
         }

@@ -2,6 +2,7 @@
 # define __BRICKSVM_DEVICE_SIMPLECPU_HPP__
 
 # include <map>
+# include <array>
 # include "interpreter/Value.hpp"
 # include "rapidjson/document.h"
 # include "core/DllExport.hpp"
@@ -140,7 +141,7 @@ namespace bricksvm
                                  RegisterContainerType &registers)
             {
                 typedef typename RegisterContainerType::mapped_type     MappedType;
-                typedef typename std::remove_extent<MappedType>::type   ValueType;
+                typedef typename MappedType::value_type                 ValueType;
 
                 bricksvm::event::EventThread    &src = msg.getParameter<bricksvm::event::EventThread>(0);
                 std::string                     progId = msg.getParameter<std::string>(2);
@@ -160,11 +161,8 @@ namespace bricksvm
             }
 
         private:
-
-            typedef long long int                                           RegisterValueType;
-            typedef double                                                  FloatingRegisterValueType;
-            typedef std::map<std::string, RegisterValueType[16]>            RegisterContainerType;
-            typedef std::map<std::string, FloatingRegisterValueType[16]>    FloatingRegisterContainerType;
+            typedef std::map<std::string, std::array<long long int, 16> >   RegisterContainerType;
+            typedef std::map<std::string, std::array<double, 16> >          FloatingRegisterContainerType;
 
             RegisterContainerType           _registers;
             FloatingRegisterContainerType   _fpRegisters;

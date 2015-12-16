@@ -3,6 +3,7 @@
 
 scpu_reg_write(0, 0)
 scpu_reg_write(2, 0)
+
 load_music:
 scpu_write_reg(0, shd_read(scpu_read_reg(2), 4096), scpu_read_reg(2), 4096)
 scpu_write_reg(2, scpu_add(scpu_read_reg(2), scpu_read_reg(0)))

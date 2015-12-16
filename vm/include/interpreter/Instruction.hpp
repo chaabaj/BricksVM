@@ -3,6 +3,7 @@
 
 # include <vector>
 # include <memory>
+# include <string>
 # include "core/IClonable.hpp"
 # include "interpreter/AParameter.hpp"
 # include "core/NewPolicy.hpp"

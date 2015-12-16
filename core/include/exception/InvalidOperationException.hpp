@@ -2,6 +2,7 @@
 # define __BRICKSVM_EXCEPTION_INVALIDOPERATION_HPP__
 
 # include <stdexcept>
+# include <string>
 # include "core/DllExport.hpp"
 
 namespace bricksvm

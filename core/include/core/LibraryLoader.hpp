@@ -11,7 +11,7 @@
 
 # ifdef WIN32
 #  include <Windows.h>
-# elif __gnu_linux__
+# elif __gnu_linux__ || __APPLE__
    typedef int HMODULE;
 #  include <dlfcn.h>
 #endif
@@ -39,7 +39,9 @@ namespace bricksvm
                     return ".dll";
                 # elif __gnu_linux__
                     return ".so";
-                # else
+                # elif  __APPLE__
+                    return ".dylib";
+                #else
                     return "";
                 #endif
             }
@@ -48,7 +50,7 @@ namespace bricksvm
 	    {
                # ifdef WIN32
                     return "";
-                # elif __gnu_linux__
+                # elif __gnu_linux__ || __APPLE__
                     return "lib";
                 # else
                     return "";
@@ -67,7 +69,7 @@ namespace bricksvm
 
                     # ifdef WIN32
                         fun = reinterpret_cast<FunctionType>(GetProcAddress(lib, name.c_str())); 
-                    # elif __gnu_linux__
+                    # elif __gnu_linux__ || __APPLE__
                         fun = reinterpret_cast<FunctionType>(dlsym(lib, name.c_str()));
                     # endif
 
@@ -88,7 +90,7 @@ namespace bricksvm
                 {
                     #ifdef WIN32
                         return core::stringBuilder("Error code : ", GetLastError());
-                    #elif __gnu_linux__
+                    #elif __gnu_linux__ || __APPLE__
                         return std::string(dlerror());
                     #endif
                 }

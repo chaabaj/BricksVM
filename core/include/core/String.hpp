@@ -35,7 +35,13 @@ namespace bricksvm
             return append(stream, values...);
         }
 #endif
-        
+#ifdef __APPLE__
+        template<typename ... U>
+        std::string append(std::stringstream &stream, U&& ... values)
+        {
+            return append(stream, values...);
+        }
+#endif
 
         template<typename T, typename ... U>
         std::string append(std::stringstream &stream, T const value, U ... values)
